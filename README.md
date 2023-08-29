@@ -7,7 +7,7 @@
 
 LANGUAGE:
 
-  <p>Mongodb<br>
+  <p>Mongodb<br> <p>![MongoDB](https://img.shields.io/badge/-MongoDB-47A248?logo=mongodb&logoColor=white)</p>
   <p>Express.js<br>
   <p>React.js<br>
   <p>Node.js<br>
