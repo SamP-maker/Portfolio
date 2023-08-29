@@ -7,19 +7,19 @@
 
 LANGUAGE:
 
-- Mongodb
-- Express.js
-- React.js
-- Node.js
+<p>Mongodb<br>
+<p>Express.js<br>
+<p>React.js<br>
+<p>Node.js<br>
 
 
 
 *FRONT END*
- <br> Authorization
-  Menu (Home/Dashboard)
-  Delivery
-  Payment
-  Tools
+ <p>Authorization<br>
+ <p>Menu (Home/Dashboard)<br>
+ <p>Delivery<br>
+ <p>Payment<br>
+ <p>Tools<br>
 
 
 *BACK END*
