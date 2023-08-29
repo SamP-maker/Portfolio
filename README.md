@@ -8,9 +8,9 @@
 LANGUAGE:
 
   <p>Mongodb<br> ![MongoDB](https://img.shields.io/badge/-MongoDB-47A248?logo=mongodb&logoColor=white)
-  <p>Express.js<br>
-  <p>React.js<br>
-  <p>Node.js<br>
+  <p>Express.js<br> ![Express.js](https://img.shields.io/badge/-Express.js-000000?logo=express&logoColor=white)
+  <p>React.js<br> ![React](https://img.shields.io/badge/-React-61DAFB?logo=react&logoColor=white)
+  <p>Node.js<br> ![Node.js](https://img.shields.io/badge/-Node.js-339933?logo=node.js&logoColor=white)
 
 
 
