@@ -1,9 +1,9 @@
 
 **Web Developer Portfolio #1**
-  <br>this is my official web portfolio for my github page.
+  <p>this is my official web portfolio for my github page.<br>
 
 
-<br>The portfolio shows a Food Ordering Application for a custom website. The description below discusses about the activities that are done within the categories.
+<p>The portfolio shows a Food Ordering Application for a custom website. The description below discusses about the activities that are done within the categories.<br>
 
 LANGUAGE:
 
