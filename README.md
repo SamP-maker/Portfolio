@@ -7,13 +7,13 @@
 
 ##LANGUAGE:
 
-  -Mongodb 
+- Mongodb
   ![MongoDB](https://img.shields.io/badge/-MongoDB-47A248?logo=mongodb&logoColor=white)
-  -Express.js 
+- Express.js
   ![Express.js](https://img.shields.io/badge/-Express.js-000000?logo=express&logoColor=white)
-  -React.js 
+- React.js
   ![React](https://img.shields.io/badge/-React-61DAFB?logo=react&logoColor=white)
-  -Node.js
+- Node.js
   ![Node.js](https://img.shields.io/badge/-Node.js-339933?logo=node.js&logoColor=white)
 
 
