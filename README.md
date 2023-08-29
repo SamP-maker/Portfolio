@@ -23,10 +23,10 @@ LANGUAGE:
 
 
 *BACK END*
-  Cookies
-  Session
-  Database Storage
-  Google Oauth2
-  Twitter Oauth
-  Facebook Oauth
+  <p>Cookies<br>
+  <p>Session<br>
+  <p>Database Storage<br>
+  <p>Google Oauth2<br>
+  <p>Twitter Oauth<br>
+  <p>Facebook Oauth<br>
 
