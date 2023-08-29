@@ -1,9 +1,9 @@
 
 **Web Developer Portfolio #1**
-  this is my official web portfolio for my github page.
+  <br>this is my official web portfolio for my github page.
 
 
-The portfolio shows a Food Ordering Application for a custom website. The description below discusses about the activities that are done within the categories.
+<br>The portfolio shows a Food Ordering Application for a custom website. The description below discusses about the activities that are done within the categories.
 
 LANGUAGE:
 
@@ -15,7 +15,7 @@ LANGUAGE:
 
 
 *FRONT END*
-  Authorization
+ <br> Authorization
   Menu (Home/Dashboard)
   Delivery
   Payment
