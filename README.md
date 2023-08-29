@@ -19,18 +19,18 @@
 
 
 ## FRONT END
-   <p>Authorization<br>
-   <p>Menu (Home/Dashboard)<br>
-   <p>Delivery<br>
-   <p>Payment<br>
-   <p>Tools<br>
+  <p>Authorization 🛡️<br>
+  <p>Menu (Home/Dashboard) 🏠<br>
+  <p>Delivery 🚚<br>
+  <p>Payment 💳<br>
+  <p>Tools 🔧<br>
 
 
 ## BACK END
-  <p>Cookies<br>
-  <p>Session<br>
-  <p>Database Storage<br>
-  <p>Google Oauth2<br>
-  <p>Twitter Oauth<br>
-  <p>Facebook Oauth<br>
+  <p>Cookies 🍪<br>
+  <p>Session 🕒<br>
+  <p>Database Storage 💾<br>
+  <p>Google Oauth2 🔑<br>
+  <p>Twitter Oauth 🐦<br>
+  <p>Facebook Oauth 📘<br>
 
