@@ -14,7 +14,7 @@ LANGUAGE:
 
 
 
-*FRONT END*
+***FRONT END***
    <p>Authorization<br>
    <p>Menu (Home/Dashboard)<br>
    <p>Delivery<br>
@@ -22,7 +22,7 @@ LANGUAGE:
    <p>Tools<br>
 
 
-*BACK END*
+***BACK END***
   <p>Cookies<br>
   <p>Session<br>
   <p>Database Storage<br>
