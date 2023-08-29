@@ -7,10 +7,10 @@ The portfolio shows a Food Ordering Application for a custom website. The descri
 
 LANGUAGE:
 
-Mongodb
-Express.js
-React.js
-Node.js
+- Mongodb
+- Express.js
+- React.js
+- Node.js
 
 
 
