@@ -18,15 +18,43 @@ const ButtonDropDown =({navbar,padding}) =>{
   
     return(
         <MenuWrapper navbar={navbar} padding={padding} onClick={toggleDropDown} show={dropDown}>
-            {window.location.pathname === "/Menu" ?
-            <StyledLink to="/Menu">Menu</StyledLink> :
-            <StyledLink to="/Dashboard">Dashboard</StyledLink>
-            }
+            {(() => {
+                if (window.location.pathname === '/Menu') {
+                    return <StyledLink to="/Menu">Menu</StyledLink>;
+                } else if (window.location.pathname === '/Dashboard') {
+                    return <StyledLink to="/Dashboard">Dashboard</StyledLink>;
+                } else if ( window.location.pathname === '/Order_Confirm'){
+                    return <StyledLink to="/Order_Confirm">Check Out</StyledLink>
+                }
+                return null; // Return null if no conditions match
+            })()}
         <DropDownContent show={dropDown}>
-        {window.location.pathname === "/Menu" ?
-            <StyledLink to="/Dashboard">Dashboard</StyledLink> :
-            <StyledLink to="/Menu">Menu</StyledLink>
-            }
+        {(() => {
+                if (window.location.pathname === '/Menu') {
+                    return (
+                    <>
+                    <StyledLink to="/Dashboard">Dashboard</StyledLink>
+                    <StyledLink to="/Order_Confirm">Check Out</StyledLink>
+                    </>
+                    )
+
+                } else if (window.location.pathname === '/Dashboard') {
+                    return (
+                        <>
+                        <StyledLink to="/Menu">Menu</StyledLink>
+                        <StyledLink to="/Order_Confirm">Check Out</StyledLink>
+                        </>
+                        )
+                } else if ( window.location.pathname === '/Order_Confirm'){
+                    return (
+                        <>
+                        <StyledLink to="/Dashboard">Dashboard</StyledLink>
+                        <StyledLink to="/Menu">Menu</StyledLink>
+                        </>
+                        )
+                }
+                return null; // Return null if no conditions match
+            })()}
       </DropDownContent>
      
 
@@ -49,7 +77,6 @@ color:white;
 display:flex;
 flex-direction:column;
 align-items:center;
-gap:10px;
 position:relative;
 transform: ${(props) => (props.show ? "translateY(15px)" : "translateY(0)")};
 transition: transform 1s ease-in-out, opacity 0.3s ease-in-out;
@@ -99,6 +126,7 @@ const StyledLink = styled(Link)`
 color: white;
 text-decoration: none;
 padding-top:10px;
+justify-content:flex-start;
 
 
 &:hover{
@@ -108,10 +136,12 @@ padding-top:10px;
 
 const DropDownContent = styled.div`
 
+display:flex;
+flex-direction:column;
 transition: padding-bottom 1s ease-in-out, opacity 0.3s ease-in-out;
   visibility: ${(props) => (props.show ? "visible" : "hidden")};
   opacity: ${(props) => (props.show ? 1 : 0)};
-  padding-bottom: ${(props) => (props.show ? "20px" : 0)};
+  padding-bottom: ${(props) => (props.show ? "10px" : 0)};
   height: ${(props) => (props.show ? "auto" : 0)};
   overflow: hidden;
   

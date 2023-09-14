@@ -5,8 +5,6 @@ import Footer from '../../util/Footer/Footer';
 import ButtonTypes from '../../util/Button/ButtonObject';
 import Input from '../../util/Input/Input';
 import Label from '../../util/Label/Label';
-import Button from '../../util/Button/Button';
-import { PhoneInput } from 'react-international-phone';
 import 'react-international-phone/style.css';
 import Cart from '../modal/CartModal';
 import MenuButton from '../../util/Button/DropdownButton';

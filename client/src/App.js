@@ -10,7 +10,8 @@ import Cart from '../src/components/modal/CartModal';
 import Order_Confirm from "./components/Checkout/Order_Confirm";
 import Address from "./components/Checkout/Address";
 import Phone from './components/modal/PhoneNumberModal';
-import BillingModal from './components/modal/BillingAddressModal'
+import BillingModal from './components/modal/BillingAddressModal';
+import Status from './components/Status/Status';
 
 
 
@@ -38,6 +39,7 @@ function App() {
     <Route path="/Address" element={<Address/>}/>
     <Route path ="/PhoneNumber" element={<Phone/>}/>
     <Route path ="/BillingModal" element={<BillingModal/>}/>
+    <Route path="/Status" element={<Status/>}/>
 
   </Routes>
       

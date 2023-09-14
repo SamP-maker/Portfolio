@@ -1,15 +1,15 @@
-import React, {useState,useEffect, useRef} from 'react';
+import React, {useState,useEffect} from 'react';
 import styled,{css} from 'styled-components';
 import Theme from '../../theme/theme';
 import menuObject from '../../util/Menu-Content/menuObject';
 import Footer from '../../util/Footer/Footer';
 import ButtonTypes from '../../util/Button/ButtonObject';
-import Button from '../../util/Button/Button';
-import { FaShoppingCart } from 'react-icons/fa';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { removeItem, increase, decrease} from '../../redux/feature/cartSlice'
-
-
+import Cart from '../modal/CartModal';
+import MenuButton from '../../util/Button/DropdownButton';
+import { Link } from 'react-router-dom';
 
 
 
@@ -71,10 +71,10 @@ const Menu = ()=>{
         <HeaderWrapper>
                  <RightWrapper>
             <ButtonMenuWrapper>
-                        <Button menu={"true"} padding=".5rem 3.875rem" text="Menu"/>
+            <MenuButton navbar={"true"}/>
             </ButtonMenuWrapper>
             <ImageWrapper>
-           <FaShoppingCart style={{color: "white"}}/>
+           <Cart/>
             </ImageWrapper>
         </RightWrapper>
     </HeaderWrapper>
@@ -113,8 +113,8 @@ const Menu = ()=>{
                             </ItemContainer>
                             )
                         })}
-        <ButtonWrapper Confirm_Order>
-                        <ButtonTypes.Confirm_Order/>
+       <ButtonWrapper Confirm_Order>
+       <Link to="/Address"><ButtonTypes.Confirm_Order/></Link>
         </ButtonWrapper>
      </CheckOutWrapper>             
 
