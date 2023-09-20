@@ -9,10 +9,10 @@ import background_img_2 from '../../theme/images/Pasta PNG/Chicken Alfredo.png';
 import background_img_3 from '../../theme/images/Desserts PNG/Goat Milk & Corn Panna Cotta.png'
 import Footer from '../../util/Footer/Footer';
 import ButtonTypes from '../../util/Button/ButtonObject';
-import MenuButton from '../../util/Button/DropdownButton';
 import { useDispatch, useSelector } from 'react-redux';
 import { addItem, setStoreCategory} from '../../redux/feature/cartSlice';
 import Cart from '../modal/CartModal';
+
 
 
 
@@ -80,27 +80,16 @@ const Menu = ()=>{
 
     return(
        <>
-        
+        <Cart/>
         <MenuWrapper>
+                
         <BackgroundDecoration img_1>
         <img src={background_img_2}/>
             </BackgroundDecoration>
         <HeaderWrapper>
+                
                  <Input black searchBar={true} placeholder={"Search for a meal"}> </Input>
                        
-
-                 <RightWrapper>
-            <ButtonWrapper>
-            <MenuButton navbar={"true"}/>
-                                
-                           
-            </ButtonWrapper>
-            <ImageWrapper>
-
-            <Cart black/>
-            
-            </ImageWrapper>
-        </RightWrapper>
         </HeaderWrapper>
 
         <BackgroundDecoration img_2>
@@ -118,6 +107,7 @@ const Menu = ()=>{
                                <img src={items.Image}/>
                                <DescriptionWrapper>
                                <p1>{items.name}</p1>
+                               <p4>{items.Description}</p4>
                                <p2>{items.Price}</p2>
                                <p3>{items.Rating}</p3>
                                <ButtonTypes.Add_to_Cart  handleAddItems={() => handleAddItems(items.id)}/>
@@ -195,8 +185,6 @@ img{
 `
 
 
-
-
 const MenuWrapper = styled.div`
 display:grid;
 margin-left:20vw; margin-right:20vw;
@@ -213,13 +201,7 @@ grid-column-start:1;
 grid-column-end:3;
 `
 
-const ButtonWrapper = styled.div`
-position:relative;
-display:flex;
-justify-content:center;
-flex-direction:column;
 
-`
 
 const DescriptionWrapper = styled.div`
 display:grid;
@@ -232,12 +214,20 @@ width:25rem;
 
 p1{
         font-size:35px;
+        font-family: 'Work Sans', sans-serif;
 }
 
 p2{
   
         font-size:30px;
+        font-family: 'Work Sans', sans-serif;
         color:${Theme.colors.greenColumn}
+}
+
+p4{
+        font-size:10px;
+        color:${Theme.colors.ColumnBlack}
+        font-family: 'Hammersmith One', sans-serif;
 }
 
 `
@@ -267,13 +257,6 @@ img{
 `
 
 
-const ImageWrapper = styled.div`
-display:flex;
-align-items:center;
-justify-content:center;
-
-`
-
 
 const HeaderWrapper = styled.header`
 color: ${Theme.colors.ColumnBlack};
@@ -283,6 +266,8 @@ justify-content:space-between;
 align-items: center;
 width:60vw;
 padding-top:5rem;
+margin-top:5rem;
+
 
 
 
@@ -295,11 +280,7 @@ img{
 }
 `
 
-const RightWrapper = styled.div`
-display:flex;
-justify-item:flex-end;
-gap:1rem;
-`
+
 
 
 

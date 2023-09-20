@@ -67,17 +67,10 @@ const Menu = ()=>{
 
 
     return(
-       <PageWrapper>
-        <HeaderWrapper>
-                 <RightWrapper>
-            <ButtonMenuWrapper>
-            <MenuButton navbar={"true"}/>
-            </ButtonMenuWrapper>
-            <ImageWrapper>
-           <Cart/>
-            </ImageWrapper>
-        </RightWrapper>
-    </HeaderWrapper>
+        
+       <>
+         <Cart/>
+       
     <ProgressBarContainer>
         <ProgressBar>
         </ProgressBar>
@@ -121,56 +114,18 @@ const Menu = ()=>{
 
         
         <Footer/>
-        </PageWrapper>
+        </>
 
         
     )
 }
 
 
-const HeaderWrapper = styled.header`
-font-size:4rem;
-color: ${Theme.colors.ColumnBlack};
-font-family: 'Hammersmith One', sans-serif;
-display:flex;
-justify-content:flex-end;
-align-items: center;
-width:60vw;
-margin-left:auto;
-margin-right:auto;
 
-
-
-img{
-    height:50px;
-    width:50px;
-    
-}
-`
-
-const ButtonMenuWrapper = styled.div`
-position:relative;
-display:flex;
-justify-content:center;
-`
-
-const RightWrapper = styled.div`
-display:flex;
-justify-item:flex-end;
-gap:1rem;
-align-items:center;
-`
-
-const ImageWrapper = styled.div`
-display:flex;
-align-items:center;
-justify-content:center;
-
-`
 
 
 const ProgressBarContainer = styled.div`
-
+margin-top:20rem;
 display:flex;
 justify-content:center;
 align-items:center;
@@ -178,6 +133,7 @@ height:100px;
 width:70rem;
 margin-left:auto;
 margin-right:auto;
+
 `
 
 const CheckpointContainer = styled.div`
@@ -191,24 +147,26 @@ gap:8rem;
 
 
 
+
 `
 
 const ProgressBar = styled.div`
 width:100%;
 height:10px;
-background-color:${Theme.colors.white};
-
+background-color:${Theme.colors.Greylite};
+border-radius:10px;
+box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 
 `
 const Checkpoint = styled.label`
 height:50px;
 width:50px;
-background-color: ${Theme.colors.white};
+background-color: ${Theme.colors.Greylite};
 border-radius:50%;
 display:flex;
 justify-contents:center;
 align-items:center;
-
+box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 &:nth-child(1){
 div{
 height:40px;
@@ -248,6 +206,7 @@ padding-bottom:10rem;
 background-color: ${Theme.colors.white};
 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
 width:60vw;
+margin-bottom:10rem;
 margin-left:20vw;
 margin-right:20vw;
 display:grid;
@@ -377,16 +336,6 @@ img{
 
 
 `
-
-
-const PageWrapper = styled.div`
-background-color: ${Theme.colors.ColumnBlack};
-padding-top:20rem;
-display:flex;
-flex-direction:column;
-gap:5rem;
-`
-
 
 
 

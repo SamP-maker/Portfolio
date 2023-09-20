@@ -59,7 +59,7 @@ const Footer = () =>{
 const FooterWrapper = styled.footer`
 background-color: ${Theme.colors.BackgroundBlack};
 left: 0;
-bottom: 100;
+bottom: 0;
 height:200px;
 width:100%;
 z-index:1;

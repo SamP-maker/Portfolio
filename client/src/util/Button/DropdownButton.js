@@ -13,7 +13,7 @@ const ButtonDropDown =({navbar,padding}) =>{
        
     }
 
-
+ 
 
   
     return(
@@ -23,9 +23,14 @@ const ButtonDropDown =({navbar,padding}) =>{
                     return <StyledLink to="/Menu">Menu</StyledLink>;
                 } else if (window.location.pathname === '/Dashboard') {
                     return <StyledLink to="/Dashboard">Dashboard</StyledLink>;
-                } else if ( window.location.pathname === '/Order_Confirm'){
-                    return <StyledLink to="/Order_Confirm">Check Out</StyledLink>
+                } else if ( window.location.pathname === '/Order_confirm' ||window.location.pathname === '/Address'){
+                    return <StyledLink to="/Order_confirm">Check Out</StyledLink>
                 }
+                else if ( window.location.pathname === '/Status'){
+                    return <StyledLink to="/Status">Status</StyledLink>
+                }
+                
+                
                 return null; // Return null if no conditions match
             })()}
         <DropDownContent show={dropDown}>
@@ -33,25 +38,39 @@ const ButtonDropDown =({navbar,padding}) =>{
                 if (window.location.pathname === '/Menu') {
                     return (
                     <>
+                  
                     <StyledLink to="/Dashboard">Dashboard</StyledLink>
-                    <StyledLink to="/Order_Confirm">Check Out</StyledLink>
+                    <StyledLink to="/Order_confirm">Check Out</StyledLink>
+                    <StyledLink to="/Status">Status</StyledLink>
                     </>
                     )
 
                 } else if (window.location.pathname === '/Dashboard') {
                     return (
                         <>
+                        
                         <StyledLink to="/Menu">Menu</StyledLink>
-                        <StyledLink to="/Order_Confirm">Check Out</StyledLink>
+                        <StyledLink to="/Order_confirm">Check Out</StyledLink>
+                        <StyledLink to="/Status">Status</StyledLink>
                         </>
                         )
-                } else if ( window.location.pathname === '/Order_Confirm'){
+                } else if ( window.location.pathname === '/Order_confirm' ||  window.location.pathname === '/Address'){
                     return (
                         <>
                         <StyledLink to="/Dashboard">Dashboard</StyledLink>
                         <StyledLink to="/Menu">Menu</StyledLink>
+                        <StyledLink to="/Status">Status</StyledLink>
                         </>
                         )
+                } else if( window.location.pathname === '/Status'){
+                    return (
+                        <>
+                        <StyledLink to="/Dashboard">Dashboard</StyledLink>
+                        <StyledLink to="/Menu">Menu</StyledLink>
+                        <StyledLink to="/Order_confirm">Check Out</StyledLink>
+                        </>
+                        )
+
                 }
                 return null; // Return null if no conditions match
             })()}

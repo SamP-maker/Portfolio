@@ -7,7 +7,7 @@ import Input from '../../util/Input/Input';
 import Label from '../../util/Label/Label';
 import 'react-international-phone/style.css';
 import Cart from '../modal/CartModal';
-import MenuButton from '../../util/Button/DropdownButton';
+import { Link } from 'react-router-dom';
 
 
 
@@ -40,19 +40,19 @@ const Address = ()=>{
 
     return(
        <PageWrapper>
+        <Cart/>
 
 
 
 
 
     <HeaderWrapper>
+    <RedirectWrapper>
+        <Link to="/Order_confirm"><p>Back to Order Confirmation</p></Link>
+      </RedirectWrapper>
                  <RightWrapper>
-            <ButtonWrapper>
-            <MenuButton navbar={"true"}/>
-            </ButtonWrapper>
-            <ImageWrapper>
-                <Cart/>
-            </ImageWrapper>
+
+  
         </RightWrapper>
     </HeaderWrapper>
 
@@ -165,6 +165,12 @@ const Address = ()=>{
     )
 }
 
+const RedirectWrapper = styled.div`
+font-size:1rem;
+`
+
+
+
 
 const ProgressBarContainer = styled.div`
 
@@ -195,19 +201,19 @@ gap:8rem;
 const ProgressBar = styled.div`
 width:100%;
 height:10px;
-background-color:${Theme.colors.white};
-
-
+background-color:${Theme.colors.Greylite};
+border-radius:10px;
+box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 `
 const Checkpoint = styled.label`
 height:50px;
 width:50px;
-background-color: ${Theme.colors.white};
+background-color:${Theme.colors.Greylite};
 border-radius:50%;
 display:flex;
 justify-contents:center;
 align-items:center;
-
+box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 &:nth-child(1),&:nth-child(2){
 div{
 height:40px;
@@ -369,14 +375,7 @@ div:nth-child(12){
 
 `
 
-const ImageWrapper = styled.div`
-display:flex;
-align-items:center;
-justify-content:center;
-height:auto;
-width:auto;
 
-`
 
 const ButtonWrapper = styled.div`
 position:relative;
@@ -402,7 +401,7 @@ font-size:4rem;
 color: ${Theme.colors.ColumnBlack};
 font-family: 'Hammersmith One', sans-serif;
 display:flex;
-justify-content:flex-end;
+justify-content:space-between;
 align-items: center;
 width:60vw;
 margin-left:auto;
@@ -434,6 +433,7 @@ padding-top:20rem;
 display:flex;
 flex-direction:column;
 gap:5rem;
+background-color: ${Theme.colors.white};
 `
 
 

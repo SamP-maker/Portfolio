@@ -20,22 +20,10 @@ const Address = ()=>{
 
 
     return(
-       <PageWrapper>
+       <>
 
+      <Cart/>
 
-
-
-
-    <HeaderWrapper>
-                 <RightWrapper>
-            <ButtonWrapper>
-            <MenuButton navbar={"true"}/>
-            </ButtonWrapper>
-            <ImageWrapper>
-                <Cart/>
-            </ImageWrapper>
-        </RightWrapper>
-    </HeaderWrapper>
 
     <ContentWrapper>
         <ParagraphWrapper>
@@ -54,16 +42,37 @@ const Address = ()=>{
 
         <BottomContentWrapper>
     <ProgressBarContainer>
-            <ProgressBarWrapper/>
 
-
+  
             <CheckpointContainer>
+            <ProgressBarWrapper></ProgressBarWrapper>
                                <Checkpoint><div><span></span></div></Checkpoint>
-                               <Checkpoint> <div><span></span></div></Checkpoint>
-                               <Checkpoint> <div><span></span></div></Checkpoint>
-                               <Checkpoint> <div><span></span></div></Checkpoint>
-            </CheckpointContainer>       
+                               <Checkpoint><div><span></span></div></Checkpoint>
+                               <Checkpoint><div><span></span></div></Checkpoint>
+                               <Checkpoint><div><span></span></div></Checkpoint>
+                               <Checkpoint><div><span></span></div></Checkpoint>
+            </CheckpointContainer>
     </ProgressBarContainer>  
+    <StatusBarColumnWrapper>
+
+             <Status><h3>Status</h3></Status>
+             <Status><p1>Delivery has arrived at your doorstep</p1></Status>
+             <Status><p2>Delivery is heading towards your address</p2></Status>
+             <Status><p3>Your order is being packed</p3></Status>
+             <Status><p4>The Kitchen is preparing your meal</p4></Status>
+
+
+    </StatusBarColumnWrapper>
+            <ElapsedTimeWrapper>
+            <ElapsedTime><h3>Elapsed Time</h3></ElapsedTime>
+             <ElapsedTime><p1>20:00</p1></ElapsedTime>
+             <ElapsedTime><p2>19:40</p2></ElapsedTime>
+             <ElapsedTime><p3>19:30</p3></ElapsedTime>
+             <ElapsedTime><p4>19:20</p4></ElapsedTime>
+              </ElapsedTimeWrapper>
+
+
+
     
         </BottomContentWrapper>    
     </ContentWrapper>
@@ -79,59 +88,112 @@ const Address = ()=>{
 
         
         <Footer/>
-        </PageWrapper>
+        </>
 
         
     )
 }
 
 
+const StatusBarColumnWrapper = styled.div`
+font-family: 'Hammersmith One', sans-serif;
+grid-column: 2 / span 1; /* Span 1 column */
+grid-row: 1 / span 5; /* Span 5 rows */
+display:grid;
+justify-items: left;
+align-items: center;
+grid-template-rows: repeat(5, 1fr);
+height:100%;
+  }
+`
 
-const CheckpointContainer = styled.div`
-display: flex;
-flex-direction:column;
-position:absolute;
-  width: 80px;
-  height: 25rem;
+const Status = styled.div`
+  background-color: ${Theme.colors.white};
   display: flex;
-  align-items: center;
-  gap: 8rem;
-  align-content:center;
-  justify-self:center;
+  border: 1px solid ${Theme.colors.white};
+`
+
+const ElapsedTime = styled.div`
+background-color: ${Theme.colors.white};
+display: flex;
+border: 1px solid ${Theme.colors.white};
 `
 
 
 
+const ElapsedTimeWrapper = styled.div`
+font-family: 'Hammersmith One', sans-serif;
+grid-column: 3 / span 1; /* Span 1 column */
+grid-row: 1 / span 5; /* Span 5 rows */
+display:grid;
+justify-items: center;
+align-items: center;
+grid-template-rows: repeat(5, 1fr);
+height:100%;
+`
 
 
+
+const ProgressBarContainer = styled.div`
+grid-column: 1 / span 1;
+grid-row: 1 / span 5;
+z-index: 1; /* Set a lower z-index value for the progress bar container */
+`
 
 const ProgressBarWrapper = styled.div`
-  width: 20px;
-  height: 850px;
-  border-radius:20px;
+width: 10px;
+  height: 90%;
+  border-radius: 20px;
   background-color: ${Theme.colors.Greylite};
- 
-
-
+  opacity:0.2;
+  display: flex; /* Use flexbox */
+  align-items: center; /* Center vertically */
+  justify-content: center; /* Center horizontally */
+  position: absolute;
+  z-index: 1; /* Set the same z-index value as ProgressBarContainer */
 `
-const Checkpoint = styled.label`
-height: 50px;
-  width: 50px;
-  background-color: ${Theme.colors.white};
+
+
+
+const CheckpointContainer = styled.div`
+display: grid;
+grid-template-rows: repeat(5, 1fr);
+justify-items: center;
+align-items: center;
+grid-row-start: 1;
+grid-row-end: 5;
+height: 100%;
+z-index: 2; /* Set a higher z-index value for the checkpoints container */
+`
+
+
+
+
+
+
+const Checkpoint = styled.div`
+height: 40px;
+  width: 40px;
   border-radius: 50%;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top:30px;
 
-  &:nth-child(1),
-  &:nth-child(2),
-  &:nth-child(3),
-  &:nth-child(4) {
+  z-index:2;
+
+  
+    
+  
+ 
+ 
+
+  &:nth-child(2) {
+    grid-row-start:2;
+    grid-row-end:2;
+    background-color: ${Theme.colors.white};
+    border: 1px solid ${Theme.colors.white};
     div {
+        
       height: 40px;
       width: 40px;
-      margin: auto auto;
       background-color: ${Theme.colors.Teal};
       border-radius: 50%;
       display: flex;
@@ -139,54 +201,102 @@ height: 50px;
       align-items: center;
 
       span {
-        margin: auto auto;
         width: 5px;
         height: 15px;
         border: solid white;
         border-width: 0 3px 3px 0;
-        -webkit-transform: rotate(45deg);
-        -ms-transform: rotate(45deg);
+        transform: rotate(45deg);
+      }
+    }
+  }
+
+  &:nth-child(3) {
+    grid-row-start:3;
+    grid-row-end:3;
+    background-color: ${Theme.colors.white};
+    border: 1px solid ${Theme.colors.white};
+    div {
+      height: 40px;
+      width: 40px;
+      background-color: ${Theme.colors.Teal};
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      span {
+        width: 5px;
+        height: 15px;
+        border: solid white;
+        border-width: 0 3px 3px 0;
+        transform: rotate(45deg);
+      }
+    }
+  }
+
+  &:nth-child(4) {
+    grid-row-start:4;
+    grid-row-end:4;
+    background-color: ${Theme.colors.white};
+    border: 1px solid ${Theme.colors.white};
+    div {
+      height: 40px;
+      width: 40px;
+      background-color: ${Theme.colors.Teal};
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      span {
+        width: 5px;
+        height: 15px;
+        border: solid white;
+        border-width: 0 3px 3px 0;
         transform: rotate(45deg);
       }
     }
   }
 
 
+  &:nth-child(5) {
+    grid-row-start:5;
+    grid-row-end:5;
+    background-color: ${Theme.colors.white};
+    border: 1px solid ${Theme.colors.white};
+    div {
+      height: 40px;
+      width: 40px;
+      background-color: ${Theme.colors.Teal};
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
 
+      span {
+        width: 5px;
+        height: 15px;
+        border: solid white;
+        border-width: 0 3px 3px 0;
+        transform: rotate(45deg);
+      }
+    }
+  }
 
 `
 
 const BottomContentWrapper = styled.div`
-border: 1px solid red;
-  grid-column-start: 1;
-  grid-column-end: 5;
-  grid-row-start: 2;
-  grid-row-end: 5;
-  margin-top: 2rem;
-  display:grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(5, 1fr);
-`
-
-const ProgressBarContainer = styled.div`
 grid-column-start: 1;
-  grid-column-end: 5;
-  justify-content:center;
-display:flex;
-margin-top:5rem;
-width:90px;
-
+grid-column-end: 5;
+grid-row-start: 2;
+grid-row-end: 5;
+margin-top: 2rem;
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+grid-template-rows: repeat(5, 1fr);
 `
 
 
-const ImageWrapper = styled.div`
-display:flex;
-align-items:center;
-justify-content:center;
-height:auto;
-width:auto;
-
-`
 
 const ContentWrapper = styled.div`
 background-color:white;
@@ -195,11 +305,11 @@ width:100%;
 display:grid;
 grid-template-columns: repeat(2,1fr);
 grid-template-rows: repeat(3,1fr);
-
+margin-top:10rem;
+margin-bottom:10rem;
 
 
 `
-
 
 
 const ParagraphWrapper = styled.div`
@@ -230,14 +340,6 @@ p1{
 
 `
 
-const ButtonWrapper = styled.div`
-position:relative;
-display:flex;
-justify-content:center;
-flex-direction:column;
-`
-
-
 
 const ContactButtonWrapper = styled.div`
 grid-row-start:1;
@@ -251,48 +353,6 @@ padding-right:200px;
 
 `
 
-
-
-
-
-const HeaderWrapper = styled.header`
-font-size:4rem;
-color: ${Theme.colors.ColumnBlack};
-font-family: 'Hammersmith One', sans-serif;
-display:flex;
-justify-content:flex-end;
-align-items: center;
-width:60vw;
-margin-left:auto;
-margin-right:auto;
-
-
-
-img{
-    height:50px;
-    width:50px;
-    
-}
-`
-
-const RightWrapper = styled.div`
-display:flex;
-justify-item:flex-end;
-gap:1rem;
-`
-
-
-
-
-
-
-const PageWrapper = styled.div`
-background-color: ${Theme.colors.ColumnBlack};
-padding-top:20rem;
-display:flex;
-flex-direction:column;
-gap:5rem;
-`
 
 
 

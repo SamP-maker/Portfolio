@@ -12,6 +12,9 @@ import Address from "./components/Checkout/Address";
 import Phone from './components/modal/PhoneNumberModal';
 import BillingModal from './components/modal/BillingAddressModal';
 import Status from './components/Status/Status';
+import Payment from './components/Checkout/Payment';
+import Checkout from './components/modal/CheckoutModal';
+
 
 
 
@@ -34,13 +37,18 @@ function App() {
     <Route path="/Login" element={<Login/>} />
     <Route path="/Dashboard" element={<Dashboard/>}/>
     <Route path="/Menu" element={<Menu/>}/>
-    <Route path="/Cart" element={<Cart/>}/>
-    <Route path="/Order_Confirm" element={<Order_Confirm/>}/>
+    <Route path="/Order_confirm" element={<Order_Confirm/>}/>
     <Route path="/Address" element={<Address/>}/>
+    <Route path="/Status" element={<Status/>}/>
+    <Route path="/Payment" element={<Payment/>}/>
+
+
+    {/*TESTING */}
+    <Route path="/Checkout" element={<Checkout/>}/>
     <Route path ="/PhoneNumber" element={<Phone/>}/>
     <Route path ="/BillingModal" element={<BillingModal/>}/>
-    <Route path="/Status" element={<Status/>}/>
-
+    <Route path="/Cart" element={<Cart/>}/>
+  
   </Routes>
       
   

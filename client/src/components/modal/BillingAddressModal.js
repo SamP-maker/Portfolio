@@ -6,6 +6,8 @@ import ButtonTypes from '../../util/Button/ButtonObject';
 import Input from '../../util/Input/Input';
 import Label from '../../util/Label/Label';
 
+import MenuButton from '../../util/Button/DropdownButton';
+import { Link } from 'react-router-dom';
 
 
 
@@ -13,9 +15,12 @@ import Label from '../../util/Label/Label';
 
 
 
-const BillingModal = ()=>{
+const BillingModal = ({closeModal})=>{
+
+  
 
 
+ 
   const [form, setForm] = useState({
     cardNumber: '',
     Day:'',
@@ -47,13 +52,35 @@ const BillingModal = ()=>{
     return(
        <PageWrapper>
 
+        
+
+
+
+    <HeaderWrapper>
+      <RedirectWrapper>
+        <Link to="/Payment"><p>Back to payment</p></Link>
+      </RedirectWrapper>
+                 <RightWrapper>
+            
+            <ButtonWrapper>
+            <MenuButton navbar={"true"}/>
+            </ButtonWrapper>
+  
+        </RightWrapper>
+    </HeaderWrapper>
+
+
+
 
 
 
     
-       
-    <CheckOutWrapper>
-    <Label fontSize="1.5rem" text="Card Number"/>
+   
+
+     <CheckOutWrapper>
+     
+   
+    <Label fontSize="1rem" text="Card Number"/>
                 
                
                         <Input
@@ -65,9 +92,9 @@ const BillingModal = ()=>{
                             onChange={(e) => handleForm({cardNumber: e.target.value})}
                             />
 
-    <Label fontSize="2rem" text="Expiration"/>
+    <Label fontSize="1.5rem" text="Expiration"/>
                 
-    <Label fontSize="1.5rem" text="Day"/>    
+    <Label fontSize="1rem" text="Day"/>    
                 <Input
                     white
                     type="text" 
@@ -77,7 +104,7 @@ const BillingModal = ()=>{
                     onChange={(e) => handleForm({Day: e.target.value})}
                     />
     
-    <Label fontSize="1.5rem" text="Year"/>
+    <Label fontSize="1rem" text="Year"/>
                 
                
                 <Input
@@ -89,7 +116,7 @@ const BillingModal = ()=>{
                     onChange={(e) => handleForm({Year: e.target.value})}
                     />
 
-<Label fontSize="1.5rem" text="First Name"/>    
+<Label fontSize="1rem" text="First Name"/>    
                 <Input
 
                     white
@@ -100,7 +127,7 @@ const BillingModal = ()=>{
                     onChange={(e) => handleForm({firstName: e.target.value})}
                     />
     
-    <Label fontSize="1.5rem" text="Last Name"/>
+    <Label fontSize="1rem" text="Last Name"/>
                 
                
                 <Input
@@ -113,10 +140,9 @@ const BillingModal = ()=>{
                     />
 
 
+{/*Line ends here for the card*/ }
 
-
-
-<Label fontSize="1.5rem" text="Billing Address"/>
+<Label fontSize="1rem" text="Billing Address"/>
 <InputWrapper>
 <Input 
      
@@ -131,7 +157,7 @@ const BillingModal = ()=>{
 
 
 
-     <Label fontSize="1.5rem" text="Address"/>    
+     <Label fontSize="1rem" text="Address"/>    
                 <Input
                     white
                     type="text" 
@@ -142,7 +168,7 @@ const BillingModal = ()=>{
                     />
 
 
-<Label fontSize="1.5rem" text="Postal Code"/>    
+<Label fontSize="1rem" text="Postal Code"/>    
                 <Input
                     white
                     type="text" 
@@ -152,7 +178,7 @@ const BillingModal = ()=>{
                     onChange={(e) => handleForm({Postal: e.target.value})}
                     />
 
-<Label fontSize="1.5rem" text="First Name"/>    
+<Label fontSize="1rem" text="First Name"/>    
                 <Input
                     white
                     type="text" 
@@ -162,7 +188,7 @@ const BillingModal = ()=>{
                     onChange={(e) => handleForm({cardFirstName: e.target.value})}
                     />
 
-<Label fontSize="1.5rem" text="Last Name"/>    
+<Label fontSize="1rem" text="Last Name"/>    
                 <Input
 
                      white
@@ -172,7 +198,7 @@ const BillingModal = ()=>{
                     value={form.cardLastName}
                     onChange={(e) => handleForm({cardLastName: e.target.value})}
                     />
-<Label fontSize="1.5rem" text="Country"/>    
+<Label fontSize="1rem" text="Country"/>    
                 <Input
                     white
                     type="text" 
@@ -181,7 +207,7 @@ const BillingModal = ()=>{
                     value={form.Country}
                     onChange={(e) => handleForm({Country: e.target.value})}
                     />
-<Label fontSize="1.5rem" text="Zip Code"/>    
+<Label fontSize="1rem" text="Zip Code"/>    
                 <Input
                     white
                     type="text" 
@@ -190,7 +216,7 @@ const BillingModal = ()=>{
                     value={form.Zip}
                     onChange={(e) => handleForm({Zip: e.target.value})}
                     />
-<Label fontSize="1.5rem" text="City"/>    
+<Label fontSize="1rem" text="City"/>    
                 <Input
                     white
                     type="text" 
@@ -199,7 +225,7 @@ const BillingModal = ()=>{
                     value={form.City}
                     onChange={(e) => handleForm({City: e.target.value})}
                     />
-<Label fontSize="1.5rem" text="State"/>    
+<Label fontSize="1rem" text="State"/>    
                 <Input
                     white
                     type="text" 
@@ -208,7 +234,7 @@ const BillingModal = ()=>{
                     value={form.State}
                     onChange={(e) => handleForm({State: e.target.value})}
                     />
-<Label fontSize="1.5rem" text="Mobile Number"/>    
+<Label fontSize="1rem" text="Mobile Number"/>    
                 <Input
                     white
                     type="Phone" 
@@ -229,6 +255,8 @@ const BillingModal = ()=>{
 
               
      </CheckOutWrapper>
+
+  
                
         </PageWrapper>
 
@@ -236,27 +264,65 @@ const BillingModal = ()=>{
     )
 }
 
+const RedirectWrapper = styled.div`
+font-size:1rem;
+`
+
+
+const HeaderWrapper = styled.header`
+font-size:4rem;
+color: ${Theme.colors.ColumnBlack};
+font-family: 'Hammersmith One', sans-serif;
+display:flex;
+justify-content:space-between;
+align-items: center;
+width:60vw;
+margin-top:2rem;
+margin-left:auto;
+margin-right:auto;
+
+
+
+img{
+    height:50px;
+    width:50px;
+    
+}
+`
+
+const RightWrapper = styled.div`
+display:flex;
+justify-item:flex-end;
+gap:1rem;
+`
+const ButtonWrapper = styled.div`
+position:relative;
+display:flex;
+justify-content:center;
+flex-direction:column;
+`
 
 
 
 const CheckOutWrapper = styled.div`
-padding-bottom:10rem;
+padding-bottom: 10rem;
 background-color: ${Theme.colors.white};
 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
-width:60vw;
-margin-left:auto;
-margin-right:auto;
-display:grid;
-grid-template-columns: repeat(2,1fr);
-grid-template-rows: repeat(auto,1fr);
-padding:5rem 5rem;
-border-radius:5rem;
+border-radius: 1rem;
+display: grid;
+width:40vw;
+margin:auto auto;
+grid-template-columns: repeat(2, 1fr);
+grid-template-rows: repeat(auto, 1fr);
 
 
 
-Label:nth-child(n+1){
-    margin-left:2rem;
+padding: 5rem 5rem;
+Label{
+  margin-left:2rem;
 }
+
+
 
 
 Label:nth-child(1){
@@ -351,12 +417,12 @@ Label:nth-child(12){
   grid-column-end:1;
   grid-row-start:9;
   grid-row-end:9;
-  margin-top:2rem;
+  margin-top:1rem;
   margin-bottom:2rem;
 }
 
 
-Input:nth-child(15){
+Input:nth-child(13){
   grid-column-start:1;
   grid-column-end:3;
   grid-row-start:12;
@@ -365,17 +431,16 @@ Input:nth-child(15){
 
 Label:nth-child(14){
   
-  grid-column-start:1;
-  grid-column-end:1;
+  
   grid-row-start:11;
   grid-row-end:11;
 }
 
-Input:nth-child(17){
+Input:nth-child(15){
   grid-column-start:1;
-  grid-column-end:1;
-  grid-row-start:14;
-  grid-row-end:14;
+  grid-column-end:3;
+  grid-row-start:12;
+  grid-row-end:12;
 }
 
 Label:nth-child(16){
@@ -387,11 +452,11 @@ Label:nth-child(16){
 }
 
 
-Input:nth-child(19){
+Input:nth-child(17){
   grid-column-start:1;
   grid-column-end:1;
-  grid-row-start:16;
-  grid-row-end:16;
+  grid-row-start:14;
+  grid-row-end:14;
 }
 
 Label:nth-child(18){
@@ -402,9 +467,9 @@ Label:nth-child(18){
   grid-row-end:15;
 }
 
-Input:nth-child(21){
-  grid-column-start:2;
-  grid-column-end:2;
+Input:nth-child(19){
+  grid-column-start:1;
+  grid-column-end:1;
   grid-row-start:16;
   grid-row-end:16;
 }
@@ -418,11 +483,11 @@ Label:nth-child(20){
 }
 
 
-Input:nth-child(23){
-  grid-column-start:1;
-  grid-column-end:1;
-  grid-row-start:18;
-  grid-row-end:18;
+Input:nth-child(21){
+  grid-column-start:2;
+  grid-column-end:2;
+  grid-row-start:16;
+  grid-row-end:16;
 }
 
 Label:nth-child(22){
@@ -433,9 +498,9 @@ Label:nth-child(22){
   grid-row-end:17;
 }
 
-Input:nth-child(25){
-  grid-column-start:2;
-  grid-column-end:2;
+Input:nth-child(23){
+  grid-column-start:1;
+  grid-column-end:1;
   grid-row-start:18;
   grid-row-end:18;
 }
@@ -448,11 +513,11 @@ Label:nth-child(24){
   grid-row-end:17;
 }
 
-Input:nth-child(27){
-  grid-column-start:1;
-  grid-column-end:1;
-  grid-row-start:20;
-  grid-row-end:20;
+Input:nth-child(25){
+  grid-column-start:2;
+  grid-column-end:2;
+  grid-row-start:18;
+  grid-row-end:18;
 }
 
 Label:nth-child(26){
@@ -463,9 +528,9 @@ Label:nth-child(26){
   grid-row-end:19;
 }
 
-Input:nth-child(29){
-  grid-column-start:2;
-  grid-column-end:2;
+Input:nth-child(27){
+  grid-column-start:1;
+  grid-column-end:1;
   grid-row-start:20;
   grid-row-end:20;
 }
@@ -478,14 +543,13 @@ Label:nth-child(28){
   grid-row-end:19;
 }
 
-div:nth-child(31){
-  grid-column-start:1;
-  grid-column-end:3;
-  grid-row-start:22;
-  grid-row-end:22;
-  margin-left:1rem;
-  margin-top:2rem;
+Input:nth-child(29){
+  grid-column-start:2;
+  grid-column-end:2;
+  grid-row-start:20;
+  grid-row-end:20;
 }
+
 
 Label:nth-child(30){
   
@@ -493,6 +557,16 @@ Label:nth-child(30){
   grid-column-end:1;
   grid-row-start:21;
   grid-row-end:21;
+}
+
+Div:nth-child(31){
+  
+  grid-column-start:1;
+  grid-column-end:1;
+  grid-row-start:22;
+  grid-row-end:22;
+  margin-top:.5rem;
+  margin-left:1rem;
 }
 
 
@@ -504,12 +578,10 @@ Label:nth-child(30){
 
 
 const PageWrapper = styled.div`
-background-color: ${Theme.colors.ColumnBlack};
-padding-top:20rem;
-display:flex;
-flex-direction:column;
-gap:5rem;
-
+  z-index: 999; /* Ensure it's on top of other content */
+  display:flex;
+  flex-direction:column;
+  gap:5rem;
 `
 
 const InputWrapper = styled.div`
@@ -532,12 +604,11 @@ display:flex;
 justify-content:left;
 height:60px;
 font-size:1rem;
-margin:0 0;
 align-items:center;
 grid-column-start:1;
   grid-column-end:1;
   grid-row-start:23;
-  grid-row-end:23;
+  grid-row-end:23; 
 
 `
 

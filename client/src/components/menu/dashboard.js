@@ -9,7 +9,6 @@ import background_img_1 from '../../theme/images/Appetizers PNG/Meat Cherry.png'
 import background_img_2 from '../../theme/images/Pasta PNG/Chicken Alfredo.png';
 import background_img_3 from '../../theme/images/Desserts PNG/Goat Milk & Corn Panna Cotta.png'
 import Footer from '../../util/Footer/Footer';
-import MenuButton from '../../util/Button/DropdownButton';
 import Cart from '../modal/CartModal'
 
 
@@ -71,16 +70,15 @@ const Dashboard = ()=>{
     
     
 
-              
-const handleClick = () =>{
-    console.log("hello")
-}
+
 
 
 
 
     return(
         <>
+     <Cart/>
+
 
     <ContentWrapper>
         <BackgroundDecoration img_1>
@@ -90,20 +88,6 @@ const handleClick = () =>{
 
         <HeaderWrapper>
             <p1>Promotion</p1>
-        <RightWrapper>
-            <ButtonWrapper>
-            <MenuButton navbar={"true"}>
-                                
-                                </MenuButton>
-            </ButtonWrapper>
-
-            <ImageWrapper>
-
-            <Cart />
-            </ImageWrapper>
-
-            
-        </RightWrapper>
         </HeaderWrapper>
         <BackgroundDecoration img_2>
         <img src={background_img_1}/>
@@ -140,6 +124,7 @@ const handleClick = () =>{
                <DescriptionWrapper>
                                <p>{items.name}</p>
                                <p>{items.Price}</p>
+                               <p>{items.Description}</p>
                                <p>{items.Rating}</p>
                                </DescriptionWrapper>
             </ItemContainer>
@@ -328,16 +313,19 @@ img{
 
 
 const HeaderWrapper = styled.header`
-font-size:4rem;
-margin-top:30px;
+font-size:6rem;
+margin-top:10rem;
 color: ${Theme.colors.ColumnBlack};
 font-family: 'Hammersmith One', sans-serif;
 text-shadow: 1px 2px 4px rgba(81,67,21,0.8);
 display:flex;
-justify-content:center;
+justify-content:flex-start;
 gap:5rem;
+padding-left:2rem;
 align-items: center;
-margin-bottom:5rem;
+margin-bottom:.5rem;
+margin-left: 20vw;
+margin-right: 20vw;
 
 
 
@@ -348,20 +336,6 @@ img{
 }
 `
 
-const ButtonWrapper = styled.div`
-position:relative;
-display:flex;
-justify-content:center;
-flex-direction:column;
-`
-
-const RightWrapper = styled.div`
-display:flex;
-justify-content:flex-end;
-width:40rem;
-gap:1rem;
-
-`
 
 
 export default Dashboard

@@ -30,13 +30,21 @@ const cartSlice = createSlice({
             const itemToAdd = menuObject[state.setCategory].find(items => items.id === itemId)
 
             if(itemToAdd){
-                
-                state.cartItems.push({...itemToAdd, Amount: 1})
+
+                const existingItemIndex = state.cartItems.findIndex(items => items.id === itemId)
+                if(existingItemIndex !== -1){
+                    state.cartItems[existingItemIndex].Amount += 1;
+                }else{
+                    state.cartItems.push({...itemToAdd, Amount: 1});
+                }
+              
                 state.amount += 1;
                 state.total += itemToAdd.Price;
                 console.log( 'items added to list:', JSON.stringify(itemToAdd, null, 2))
                 console.log( JSON.parse(JSON.stringify(state.cartItems)))
             }
+
+            
            
         },
         clearCart: (state) =>{

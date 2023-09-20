@@ -46,7 +46,11 @@ const ButtonTypes = {
         )},
     
 
-    Pay_Now:()=> (<Button type_normal={true} padding="1.5rem 5rem" text="Pay now" fontSize="1.5rem" backgroundColor={Theme.colors.OrangeLite} borderRadius="1rem"/>),
+    Pay_Now:()=> (
+    <Link to="/Payment">
+                    <Button type_normal={true} padding="1.5rem 5rem" text="Pay now" fontSize="1.5rem" backgroundColor={Theme.colors.OrangeLite} borderRadius="1rem"/>
+    </Link>
+    ),
 
     Contact:()=>  (<Button type_normal={true} padding="1.375rem 4.875rem " text="Contact" fontSize="1.5rem" backgroundColor={Theme.colors.OrangeLite} borderRadius="1rem"/>),
 
@@ -58,7 +62,9 @@ const ButtonTypes = {
         <QuantityButton decrease onClick={handleDecreaseCount}> - </QuantityButton>
         <p>{count}</p>
         <QuantityButton increase onClick={handleIncreaseCount}> + </QuantityButton>
-        </>)}
+        </>)},
+
+  
         
         
     

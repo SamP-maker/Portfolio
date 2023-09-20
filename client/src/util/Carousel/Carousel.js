@@ -32,6 +32,12 @@ p2{
 p3{
   font-size:15px;
 }
+
+p4{
+  font-size:13px;
+  color:${Theme.colors.ColumnBlack}
+  font-family: 'Hammersmith One', sans-serif;
+}
 `
 
 
@@ -62,6 +68,7 @@ const CarouselSlide = Menu.Main.map((data) =>{
   
     <DescripContainer>
        <p1>{data.name}</p1>
+       <p4>{data.Description}</p4>
        <p2>{data.Price}</p2>
        <p3>{data.Rating}</p3>
       </DescripContainer>
