@@ -110,7 +110,9 @@ const Menu = ()=>{
                                <p4>{items.Description}</p4>
                                <p2>{items.Price}</p2>
                                <p3>{items.Rating}</p3>
+                        <ButtonContainer>
                                <ButtonTypes.Add_to_Cart  handleAddItems={() => handleAddItems(items.id)}/>
+                        </ButtonContainer>
                                </DescriptionWrapper>
                                
                             </ItemContainer>
@@ -138,6 +140,9 @@ flex-direction:column;
 margin-bottom:6rem;
 
 
+`
+const ButtonContainer = styled.div`
+width:100%;
 `
 
 
@@ -208,7 +213,7 @@ display:grid;
 grid-template-rows: repeat( 4, 1fr);
 grid-column-start:2;
 grid-column-end:2;
-grid-row:3 span;
+grid-row: 3 span;
 width:25rem;
 
 
@@ -235,8 +240,9 @@ p4{
 
 const ItemContainer = styled.div`
 display:grid;
-grid-template-columns: repeat( 2, 1fr);
 position:relative;
+grid-template-columns: repeat(2, 1fr);
+
 background-color: ${Theme.colors.white};
 padding:5rem 5rem;
 justify-self:center;

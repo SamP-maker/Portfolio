@@ -352,7 +352,7 @@ align-items:center;
 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 
 
-&:nth-child(1),&:nth-child(2){
+&:nth-child(1),&:nth-child(2),&:nth-child(3){
 div{
 height:40px;
 width:40px;
@@ -362,6 +362,16 @@ border-radius:50%;
 display:flex;
 justify-contents:center;
 align-items:center;
+animation: fadeIn 2s ease forwards;
+
+@keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
 
 
 

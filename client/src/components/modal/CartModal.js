@@ -48,7 +48,7 @@ const Cart = ({black}) =>{
           
         }else{
           setisHideNav(false)
-          setIsOpen(false)
+          setIsOpen(true)
           
         }
         prevScrollY.current = currentScrollY;
@@ -80,10 +80,11 @@ const Cart = ({black}) =>{
 
         
     <NavbarWrapper className={isHideNav ? 'hidden' : ''}>
-        <StyledLink to="/Menu"><Navigation>Menu</Navigation></StyledLink>
         <StyledLink to="/Dashboard"><Navigation>Dashboard</Navigation></StyledLink>
+        <StyledLink to="/Menu"><Navigation>Menu</Navigation></StyledLink>
         <StyledLink to="/Order_confirm"><Navigation>Check Out</Navigation></StyledLink>
         <StyledLink to="/Status"><Navigation>Status</Navigation></StyledLink>
+        <Navigation> Login</Navigation>
         <Navigation onClick={handleOpenModal} > Cart{black ? <FaShoppingBag style={{color: "black"}}/> : <FaShoppingBag style={{color: "white"}}/> } </Navigation>
         
     </NavbarWrapper>
@@ -92,7 +93,7 @@ const Cart = ({black}) =>{
 
 
   
-  <ModalOverlay className={isHideNav ? 'hidden' : ''}>
+  <ModalOverlay className={isOpen ? 'hidden' : ''}>
         {cartItems.length === 0? (
           // Display "This cart is empty" message
           <EmptyItemContainer>
@@ -100,10 +101,10 @@ const Cart = ({black}) =>{
           </EmptyItemContainer>
         ) : (
           // Display cart items
-          cartItems.map((items) => {
+          cartItems.map((items,index) => {
             return (
             
-              <ItemContainer key={items.id}>
+              <ItemContainer key={items.id} className={index !== cartItems.length - 1? 'with-shadow' : ''}>
                 <img src={items.Image} />
 
                 <DescriptionWrapper>
@@ -130,7 +131,9 @@ const Cart = ({black}) =>{
             );
           })
         )}
-
+<ButtonContainer>
+        <ButtonTypes.Head_to_Check_out/>
+</ButtonContainer>
 
   </ModalOverlay>
 
@@ -148,6 +151,13 @@ const Cart = ({black}) =>{
 
 }
 
+const ButtonContainer = styled.div`
+padding-top:1rem;
+padding-bottom:1rem;
+margin-left:60%;
+position:relative;
+`
+
 const ModalOverlay = styled.div`
 position:fixed;
 right:0;
@@ -155,7 +165,8 @@ top:0;
 background-color: ${Theme.colors.white};
 box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 padding-top:3.5rem;
-overflow:auto;
+max-height: calc(5 * (2.5rem + 2.5rem) + 3rem);
+overflow-y:scroll;
 z-index:99;
 
 
@@ -260,9 +271,14 @@ position:relative;
 justify-items:center;
 background-color: ${Theme.colors.white};
 padding:2rem 1rem;
-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
 font-family: 'Work Sans', sans-serif;
+
 width:500px;
+
+
+&.with-shadow{
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+}
 
 img{
         height:100px;

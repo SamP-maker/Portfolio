@@ -36,7 +36,6 @@ const init_page = () =>{
     return(
 
         <>
-    <Container>
     
         <ImageContainer>
         <Img1 topimg/>
@@ -55,9 +54,7 @@ const init_page = () =>{
            
        
 
-        
-    </Container> 
-    
+   
     <Footer/>
     </>
     )}
@@ -65,13 +62,6 @@ const init_page = () =>{
 
 
 
-const Container = styled.div`
-gridTemplateRows:repeat(auto-fit,minmax(0,1fr));
-justify-content:center;
-margin-top:10rem;
-margin-bottom:10rem;
-
-`
 
 
 
@@ -80,6 +70,7 @@ display:flex;
 position:relative;
 justify-content:center;
 align-items:center;
+margin-top:10rem;
 
 `
 
@@ -153,7 +144,7 @@ const ButtonWrapper = styled.div`
 margin-top:1rem;
 display:flex;
 justify-content:center;
-position:relative;
+margin-bottom:13.2rem;
 `
 
 

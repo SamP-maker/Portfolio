@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 const ButtonTypes = {
 
-    Confirm_Order:()=> (<Button type_normal={true} padding="1.5rem 3.875rem " text="Confirm Order" fontSize="2rem" backgroundColor={Theme.colors.OrangeLite} borderRadius="1rem"/>),
+    Confirm_Order:(handleIsCheckpoint)=> (<Button type_normal={true} padding="1.2rem 2rem " text="Confirm Order" onClick={handleIsCheckpoint} fontSize="1rem" backgroundColor={Theme.colors.OrangeLite} borderRadius="1rem"/>),
 
     Order_Now:()=> (
     
@@ -30,18 +30,18 @@ const ButtonTypes = {
         return(
     
     <>
-    <Button type_normal={true} onClick={handleAddItems} padding="2.063rem 4.813rem" text="Add to Cart" fontSize="1.5rem" backgroundColor={Theme.colors.OrangeLite} borderRadius="1rem"/>
+    <Button type_normal={true} onClick={handleAddItems} padding="1.5rem 7rem" text="Add to Cart" fontSize="1rem" backgroundColor={Theme.colors.BackgroundBlack} borderRadius="1rem"/>
     </>
         )
         },
 
-    Head_to_Check_out:()=> (<Button type_normal={true} padding="2.313rem 9.625rem " text="Head to Check Out" fontSize="1.5rem" backgroundColor={Theme.colors.OrangeLite} borderRadius="1rem"/>),
+    Head_to_Check_out:()=> (<Button type_normal={true} padding=".8rem 1.625rem " text="Head to Check Out" fontSize="1rem" backgroundColor={Theme.colors.OrangeLite} borderRadius="1rem"/>),
 
     Remove:({handleRemove})=> {
         return(
         <>
     
-    <Button type_normal={true} onClick={handleRemove} padding=".30rem 1.25rem " text="Remove" fontSize="0.75rem" backgroundColor={Theme.colors.OrangeLite} borderRadius="1rem"/>
+    <Button type_normal={true} onClick={handleRemove} padding=".4rem 1.25rem " text="Remove" fontSize="0.75rem" backgroundColor={Theme.colors.Orange} borderRadius="0.625rem"/>
     </>
         )},
     

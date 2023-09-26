@@ -224,6 +224,16 @@ border-radius:50%;
 display:flex;
 justify-contents:center;
 align-items:center;
+animation: fadeIn 2s ease forwards;
+
+@keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
 
 
 

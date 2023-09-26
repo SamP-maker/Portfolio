@@ -234,8 +234,7 @@ const CarouselContainer = styled.div`
 
 const ButtonContainer = styled.div`
 align-self: end;
-grid-row-start:2;
-grid-row-end:2;
+grid-row: 2 span;
 justify-self:end;
 
  

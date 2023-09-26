@@ -101,7 +101,8 @@ box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 
 &:hover{
     border:0.1250rem solid ${Theme.colors.whiteShadow};
-    background-color:${Theme.colors.CarrotOrange};
+    background-color:${Theme.colors.Orange};
+    color:${Theme.colors.ColumnBlack};
     opacity:1;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     transition:1.5s;

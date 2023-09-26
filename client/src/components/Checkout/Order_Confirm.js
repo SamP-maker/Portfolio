@@ -4,11 +4,9 @@ import Theme from '../../theme/theme';
 import menuObject from '../../util/Menu-Content/menuObject';
 import Footer from '../../util/Footer/Footer';
 import ButtonTypes from '../../util/Button/ButtonObject';
-
 import { useDispatch, useSelector } from 'react-redux';
 import { removeItem, increase, decrease} from '../../redux/feature/cartSlice'
 import Cart from '../modal/CartModal';
-import MenuButton from '../../util/Button/DropdownButton';
 import { Link } from 'react-router-dom';
 
 
@@ -21,6 +19,9 @@ const Menu = ()=>{
         const [selectedCategory, setSelectedCategory] = useState('Main')
         const {cartItems} = useSelector((store) => store.cart)
         const dispatch = useDispatch()
+        
+
+      
 
         const handleIncreaseAmount = (itemId) =>{
                 dispatch(increase(itemId))
@@ -35,7 +36,7 @@ const Menu = ()=>{
                 dispatch(removeItem(itemId))
         }
 
-
+      
 
 
         const menuSort = (Menu=[]) =>{
@@ -44,7 +45,6 @@ const Menu = ()=>{
                 })
                 return sort
         }
-
 
 
 
@@ -167,6 +167,11 @@ display:flex;
 justify-contents:center;
 align-items:center;
 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+
+
+
+
+
 &:nth-child(1){
 div{
 height:40px;
@@ -177,6 +182,16 @@ border-radius:50%;
 display:flex;
 justify-contents:center;
 align-items:center;
+animation: fadeIn 2s ease forwards;
+
+@keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
 
 
 
