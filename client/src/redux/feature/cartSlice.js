@@ -52,6 +52,7 @@ const cartSlice = createSlice({
         },
         removeItem: (state, action) =>{
             const itemId = action.payload;
+            state.amount = 0 ;
             state.cartItems = state.cartItems.filter((item) => item.id !== itemId);
         },
         increase: (state,action) =>{
@@ -96,7 +97,7 @@ const cartSlice = createSlice({
 
 
 
-console.log(initialState)
+
 
 
 export const { clearCart, removeItem, increase, decrease, calculateTotal,addItem,setStoreCategory} = cartSlice.actions;

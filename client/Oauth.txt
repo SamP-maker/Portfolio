@@ -11,3 +11,23 @@ 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
 1554855768687779840-XsdkZzjzj46u4SHLevRMDsQAaGgWqH
 //Client Secret
 IMIwvfqtPVdze40CdAzmLMDdQGRiugRMvsQluvXTKLG08
+
+
+
+//Meta
+//Client ID
+712294514088459
+//Client Secret
+bc37b38e7b69a4eb76d9c562d1b2dc58
+
+
+
+
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+        background-color: #f0f0f0; /* Set your background color */
+    }
+ 

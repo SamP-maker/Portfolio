@@ -1,32 +1,109 @@
 import React, { useState } from "react";
 import {styled,css} from 'styled-components';
 import Theme from "../../theme/theme";
+import { useEffect } from "react";
+
 
 const CheckoutModal = () => {
-  
+
+  const [orderTotal,setOrderTotal] = useState({
+    Total: 0,
+    Tax: 0,
+    
+
+  })
+
+
+
+  async function handleSubmit(e){
+    e.preventDefault()
+try{
+  const response = await fetch("http://localhost:5000/recordSummary",{
+    method:"POST",
+    header: "application/json",
+    credentials:"include",
+    body: JSON.stringify()
+  })
+
+
+  if(response.ok){
+    const data = response.json()
+    console.log(`Receipt:`, data)
+  }
+}catch(err){
+  console.error(`an error has occured`, err)
+}
+
+}
+
+
+
+  useEffect(()=>{
+      return async () =>{
+
+try{
+    let response = await fetch('http://localhost:5000/userOrderList',{
+      credentials: 'include', // Include credentials in the request
+    });
+
+    if(response.ok){
+    
+      const result = await response.json()
+      
+      setOrderTotal({
+        Total: result.Total.toFixed(2),
+        Tax: Math.abs(result.Total * 1.16 - result.Total).toFixed(2),
+        
+      })
+      
+    }else{
+        window.alert('Cannot get item')
+    }
+
+  }catch(err){
+    console.error('An error has occured:', err)
+  }
+
+
+
+
+
+
+
+  }
+})
+
 
   return (
-
+<form onSubmit={handleSubmit}>
     <CheckoutWrapper>
-
+<Fees>
        <OrderTotalWrapper>
-        <h2>Order Total</h2>
-        <h2>$10.00</h2>
+        <h3>Order Total: </h3>
+        <h3>${orderTotal.Total}</h3>
 
 
        </OrderTotalWrapper>
-       <TaxWrapper>
-       <h2>Tax</h2>
-       <h2>$0.70</h2>
-       </TaxWrapper>
 
+       <DeliveryFee>
+       <h3>Delivery Fee: </h3>
+       <h3>${orderTotal.Tax}</h3>
+       </DeliveryFee>
+
+
+       <TaxWrapper>
+       <h3>Tax: </h3>
+       <h3>${orderTotal.Tax}</h3>
+       </TaxWrapper>
+</Fees>
      <ButtonContainer>
-        <ButtonWrapper>Checkout  <span></span> $10.70</ButtonWrapper>
+        <ButtonWrapper>Checkout  <span></span>${(parseFloat(orderTotal.Tax) + parseFloat(orderTotal.Total)
+  ).toFixed(2)}</ButtonWrapper>
      </ButtonContainer>
      
     </CheckoutWrapper>
 
-    
+    </form>
 
 
   );
@@ -85,17 +162,49 @@ display:flex;
 padding-left:20px; padding-right:20px;
 margin-top:20px;
 justify-content:space-between;
+
+
+
+`
+
+const DeliveryFee = styled.div`
+display:flex;
+padding-left:20px; padding-right:20px;
+margin-top:20px;
+justify-content:space-evenly;
+flex-direction:row;
+gap:20px;
+
+
 `
 
 
-const CheckoutWrapper = styled.div`
 
-padding:20px 20px;
-height:10rem;
-width:25rem;
-box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-border-radius:20px;
+const Fees = styled.div`
+display:flex;
+
+justify-content:space-between;
+
+padding:2rem 2rem;
+
+flex-direction:column;
+
+
+`
+
+const CheckoutWrapper = styled.div`
+background-color: ${Theme.colors.white};
+left: 0;
+bottom: 0;
+height:200px;
+width:100%;
+z-index:1;
+display:flex;
+position:fixed;
+justify-content:space-evenly;
 font-family: 'Work Sans', sans-serif;
+align-items:center;
+box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 `
 
 

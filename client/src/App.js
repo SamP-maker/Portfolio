@@ -6,14 +6,13 @@ import Init from "./components/reg/Init";
 import Login from "./components/reg/Login";
 import Dashboard from "./components/menu/dashboard";
 import Menu from "./components/menu/menu";
-import Cart from '../src/components/modal/CartModal';
 import Order_Confirm from "./components/Checkout/Order_Confirm";
 import Address from "./components/Checkout/Address";
-import Phone from './components/modal/PhoneNumberModal';
-import BillingModal from './components/modal/BillingAddressModal';
+import CardNumber from './components/modal/BillingCardNumber';
 import Status from './components/Status/Status';
 import Payment from './components/Checkout/Payment';
-import Checkout from './components/modal/CheckoutModal';
+import BillingAddress from './components/modal/BillingAddressModal';
+import CreditCard from '../src/components/modal/CreditCard'
 
 
 
@@ -34,20 +33,20 @@ function App() {
     <Routes>
     <Route path="/" element={<Init/>}/>
     <Route path="/Signup" element={<Signup/>} />
-    <Route path="/Login" element={<Login/>} />
-    <Route path="/Dashboard" element={<Dashboard/>}/>
+    <Route path="/login" element={<Login/>} />
+ 
     <Route path="/Menu" element={<Menu/>}/>
     <Route path="/Order_confirm" element={<Order_Confirm/>}/>
     <Route path="/Address" element={<Address/>}/>
     <Route path="/Status" element={<Status/>}/>
     <Route path="/Payment" element={<Payment/>}/>
+    <Route path="/Dashboard" element={<Dashboard/>}/>
+    <Route path ="/BillingModal" element={<CardNumber/>}/>
+    <Route path ="/BillingAddress" element={<BillingAddress/>}/>
+    
+  {/*Testing*/} 
+  <Route path="/CreditCard" element={<CreditCard/>}/>
 
-
-    {/*TESTING */}
-    <Route path="/Checkout" element={<Checkout/>}/>
-    <Route path ="/PhoneNumber" element={<Phone/>}/>
-    <Route path ="/BillingModal" element={<BillingModal/>}/>
-    <Route path="/Cart" element={<Cart/>}/>
   
   </Routes>
       

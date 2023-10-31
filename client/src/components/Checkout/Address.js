@@ -7,30 +7,63 @@ import Input from '../../util/Input/Input';
 import Label from '../../util/Label/Label';
 import 'react-international-phone/style.css';
 import Cart from '../modal/CartModal';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 
 
 
 
 const Address = ()=>{
-        const [phone, setPhone] = useState('');
+        const navigate = useNavigate()
         const [form,setForm] = useState({
           firstName: '',
           lastName: '',
           Address: '',
           Postal:'',
           District:'',
+          Phone:'',
 
         })
 
+      
 
-        const handleForm = (value)=>{
+         /*FORM HANDLING */
+         const handleForm = (value)=>{
           return setForm(prev =>{
             return {...prev,...value}
 
           })
         }
+
+        async function handleSubmit(e){
+          e.preventDefault();
+
+
+              try{
+                await fetch('http://localhost:5000/userAddress',{
+                  method:"POST",
+                  headers:{
+                    "Content-Type":"application/json",
+                  },
+                  credentials: 'include',
+                body: JSON.stringify(form)
+                })
+                navigate("/Payment")
+
+              
+                
+              }catch(err){
+                console.error("Error occured,", err);
+                window.alert("Error occured. Please try again later.")
+              }
+
+            
+        }
+
+         
+
+
+
 
 
 
@@ -47,9 +80,9 @@ const Address = ()=>{
 
 
     <HeaderWrapper>
-    <RedirectWrapper>
-        <Link to="/Order_confirm"><p>Back to Order Confirmation</p></Link>
-      </RedirectWrapper>
+    
+        <StyledLink to="/Order_confirm"><RedirectWrapper><p>Back to Order Confirm</p> </RedirectWrapper></StyledLink>
+     
                  <RightWrapper>
 
   
@@ -58,20 +91,8 @@ const Address = ()=>{
 
 
 
-    <ProgressBarContainer>
-                               <ProgressBar>
-                               </ProgressBar>
-
-                           <CheckpointContainer>
-                               <Checkpoint><div><span></span></div></Checkpoint>
-                               <Checkpoint> <div><span></span></div></Checkpoint>
-                               <Checkpoint> <div><span></span></div></Checkpoint>
-                           </CheckpointContainer>                  
-
-
-    </ProgressBarContainer> 
     
-       
+    <form onSubmit={handleSubmit}>
     <CheckOutWrapper>
     <Label fontSize="1.5rem" text="First Name"/>
                 
@@ -141,7 +162,7 @@ const Address = ()=>{
                     name="Phone" 
                     placeholder="Mobile Number.."
                     value={form.Phone}
-                    onChange={(e) => handleForm({Phone: e.target.value})}
+                    setPhone={(e) => handleForm({Phone: e})}
                     />
                
 
@@ -149,12 +170,12 @@ const Address = ()=>{
 <Label fontSize="1rem" text="*Delivery is only available in the same state within 20km*"/>
 
             
-<PaynowWrapper>
-<ButtonTypes.Pay_Now/>
-</PaynowWrapper>                    
+    <PaynowWrapper>
+        <ButtonTypes.Pay_Now type="submit"/>
+    </PaynowWrapper>                    
               
      </CheckOutWrapper>
-               
+</form>             
 
 
         
@@ -165,98 +186,22 @@ const Address = ()=>{
     )
 }
 
+const StyledLink = styled(Link)`
+text-decoration:none;
+color: ${Theme.colors.ColumnBlack};
+`
+
 const RedirectWrapper = styled.div`
 font-size:1rem;
-`
+padding:1rem 1rem;
+box-shadow: 0 2px 4px ${Theme.colors.Greylite};
+border-radius: .5rem;
 
-
-
-
-const ProgressBarContainer = styled.div`
-
-display:flex;
-justify-content:center;
-align-items:center;
-height:100px;
-width:70rem;
-margin-left:auto;
-margin-right:auto;
-`
-
-const CheckpointContainer = styled.div`
-display:flex;
-position:absolute;
-width:25rem;
-height:80px;
-display:flex;
-align-items:center;
-gap:8rem;
-`
-
-
-
-
-
-
-const ProgressBar = styled.div`
-width:100%;
-height:10px;
-background-color:${Theme.colors.Greylite};
-border-radius:10px;
-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-`
-const Checkpoint = styled.label`
-height:50px;
-width:50px;
-background-color:${Theme.colors.Greylite};
-border-radius:50%;
-display:flex;
-justify-contents:center;
-align-items:center;
-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-&:nth-child(1),&:nth-child(2){
-div{
-height:40px;
-width:40px;
-margin:auto auto;
-background-color: ${Theme.colors.Teal};
-border-radius:50%;
-display:flex;
-justify-contents:center;
-align-items:center;
-animation: fadeIn 2s ease forwards;
-
-@keyframes fadeIn {
-        from {
-          opacity: 0;
-        }
-        to {
-          opacity: 1;
-        }
-      }
-
-
-
-span{
-  
-  margin:auto auto;
-  width: 5px;
-  height: 15px;
-  border: solid white;
-  border-width: 0 3px 3px 0;
-  -webkit-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  transform: rotate(45deg);
+&:hover{
+  cusor:pointer;
 }
-
-}
-
-}
-
-
-
-
 `
+
 
 const CheckOutWrapper = styled.div`
 padding-bottom:10rem;
@@ -387,12 +332,7 @@ div:nth-child(12){
 
 
 
-const ButtonWrapper = styled.div`
-position:relative;
-display:flex;
-justify-content:center;
-flex-direction:column;
-`
+
 
 const PaynowWrapper = styled.div`
 display:flex;
@@ -417,13 +357,6 @@ width:60vw;
 margin-left:auto;
 margin-right:auto;
 
-
-
-img{
-    height:50px;
-    width:50px;
-    
-}
 `
 
 const RightWrapper = styled.div`
@@ -439,7 +372,7 @@ gap:1rem;
 
 const PageWrapper = styled.div`
 background-color: ${Theme.colors.ColumnBlack};
-padding-top:20rem;
+padding-top:10rem;
 display:flex;
 flex-direction:column;
 gap:5rem;

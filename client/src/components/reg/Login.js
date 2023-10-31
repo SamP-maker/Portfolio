@@ -1,6 +1,5 @@
-
 import React, {useState, useEffect} from "react";
-import {useParams, useNavigate} from "react-router";
+import { useNavigate} from "react-router";
 import styled,{css} from "styled-components";
 import Input from "../../util/Input/Input";
 import Button from "../../util/Button/Button";
@@ -11,47 +10,26 @@ import GoogleAuth from "../../auth/googleAuth";
 import Footer from "../../util/Footer/Footer";
 import { FaUserAlt } from "react-icons/fa";
 import { FaLock } from "react-icons/fa";
-import {FaEnvelope} from "react-icons/fa";
-
+import FacebookButton from "../../auth/metaAuth";
+import {useDispatch, useSelector} from 'react-redux';
+import { setUserDetails } from "../../redux/feature/registrationSlice";
+import { reduceBorderWidth,leftdividerAnimation,rightdividerAnimation,reduceBeforeAfterWidth} from "../../theme/animations/animations";
 
 const Login = () =>{
-
-    const [documents,setDocuments] = useState([]);
+    
+   
+    const dispatch = useDispatch()
+    const {Username} = useSelector((store) => store.user)
     const [newDocument,setNewDocuments] = useState({
-        name: "",
-        email:"",
+        identifier: "",
         password:"",
     })
 
-    const params = useParams();
+
     const navigate = useNavigate();
 
-
-
-    useEffect(()=>{
-
-        async function getDocuments(){
-            const response = await fetch(`http://localhost:5050/record/`);
-
-
-            if(!response.ok){
-                const message = `An error occured ${response.statusText}`;
-                window.alert(message);
-                return;
-            }
-
-
-            const documents = await response.json()
-            setDocuments(documents);
-
-        }
-
-        getDocuments();
-        return
-    }, [documents.length]);
-
-    //Form Handling//
-    const handleform = (value) =>{
+     //Form Handling//
+     const handleform = (value) =>{
         return setNewDocuments((prev) =>{
             return {...prev,...value}
         })
@@ -59,42 +37,38 @@ const Login = () =>{
 
 
 
-    const user = documents.find((user) => user.email === newDocument.email);
-
-
 
     async function handleSubmit(e){
         e.preventDefault()
+        try{
+        const response =  await fetch('http://localhost:5000/login',{
+          method:'POST',
+          headers:{
+            "Content-Type": 'application/json',
+          },
+          credentials: 'include',
+          body: JSON.stringify({ Identifier: newDocument.identifier, Password: newDocument.password}),
+          });
 
-    try{
-        await fetch(`http://localhost:5050/api`,{
-            method:"POST",
-            headers:{
-            "Content-Type": "application/json",
-            },
-        body: JSON.stringify(newDocument)
-        })
+          
 
-
-        if (user) {
-            // User with the provided email exists in the 'documents' array
-            if (user.password === newDocument.password) {
-              // Password matches, login successful
-              navigate("/");
-            } else {
-              // Password does not match, show error message
-              window.alert('Wrong Password Credentials');
-            }
-          } else {
-            // User with the provided email does not exist, show error message
-            window.alert('Wrong Email Credentials');
+          if(response.ok){
+            const data = await response.json();
+           
+            dispatch(setUserDetails(data.username));
+            navigate("/Dashboard")
+          }else{
+            window.alert('Login Failed');
           }
 
-        
-    }catch(error){
-        console.error("Error occurred:", error);
-        window.alert("Error occurred. Please try again later.");
-    }
+       
+      }catch(err){  
+   
+        window.alert(err)
+        return;
+      };
+
+       
 
         
     }
@@ -103,10 +77,9 @@ const Login = () =>{
 
     
     return(
-
-        <>
-             
-            <form onSubmit={handleSubmit}>
+<>
+        <FormContainer>
+            
                 <FormWrapper>
                
                 <Label fontSize="1.5rem" text="Login"/>
@@ -114,14 +87,14 @@ const Login = () =>{
                 <InputWrapper>
 
                 <IconWrapper>
-                        <FaUserAlt style={{ color: "white"}}/>
+                        <FaUserAlt style={{ color: "black"}}/>
                 </IconWrapper>
                         <Input
-                           black={"true"}
+                           register={"true"}
                             type="text" 
-                            name="name" 
-                            placeholder="Username"
-                            onChange={(e) => handleform({name : e.target.value})}
+                            name="identifier" 
+                            placeholder="Username or Password"
+                            onChange={(e) => handleform({identifier : e.target.value})}
                             
                             
                             
@@ -132,10 +105,10 @@ const Login = () =>{
 
                 <InputWrapper>
                 <IconWrapper>
-                        <FaLock style={{ color: "white"}}/>
+                        <FaLock style={{ color: "black"}}/>
                 </IconWrapper>
                         <Input 
-                            black={"true"}
+                            register={"true"}
                             type="password" 
                             name="password" 
                             placeholder="Password"
@@ -144,25 +117,8 @@ const Login = () =>{
                             />
                 </InputWrapper>
 
-
-
-                <InputWrapper>
-                <IconWrapper>
-                        <FaEnvelope style={{ color: "white"}}/>
-                </IconWrapper>
-                        <Input
-                            black={"true"} 
-                            type="email" 
-                            name="email" 
-                            placeholder="Email"
-                            onChange={(e) => handleform({email : e.target.value})} 
-                            
-                            />
-                </InputWrapper>
-
-
                 <ButtonWrapper>
-                        <Button type="submit" text="Login" register="true" ></Button>
+                        <Button type="submit" text="Login" Signup="true" ></Button>
                 </ButtonWrapper>
 
 
@@ -176,38 +132,159 @@ const Login = () =>{
 
 
                 </FormWrapper>
-             </form>
+            </FormContainer>
              
              <ContentWrapper>
-             <Divider/>
-             <p6>SIGN UP WITH</p6>
-             <Divider/>
+             <Divider left/>
+        <ContainerWrapper>
+        
+          <Container left/>
+          <p1>SIGN UP WITH</p1>
+          <Container right/>
+          </ContainerWrapper>
+          
+             <Divider right/>
            
             </ContentWrapper>
             <ImageWrapper>
               <GoogleAuth/>
+              <FacebookButton/>
             </ImageWrapper>
 
            
             <Footer/>
-        </>
-             
+      
+</>             
         )
     }
 
+    
+const Container = styled.div`
 
 
 
-export default Login
+
+  
+${(props)=> props.left && css`
+font-family: 'Work Sans', sans-serif;
+  color:${Theme.colors.Teal};
+  width:4rem;
+  padding-top:2rem;padding-bottom:2rem;
+  border-left:.5rem solid ${Theme.colors.DarkTeal};
+  border-bottom:.5rem solid ${Theme.colors.DarkTeal};
+  position: absolute; /* Add relative positioning to create a positioning context */
+  top:0rem;
+  left:-.1rem;
+  animation: ${reduceBorderWidth} 3s forwards;
+
+
+  
+
+  &::before{
+    content:'';
+    color:${Theme.colors.Teal};
+    width:7rem;
+    padding-top:2rem;padding-bottom:2rem;
+    border-top:.5rem solid ${Theme.colors.DarkTeal};
+    position: absolute; /* Add relative positioning to create a positioning context */
+    top:-0.1rem;
+    left:-.5rem;
+    animation:${reduceBeforeAfterWidth} 3s forwards;
+    
+
+    
+    
+  }
+
+  
+
+  
+  
+
+  
+
+
+
+`}
+
+
+
+
+${(props)=> props.right && css`
+font-family: 'Work Sans', sans-serif;
+  color:${Theme.colors.Teal};
+  width:4rem;
+  top:-.1rem;
+  right:-0.15rem;
+  padding-top:2rem;padding-bottom:2rem;
+  border-right:.5rem solid ${Theme.colors.ColumnBlack};
+  border-top:.5rem solid ${Theme.colors.ColumnBlack};
+  position: absolute; /* Add relative positioning to create a positioning context */
+  animation: ${reduceBorderWidth} 2s forwards;
+ 
+
+  &::before{
+    content:'';
+    color:${Theme.colors.Teal};
+    width:7rem;
+    padding-top:2rem;padding-bottom:2rem;
+    border-bottom:.5rem solid ${Theme.colors.ColumnBlack};
+    position: absolute; /* Add relative positioning to create a positioning context */
+    bottom:-.1rem;
+    right:-.5rem;
+    animation: ${reduceBeforeAfterWidth} 2s forwards;
+    
+  }
+
+`}
+
+
+`
+
+
+
+
+
+    const ContainerWrapper = styled.div`
+    position: relative; /* Add relative positioning to create a positioning context */
+    padding-top:2rem;padding-bottom:2rem;
+     z-index:;
+      width:10rem;
+      border:.15rem solid white;
+      padding-left:3rem;
+      display:flex;
+      align-items:center;
+      
+    
+    
+    
+      p1{
+       
+        padding-left:-20px;
+        position:absolute;
+        font-family: 'Work Sans', sans-serif;
+      }
+    `
+
+
+
+const FormContainer = styled.div`
+display:flex;
+justify-content:center;
+
+`
 
 const FormWrapper = styled.div`
-margin-top:3rem;
+margin-top:5rem;
 display:grid;
 gap:0.6rem;
 gridTemplateRows: repeat(auto-fit,minmax(0,1fr));
 justify-content:center;
-
-
+padding:2rem 1.3rem;
+height:600px;
+width:500px;
+box-shadow:rgba(0, 0, 0, 0.24) 0px 3px 8px;
+background-color:${Theme.colors.white};
 &>:first-child{
     margin-left:1.3rem;
 }
@@ -217,6 +294,14 @@ justify-content:center;
 
 const InputWrapper = styled.div`
 grid-column: 1;
+
+&:nth-child(3){
+  grid-row:2;
+}
+
+&:nth-child(4){
+  grid-row:3;
+}
 
 `
 
@@ -259,33 +344,57 @@ display:flex;
 gap:5rem;
 justify-content:space-evenly;
 
+align-items:center;
 
 
-p6{
-    font-family: 'Work Sans', sans-serif;
-    color:${Theme.colors.ColumnBlack};
-    display:block;
-    width:10rem;
-    padding-left: 2rem;
-}
 
 `
 
 const Divider = styled.div`
-border-radius:1rem;
+
+
+
+    
+
+
+${(props)=> props.left && css`
+border-radius:.1rem;
 width:40rem;
-background-color:${Theme.colors.Orange};
+background-color:${Theme.colors.ColumnBlack};
 height:.5rem;
-box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 3px;
+
+animation: ${leftdividerAnimation} 3s forwards;
+
+
+
+`}
+
+
+${(props)=> props.right && css`
+border-radius:.1rem;
+width:40rem;
+background-color:${Theme.colors.ColumnBlack};
+height:.5rem;
+
+animation: ${rightdividerAnimation} 3s forwards;
+
+
+`}
 
 `
 
+
 const ImageWrapper = styled.div`
 display:flex;
-justify-content:center;
-gap:5rem;
+
+gap:1rem;
 margin-top:5rem;
 margin-bottom:5rem;
+flex-direction:column;
+
+align-items:center;
+justify-content:space-evenly;
+
 
 `
 
@@ -295,3 +404,10 @@ const IconWrapper = styled.div`
   position:absolute;
   
 `;
+
+
+
+
+
+
+export default Login

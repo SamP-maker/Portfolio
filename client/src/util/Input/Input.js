@@ -1,12 +1,15 @@
 import React, {useState} from 'react';
-import styled,{css} from 'styled-components';
+import styled,{css, keyframes} from 'styled-components';
 import Theme from '../../theme/theme';
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/bootstrap.css";
 import { FaSearch } from 'react-icons/fa';
+import Menu from '../Menu-Content/menuObject';
+import { inputAnimation } from "../../theme/animations/animations";
 
-const Input = ({type,name, placeholder, onChange, value, searchBar,white,black}) =>{
-    const [phone, setPhone] = useState("");
+const Input = ({type,name, placeholder, onChange, value, searchBar,white,register,phone,setPhone}) =>{
+
+
 
 
 
@@ -48,10 +51,10 @@ const Input = ({type,name, placeholder, onChange, value, searchBar,white,black})
                                                             return (
                                                                <InputContainer>
                                                                <IconWrapper>
-                                                                   <FaSearch style={{color:"white"}}/>
+                                                                   <FaSearch style={{color:"black"}}/>
                                                                 </IconWrapper>
                                                               <InputWrapper
-                                                              black={black}
+                                                              register={register}
                                                               white={white}
                                                               type={type} 
                                                               name={name}
@@ -75,7 +78,7 @@ const Input = ({type,name, placeholder, onChange, value, searchBar,white,black})
                                                         return(
                                                             <InputWrapper 
 
-                                                                black={black}
+                                                            register={register}
                                                                 white={white}
                                                                 type={type} 
                                                                 name={name}
@@ -87,6 +90,8 @@ const Input = ({type,name, placeholder, onChange, value, searchBar,white,black})
                                                     };
 
 }
+
+
 
 
 const InputContainer = styled.div`
@@ -101,9 +106,6 @@ const IconWrapper = styled.div`
 
 
 const CheckboxWrapper = styled.label`
-
-
-
 display:flex;
 position: relative;
 justify-content:start;
@@ -188,35 +190,37 @@ const InputWrapper = styled.input`
 
 
 
-${(props)=>props.black && css`
+${(props)=>props.register && css`
 padding-top:  1.6rem;
 padding-bottom: 1.6rem;
 padding-right: 15rem;
 padding-left: 3rem;
 margin:1rem;
-border-radius: 1rem;
 text-decoration:none;
 font-family: ${Theme.font};
 font-size: 0.875rem;
-background-color:${Theme.colors.BackgroundBlack};
-border:0.15rem solid ${Theme.colors.whiteShadow};
+border:none;
+background-color: transparent;
 box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-color: ${Theme.colors.white};
-
-
+border-radius:.7rem;
+color: ${Theme.colors.ColumnBlack};
 
 &::placeholder{
-    color: ${Theme.colors.white};
+    color: ${Theme.colors.ColumnBlack};
     font-size:1rem;
     opacity:0.8;
     font-family: 'Work Sans', sans-serif;
+
 }
 
 &:focus{
-    border: 0.15rem solid ${Theme.colors.Orange};
+
     transition:2s;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     outline:none;
+    animation: ${inputAnimation} .6s  forwards;
+
+
 
 
     &::placeholder{
@@ -235,7 +239,7 @@ padding-top:  1rem;
 padding-bottom: 1rem;
 padding-left: 3rem;
 margin:1rem;
-border-radius: 1rem;
+
 text-decoration:none;
 font-family: 'Work Sans', sans-serif;
 font-size: 0.875rem;
@@ -280,19 +284,26 @@ ${(props) => props.searchBar && css`
 
 padding-top:  1.5rem;
 padding-bottom: 1.5rem;
-padding-right:45vw;
+padding-left: 3rem;
+width:45rem;
+padding-right:3rem;
 margin:1rem;
 border-radius: 1rem;
 text-decoration:none;
 font-family: 'Work Sans', sans-serif;
-font-size: 0.875rem;
-background-color:${Theme.colors.BackgroundBlack};
-border:0.15rem solid ${Theme.colors.BackgroundBlack};
+font-size: 1rem;
+background-color:${Theme.colors.white};
+border:0.15rem solid ${Theme.colors.ColumnBlack};
 box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 
 
+
+
+
+
+
 &::placeholder{
-    color: ${Theme.colors.white};
+    color: ${Theme.colors.ColumnBlack};
     font-size:1rem;
     opacity:0.8;
     font-family: 'Work Sans', sans-serif;
@@ -300,13 +311,17 @@ box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 
 &:focus{
     border: 0.15rem solid ${Theme.colors.white};
-    transition:2s;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    transition:0.2s;
     outline:none;
 
 
-
-
+    &::placeholder{
+        color:transparent;
+    }
+    
+   
+}
 
 `}
 `
@@ -323,7 +338,6 @@ input[type="tel"]{
 padding-top:  1rem;
 padding-bottom: 1rem;
 font-size: 0.875rem;
-border-radius: 1rem;
 text-decoration:none;
 background-color:${Theme.colors.white};
 border:0.15rem solid ${Theme.colors.columnBlack};

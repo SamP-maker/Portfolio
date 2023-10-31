@@ -1,45 +1,46 @@
 import {createSlice} from '@reduxjs/toolkit';
 
 
-const initiateState ={
-    isSigningUp: false,
-    signupSuccess: false,
-    signupError: null,
-};
+const initialState = {
+    isLoggedin: false,
+    Username: '',
+}
 
-const signupSlice = createSlice({
-    name: 'signup',
-    initiateState,
-    reducers: {
-        signupState: (state)=>{
-            state.isSigningUp = true;
-            state.signupSuccess = false;
-            state.signupError = null;
+const userSlice = createSlice({
+    name:'user',
+    initialState,
+    reducers:{
+        setUserDetails:(state,action)=>{
+            state.isLoggedin= true;
+            state.Username= action.payload;
+            console.log(state.Username)
         },
-        signupSuccess: (state)=>{
-            state.isSigningUp = false;
-            state.signupSuccess = true;
-            state.signupError = null;
-        },
-        signupFailure: (state,action) =>{
-            state.isSigningUp = false;
-            state.signupSuccess = false;
-            state.signupError = action.payload;
-        },
-        resetSignup: (state) =>{
-            state.isSigningUp = false;
-            state.signupSuccess = false;
-            state.signupError = null;
-        },
+        clearUserDetails: (state)=>{
+            state.isLoggedin = false;
+            state.Username = ''
+            console.log(state.Username)
+        }
+    },
+});
 
+export const fetchUserDetails =  (url) => async (dispatch) =>{
 
+    const response = await fetch(url);
+try{
+    if(!response.ok){
+        throw new Error(`an error occured: ${response.statusText}`);
+    }else{
 
+        const result = await response.json();
+        dispatch(setUserDetails({username: result.username}));
+        console.log("Logged In")
 
-},
+        
+    }
+}catch(err){
+    console.log(err);
+}
+}
 
-
-})
-
-
-export const {signupState, signupSuccess, signupFailure, resetSignup} = signupSlice.actions;
-export default signupSlice.reducer;
+export const { setUserDetails,clearUserDetails } = userSlice.actions;
+export default userSlice.reducer;

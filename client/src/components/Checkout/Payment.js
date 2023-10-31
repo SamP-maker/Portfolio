@@ -4,27 +4,62 @@ import Theme from '../../theme/theme';
 import Footer from '../../util/Footer/Footer';
 import 'react-international-phone/style.css';
 import Cart from '../modal/CartModal';
-import MenuButton from '../../util/Button/DropdownButton';
 import VisaCard from '../../theme/Icons/Visa.png';
 import MasterCard from '../../theme/Icons/Mastercard.png';
 import Wallet from '../../theme/Icons/wallet.png';
-import BillingModal from '../modal/BillingAddressModal';
 import { Link } from 'react-router-dom';
+import CheckoutModal from '../modal/CheckoutModal';
+import { Logo } from '../../theme/theme';
+
+
 
 
 
 const Payment = ()=>{
 
+  const [itemDocuments,setItemDocuments] = useState([])
+  const [AddressDocuments,setAddressDocuments] = useState([])
+  const [BillingAddress, setBillingAddress] = useState([])
+  const [cardNumber, setcardNumber] = useState([])
+  
+
+  function fetchData(url,setStateFunction){
+    return async ()=>{
+
+    try{
+      const response = await fetch(`${url}`,{
+        credentials: 'include', // Include credentials in the request
+      });
+      if(!response.ok){
+        throw new Error(`an Error occured ${response.statusText}`);
     
+      }
+      
+      const items = await response.json();
+      setStateFunction(items);
+      const itemArray = [items]
 
-       
+   
+    }catch(error){
+      window.alert(error.message);
+    }
+      
+  };
 
+  }
 
-
-
+/*
+  useEffect(()=>fetchData(`http://localhost:5000/userOrderList`,setItemDocuments),[itemDocuments.length])
+  useEffect(()=>fetchData(`http://localhost:5000/userAddress`,setAddressDocuments),[AddressDocuments.length])
+  useEffect(()=>fetchData(`http://localhost:5000/userBillingAddress`,setBillingAddress),[BillingAddress.length])
+  useEffect(()=>fetchData(`http://localhost:5000/userBilling`,setcardNumber),[cardNumber.length])
+*/
 
     return(
+      
        <PageWrapper>
+
+<Logo/>
         <Cart/>
 
 
@@ -32,25 +67,12 @@ const Payment = ()=>{
 
 
 <HeaderWrapper>
-      <RedirectWrapper>
-        <Link to="/Address"><p>Back to Address</p></Link>
-      </RedirectWrapper>
+      
+      <StyledLink to="/Order_confirm"><RedirectWrapper><p>Back to Order</p> </RedirectWrapper></StyledLink>
+     
     </HeaderWrapper>
 
 
-
-    <ProgressBarContainer>
-                               <ProgressBar>
-                               </ProgressBar>
-
-                           <CheckpointContainer>
-                               <Checkpoint><div><span></span></div></Checkpoint>
-                               <Checkpoint> <div><span></span></div></Checkpoint>
-                               <Checkpoint> <div><span></span></div></Checkpoint>
-                           </CheckpointContainer>                  
-
-
-    </ProgressBarContainer> 
     <PaymentInfoWrapper>
         <div><h1>Choose a payment method</h1></div>
     <PaymentMethodWrapper>
@@ -62,82 +84,131 @@ const Payment = ()=>{
     <img src={MasterCard}/>
 
     </Link>
-    <Link to="/BillingModal">
+   
     <img src={Wallet}/>
 
-    </Link>
+
         
 
     </PaymentMethodWrapper>
    
 {/*First card */}
-<Section_Order_Confirmation>
-<EditButton>Edit</EditButton>
-            <OrderContentContainer>
-              
-                              <ItemContainer>
-                                <p>Aglio Olio Pasta</p>
-                                <p>Aglio Olio Pasta</p>
-                              </ItemContainer>
+            <Section_Order_Confirmation>
 
-                              <DetailsContainer>
-                               <p>Remarks:<span> None</span></p>
-                                <p>Remarks:<span> None</span></p>
-                              </DetailsContainer>
+           
+            <StyledLink to="/Order_confirm"> <EditButton>Edit</EditButton></StyledLink>
 
-                              <QuantityContainer>
-                              <p>1</p>
-                              <p>1</p>
-                              </QuantityContainer>
-            </OrderContentContainer>
-</Section_Order_Confirmation>
+{itemDocuments.length === 0 ?    ( 
+                                     <OrderContentContainer>
+                                                      {itemDocuments.map(items =>{
+                                                        return(
+                                                                <>
+                                                                  <ItemContainer>
+                                                                      {<p>{items.name}</p>}
+                                                                  </ItemContainer>
+
+                                                                  <DetailsContainer>
+                                                                        <p>Remarks:<span> None</span></p>
+                                                                  </DetailsContainer>
+
+                                                                  <QuantityContainer>
+                                                                      <p>{items.amount}</p>
+                                                                  </QuantityContainer>
+                                                                </>
+                                                              )
+                                                      })}
+                                     </OrderContentContainer>):( 
+
+                                      <OrderContentContainer>
+                                                          <ItemContainer>
+                                                                        <p>Aglio Olio Pasta</p>
+                                                                        <p>Aglio Olio Pasta</p>
+                                                                        <p>Aglio Olio Pasta</p>
+                                                          </ItemContainer>
+                                                          <DetailsContainer>
+                                                                        <p>Remarks:<span> None</span></p>
+                                                                        <p>Remarks:<span> None</span></p>
+                                                                        <p>Remarks:<span> None</span></p>
+                                                          </DetailsContainer>
+                                                          <QuantityContainer>
+                                                                        <p>1</p>
+                                                                        <p>1</p>
+                                                                        <p>1</p>
+                                                          </QuantityContainer>
+                                      </OrderContentContainer> )
+                                       
+
+                           }
+           
+            </Section_Order_Confirmation>
 
 
 {/*Second card */}
-<Section_Delivery_Address>
-<EditButton>Edit</EditButton>
-            <OrderContentContainer>
-              
-                              <ItemContainer>
-                                <p>Aglio Olio Pasta</p>
-                                <p>Aglio Olio Pasta</p>
-                              </ItemContainer>
-
-                              <DetailsContainer>
-                               <p>Remarks:<span> None</span></p>
-                                <p>Remarks:<span> None</span></p>
-                              </DetailsContainer>
-
-                              <QuantityContainer>
-                              <p>1</p>
-                              <p>1</p>
-                              </QuantityContainer>
-            </OrderContentContainer>
-</Section_Delivery_Address>
+              <Section_Delivery_Address>
+              <StyledLink to="/BillingModal"> <EditButton>Edit</EditButton></StyledLink>
+                                    {AddressDocuments.length === 0 ? (
+                                    <AddressContainer>
+                                            <Address_Item_Container>
+                                                                  <p>Surname: Lee</p>
+                                                                  <p>Name: Sam Perry Chin Howe</p>
+                                                                  <p>Address: Five Stones Condominium, Block E, Level 5, Unit 02, 47300, Petaling Jaya</p>
+                                                                  <p>Phone: +60 102367603</p>
+                                            </Address_Item_Container>
+                                    </AddressContainer>  )
+                                    :
+                                ( <AddressContainer>
+                                            <Address_Item_Container>
+                                                        {AddressDocuments.map(items => {
+                                                                   return(
+                                                                      <>
+                                                                      <p>Surname: {items.LastName}</p>
+                                                                      <p>Name: {items.FirstName}</p>
+                                                                      <p>Address: {items.Address}</p>
+                                                                      <p>Phone: {items.Postal},{items.District}</p>
+                                                                      <p>{items.Phone ? items.Phone : "No Phone Number Found"}</p>
+                                                                      </>
+                                                                    )})}           
+                                            </Address_Item_Container>
+                          </AddressContainer>
+                          )}
+            
+              </Section_Delivery_Address>
 
 
 
 
 {/*Third card */}
 <Section_Payment_Billing>
-<EditButton>Edit</EditButton>
-            <OrderContentContainer>
-              
-                              <ItemContainer>
-                                <p>Aglio Olio Pasta</p>
-                                <p>Aglio Olio Pasta</p>
-                              </ItemContainer>
+              <StyledLink to="/BillingAddress"> <EditButton>Edit</EditButton></StyledLink>
+                                   <BillingContainer>
+                                    {BillingAddress.length === 0 ? 
+                              ( <Billing_Item_Container>
+                                <p>Card: **** **** **** 1234</p>
+                                <p>Name: Sam Perry Lee Chin Howe</p>
+                                <p>Address: Five Stones Condominium, Block E, Level 5, Unit 02, 47300, Petaling Jaya</p>
+                              </Billing_Item_Container>) :
+                              
 
-                              <DetailsContainer>
-                               <p>Remarks:<span> None</span></p>
-                                <p>Remarks:<span> None</span></p>
-                              </DetailsContainer>
+                              (<Billing_Item_Container>
+                              {cardNumber.map((items,index)=>{
+                                return(
+                                  <>
+                                <p>Card: {items.cardNumber}</p>
+                                <p>Name:{items.Firstname}, {items.LastName}</p>
+                          
+                                  
+                                  </>
+                                )
 
-                              <QuantityContainer>
-                              <p>1</p>
-                              <p>1</p>
-                              </QuantityContainer>
-            </OrderContentContainer>
+
+                              })}
+                              </Billing_Item_Container>
+                              
+                              )}
+                              
+                             
+
+                                </BillingContainer>
 </Section_Payment_Billing>
 
 
@@ -147,30 +218,68 @@ const Payment = ()=>{
 {/*Fourth card */}
 
     </PaymentInfoWrapper>
+ 
+<CheckoutModal/>
 
-    
    
         
-        <Footer/>
+  
         </PageWrapper>
 
         
     )
 }
 
+
+const StyledLink = styled(Link)`
+text-decoration:none;
+color: ${Theme.colors.ColumnBlack};
+`
+
 const RedirectWrapper = styled.div`
 font-size:1rem;
+padding:1rem 1rem;
+box-shadow: 0 2px 4px ${Theme.colors.Greylite};
+border-radius: .5rem;
+
+&:hover{
+  cusor:pointer;
+}
+`
+
+
+
+const Billing_Item_Container = styled.div`
+grid-column-start:1;
+grid-column-end:3;
+font-size:0.825rem;
+display:flex;
+flex-direction:column;
+gap:10px;
+height:200px;
+position:relative;
+font-size:1rem;
+
+
+`
+
+
+
+const BillingContainer = styled.div`
+margin-top:3%;
+display:grid;
+grid-template-columns: repeat(3,1fr);
+grid-template-rows: repeat(auto,1fr);
 `
 
 
 
 const Section_Payment_Billing = styled.div`
 grid-row:5;
-grid-column-start:1;
-grid-column-end:2;
 margin-top:5%;
 height:20rem;
-padding:20px 20px;
+padding-top:20px;
+padding-left:5rem;
 grid-column-start:1;
 grid-column-end:3;
 background-color: ${Theme.colors.white};
@@ -182,14 +291,36 @@ font-family: 'Work Sans', sans-serif;
 
 `
 
+
+const Address_Item_Container = styled.div`
+grid-column-start:1;
+grid-column-end:3;
+font-size:0.825rem;
+display:flex;
+flex-direction:column;
+gap:10px;
+height:200px;
+position:relative;
+font-size:1rem;
+
+
+`
+
+
+
+const AddressContainer = styled.div`
+margin-top:3%;
+display:grid;
+grid-template-columns: repeat(3,1fr);
+grid-template-rows: repeat(auto,1fr);
+`
 
 const Section_Delivery_Address = styled.div`
 grid-row:4;
-grid-column-start:1;
-grid-column-end:2;
 margin-top:5%;
 height:20rem;
-padding:20px 20px;
+padding-top:20px;
+padding-left:5rem;
 grid-column-start:1;
 grid-column-end:3;
 background-color: ${Theme.colors.white};
@@ -198,8 +329,8 @@ box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 font-family: 'Work Sans', sans-serif;
 
 
-`
 
+`
 
 
 const EditButton = styled.p`
@@ -217,17 +348,27 @@ color:${Theme.colors.Teal};
 const ItemContainer = styled.div`
 grid-column:1;
 font-size:0.825rem;
-
+display:flex;
+flex-direction:column;
+gap:1rem;
+font-size:1rem;
 
 `
 const DetailsContainer = styled.div`
 grid-column:2;
 font-size:0.825rem;
-
+display:flex;
+flex-direction:column;
+gap:1rem;
+font-size:1rem;
 `
 const QuantityContainer = styled.div`
 grid-column:3;
 font-size:0.825rem;
+display:flex;
+flex-direction:column;
+gap:1rem;
+font-size:1rem;
 `
 
 const OrderContentContainer = styled.div`
@@ -241,11 +382,10 @@ justify-items:center;
 
 const Section_Order_Confirmation = styled.div`
 grid-row:3;
-grid-column-start:1;
-grid-column-end:2;
 margin-top:5%;
 height:20rem;
-padding:20px 20px;
+padding-top:20px;
+padding-left:5rem;
 grid-column-start:1;
 grid-column-end:3;
 background-color: ${Theme.colors.white};
@@ -293,7 +433,7 @@ display: flex;
 const PaymentInfoWrapper = styled.div`
 padding-bottom:10rem;
 background-color: ${Theme.colors.white};
-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+
 width:60vw;
 margin-left:auto;
 margin-right:auto;
@@ -302,108 +442,11 @@ grid-template-columns: repeat(2,1fr);
 grid-template-rows: repeat(2,1fr);
 padding:5rem 5rem;
 font-family: 'Work Sans', sans-serif;
+margin-bottom:30rem;
 
 `
 
 
-const ProgressBarContainer = styled.div`
-
-display:flex;
-justify-content:center;
-align-items:center;
-height:100px;
-width:70rem;
-margin-left:auto;
-margin-right:auto;
-`
-
-const CheckpointContainer = styled.div`
-display:flex;
-position:absolute;
-width:25rem;
-height:80px;
-display:flex;
-align-items:center;
-gap:8rem;
-`
-
-
-
-
-
-
-const ProgressBar = styled.div`
-width:100%;
-height:10px;
-background-color:${Theme.colors.Greylite};
-border-radius:10px;
-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-
-
-`
-const Checkpoint = styled.label`
-height:50px;
-width:50px;
-background-color: ${Theme.colors.Greylite};
-border-radius:50%;
-display:flex;
-justify-contents:center;
-align-items:center;
-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-
-
-&:nth-child(1),&:nth-child(2),&:nth-child(3){
-div{
-height:40px;
-width:40px;
-margin:auto auto;
-background-color: ${Theme.colors.Teal};
-border-radius:50%;
-display:flex;
-justify-contents:center;
-align-items:center;
-animation: fadeIn 2s ease forwards;
-
-@keyframes fadeIn {
-        from {
-          opacity: 0;
-        }
-        to {
-          opacity: 1;
-        }
-      }
-
-
-
-span{
-  
-  margin:auto auto;
-  width: 5px;
-  height: 15px;
-  border: solid white;
-  border-width: 0 3px 3px 0;
-  -webkit-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  transform: rotate(45deg);
-}
-
-}
-
-}
-
-
-
-
-`
-
-
-
-const ButtonWrapper = styled.div`
-position:relative;
-display:flex;
-justify-content:center;
-flex-direction:column;
-`
 
 
 
@@ -437,7 +480,7 @@ gap:1rem;
 
 const PageWrapper = styled.div`
 background-color: ${Theme.colors.ColumnBlack};
-padding-top:20rem;
+padding-top:2rem;
 display:flex;
 flex-direction:column;
 gap:5rem;

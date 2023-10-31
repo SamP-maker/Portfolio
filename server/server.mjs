@@ -1,18 +1,45 @@
 import express from "express";
 import cors from "cors";
-import "./loadEnvironment.mjs"
-import routes from "./routes/userRoute.mjs"
-import googleAuthRoute from './routes/googleAuthRoute.mjs'
+import "./loadEnvironment.mjs";
+import route from "./routes/userRoute.mjs";
+import googleAuthRoute from './routes/googleAuthRoute.mjs';
+import userAddress from './routes/userAddress.mjs';
+import userBilling from './routes/userBilling.mjs';
+import userBillingAddress from './routes/userBillingAddres.mjs';
+import userOrderList from './routes/userOrderList.mjs';
+import recordSummary from './routes/recordSummary.mjs'; 
+import User_session from './session/session.mjs';
+import session from 'express-session';
 
-
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 const app = express();
 
-app.use(cors());
+
+app.use(session({
+    secret: 'my-secret-key',
+    resave:false,
+    saveUninitialized:true,
+    cookie: {
+        secure: false,
+    maxAge: 2.16e+7,}
+
+}));
+
+
+app.use(cors({  
+    origin: 'http://localhost:3000', // Replace with the actual origin of your frontend
+    credentials: true,  }));
 app.use(express.json());
-app.use("/auth/google", googleAuthRoute)
-app.use("/api", routes);
+
+app.use(User_session);
+app.use("/userAddress", userAddress);
+app.use("/userRoute", route);
+app.use(googleAuthRoute);
+app.use("/recordSummary", recordSummary);
+app.use("/userOrderList", userOrderList);
+app.use("/userBilling", userBilling);
+app.use("/userBillingAddress", userBillingAddress);
 
 
 app.listen(PORT,()=>{

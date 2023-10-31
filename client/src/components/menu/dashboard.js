@@ -1,15 +1,16 @@
 import React, {useState,useEffect, useRef} from 'react';
 import styled,{css} from 'styled-components';
 import Theme from '../../theme/theme';
-import  ButtonTypes  from '../../util/Button/ButtonObject';
 import Carousel from '../../util/Carousel/Carousel';
 import Navbar from '../../util/Navbar/Navbar';
 import Menu from '../../util/Menu-Content/menuObject_PNG';
-import background_img_1 from '../../theme/images/Appetizers PNG/Meat Cherry.png';
-import background_img_2 from '../../theme/images/Pasta PNG/Chicken Alfredo.png';
-import background_img_3 from '../../theme/images/Desserts PNG/Goat Milk & Corn Panna Cotta.png'
+import Caterring from '../../theme/images/Caterring.jpg';
+import Kitchen from '../../theme/images/Kitchen.png';
 import Footer from '../../util/Footer/Footer';
 import Cart from '../modal/CartModal'
+import { Logo } from '../../theme/theme';
+import Button from '../../util/Button/Button';
+
 
 
 
@@ -34,11 +35,11 @@ const Dashboard = ()=>{
 
 
     useEffect(() =>{ 
-    const selectedMainItems = randomArrSort(Menu.Main, 4);
-    const selectedPastaItems = randomArrSort(Menu.Pasta,4);
-    const selectedAppetizers = randomArrSort(Menu.Appetizers,4);
-    const selectedBeverageItems = randomArrSort(Menu.Beverage,4);
-    const selectedDessertItems = randomArrSort(Menu.Desserts,4);
+    const selectedMainItems = randomArrSort(Menu.Main, 2);
+    const selectedPastaItems = randomArrSort(Menu.Pasta,1);
+    const selectedAppetizers = randomArrSort(Menu.Appetizers,1);
+    const selectedBeverageItems = randomArrSort(Menu.Beverage,1);
+    const selectedDessertItems = randomArrSort(Menu.Desserts,1);
 
 
     let allSelectedItems = [
@@ -71,45 +72,56 @@ const Dashboard = ()=>{
     
 
 
+const Section_1 = styled.div`
+display:flex;
+justify-content:space-evenly;
+flex-direction:column;
 
+`
+const Section_1_message = styled.p`
+display:inline-block;
+width:600px;
+margin-left:2rem;
+font-family: 'Tangerine', cursive;
+font-weight:bold;
+font-size:30px;
+margin-bottom:2rem;
+`
 
 
 
     return(
-        <>
-     <Cart/>
-
+        <PageWrapper>
+  
+  <Cart/>
 
     <ContentWrapper>
-        <BackgroundDecoration img_1>
-        <img src={background_img_2}/>
-        
-        </BackgroundDecoration>
+    
 
         <HeaderWrapper>
-            <p1>Promotion</p1>
+        <Section_1>
+        <Logo/>
+        <Section_1_message>Serving you only the finest and fresh ingredients found 
+
+            in our local town. Crafted by our head-chef with multi-
+
+            year experience.
+        </Section_1_message>
+        </Section_1>
+        <CarouselContainer>           
+        <Carousel/>
+        </CarouselContainer> 
         </HeaderWrapper>
-        <BackgroundDecoration img_2>
-        <img src={background_img_1}/>
-        
-        </BackgroundDecoration>
+       
 
         
-                <ContainerWrapper>
-
-                    <CarouselContainer>
-
-                     
-                            <Carousel/>
-                    </CarouselContainer>
-
-                    <ButtonContainer>
-                        <ButtonTypes.Order_Now/>
-                    
-                    </ButtonContainer>
 
 
-                </ContainerWrapper>
+                  
+
+
+
+
 
                 <Navbar handleSelectedCategory={handleSelectedCategory}/>
 
@@ -119,28 +131,54 @@ const Dashboard = ()=>{
             return(
             <ItemContainer key={items.id}>
                <ImageWrapper container>
-            <img src={items.Image}/>
+               <ItemImageContainer  src={items.Image}/>
             </ImageWrapper>
                <DescriptionWrapper>
                                <p>{items.name}</p>
                                <p>{items.Price}</p>
                                <p>{items.Description}</p>
-                               <p>{items.Rating}</p>
+                               <RatingContainer src={items.Rating}/>
                                </DescriptionWrapper>
             </ItemContainer>
             )
         })}
 
-        <BackgroundDecoration img_3>
-        <img src={background_img_3}/>
-            </BackgroundDecoration>
+      
                    
                        
 
                 </ItemScrollContainer>
 
 
+        <Section_3>
+         
+            
+            <EventImageContainer left>
+            <CategoryTitle >Event</CategoryTitle>
+            <Image src={Caterring} left/>
+            <ButtonWrapper>
+            <Button explore={true} padding={"1rem 6rem"} backgroundColor={"transparent"} fontSize={"1.3rem"}>Reserve</Button>
+        </ButtonWrapper>
+        
+            </EventImageContainer>
+        
+        
+            
 
+
+
+
+
+            <EventImageContainer right>
+            <CategoryTitle >Career</CategoryTitle>
+        <Image src={Kitchen} right/>    
+
+         <ButtonWrapper>
+            <Button explore={true} padding={"1rem 6rem"} backgroundColor={"transparent"} fontSize={"1.3rem"}>Contact</Button>
+        </ButtonWrapper> 
+            </EventImageContainer>
+
+        </Section_3>
 
 
 
@@ -155,50 +193,118 @@ const Dashboard = ()=>{
                
     </ContentWrapper>
     <Footer/>
-    </>
+    </PageWrapper>
 
     )
 }
 
-const BackgroundDecoration = styled.div`
+const PageWrapper = styled.div`
+overflow-x:hidden;
+`
+
+const ButtonWrapper = styled.div`
 position:absolute;
-z-index: -1;
-${(props)=> props.img_1 && css`
-img{
-
-    height:800px;
-    width:1000px;
-    margin-top:-20rem;
-    margin-left:-20rem;
-}
+bottom:20%;
+left:35%;
+`
 
 
-`}
+const CategoryTitle = styled.h2`
+position:absolute;
+color:white;
+padding:2rem 5rem;
+font-family: 'Work Sans', sans-serif;
+font-size:30px;
+text-shadow: 0 2px 4px ${Theme.colors.ColumnBlack};
+`
 
-${(props)=> props.img_2 && css`
-img{
-    margin-top:70rem;
-    margin-left:90rem;
-    height:400px;
-    width:400px;
-}
+const Image = styled.img`
+height:700px;
+width:50vw;
 
 
-`}
 
-${(props)=> props.img_3 && css`
-img{
-    margin-left:-20vw;
+${(props) => props.left && css`
+
+width:50vw;
+box-shadow:inset 0 2px 4px ${Theme.colors.BackgroundBlack};
+
+&:hover{
+    box-shadow:inset 0 2px 4px ${Theme.colors.white};
+
   
 }
+`}
+
+
+
+${(props) => props.right && css`
+
+width:50vw;
+box-shadow:inset 0 2px 4px ${Theme.colors.BackgroundBlack};
+
+&:hover{
+    box-shadow:inset 0 2px 4px ${Theme.colors.white};
+   
+}
+`}
+
+`
+
+const EventImageContainer = styled.div`
+position:relative;
+
+transition:2s;
+
+${(props) => props.left && css`
+&:hover{
+    opacity:0.9;
+    transition:2s;
+   
+}
 
 
 `}
 
 
+${(props) => props.right && css`
+
+&:hover{
+    opacity:0.9;
+    transition:2s;
+   
+}
+
+
+`}
+`
+
+const Section_3 = styled.div`
+
+height:700px;
+display:flex;
+flex-direction:row;
 
 
 `
+
+const CarouselContainer = styled.div`
+top:0;
+right:2rem;
+position:absolute;
+
+`
+
+const RatingContainer = styled.img`
+height:20px;
+`
+
+const ItemImageContainer = styled.img`
+
+
+`
+
+
 
 
 const ContentWrapper = styled.div`
@@ -211,52 +317,34 @@ margin-:20vh 20vw;
 
 `
 
-const ContainerWrapper = styled.div`
-display:grid;
-
-padding:5rem 5rem;
-background-color: ${Theme.colors.white};
-gap:1rem;
-margin-left: 20vw;
-margin-right: 20vw;
-border-radius:50px;
-box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-
-`
 
 
 
 
-const CarouselContainer = styled.div`
-  padding: 1rem 1rem;
-  width:19rem;
-`
 
-const ButtonContainer = styled.div`
-align-self: end;
-grid-row: 2 span;
-justify-self:end;
-
- 
-
-`
 
 
 const ItemScrollContainer = styled.div`
-display:grid;
-padding:5rem 20rem;
-grid-template-columns: repeat(2, 1fr);
-gap:5rem;
+display:flex;
+flex-wrap:wrap;
+width:100vw;
+gap:0.5rem;
+
+margin-top:-20px;
+
 `
 
 
 
 const DescriptionWrapper = styled.div`
-display:grid;
-grid-template-rows: repeat( 3, 1fr);
-grid-row-start:2;
-grid-row-end:2;
+display:flex;
+margin-top:1rem;
+gap:1rem;
+flex-direction:column;
+justify-content:center;
+align-items:center;
 
+text-align: center;
 
 p:nth-child(1){
     font-family: 'Oleo Script', cursive;
@@ -266,11 +354,13 @@ p:nth-child(1){
 p:nth-child(2){
         font-family: 'Work Sans', sans-serif;
         font-size:18px;
-        color:${Theme.colors.greenColumn}
+        color:${Theme.colors.BackgroundBlack};
 }
 
 p:nth-child(3){
-    font-size:10px;
+    font-size:25px;
+    font-weight:bold;
+    font-family: 'Tangerine', cursive;
 }
 
 
@@ -279,13 +369,17 @@ p:nth-child(3){
 const ItemContainer = styled.div`
 position:relative;
 background-color: ${Theme.colors.white};
-padding:5rem 5rem;
-grid-row:span 1;
 justify-self:center;
-box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+padding:12rem 11.8rem;
 height:250px;
 width:250px;
 
+
+
+&:hover{
+    cursor:pointer;
+    box-shadow: 0 .3px 4px rgba(0, 0, 0, 0.7);
+}
 `
 const ImageWrapper = styled.div`
 display:flex;
@@ -312,27 +406,13 @@ img{
 
 
 const HeaderWrapper = styled.header`
-font-size:6rem;
-margin-top:10rem;
-color: ${Theme.colors.ColumnBlack};
-font-family: 'Hammersmith One', sans-serif;
-text-shadow: 1px 2px 4px rgba(81,67,21,0.8);
 display:flex;
-justify-content:flex-start;
-gap:5rem;
-padding-left:2rem;
-align-items: center;
-margin-bottom:.5rem;
-margin-left: 20vw;
-margin-right: 20vw;
+margin-top:3.6rem;
+
+flex-direction:row;
 
 
-
-img{
-    height:50px;
-    width:50px;
-    
-}
+position:relative;
 `
 
 

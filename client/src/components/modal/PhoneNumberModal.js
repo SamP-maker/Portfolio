@@ -4,8 +4,8 @@ import "react-phone-input-2/lib/bootstrap.css";
 import {styled,css} from 'styled-components';
 import Theme from "../../theme/theme";
 
-const Phone = () => {
-  const [phone, setPhone] = useState("");
+const Phone = ({phone,setPhone}) => {
+ 
 
   return (
 
@@ -15,7 +15,7 @@ const Phone = () => {
       enableSearch={true}
       value={phone}
       styled
-      onChange={(phone) => setPhone(phone)}
+      onChange={(value) => setPhone(value)}
     />
 
 

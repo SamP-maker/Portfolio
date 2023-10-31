@@ -7,19 +7,28 @@ import ButtonTypes from '../../util/Button/ButtonObject';
 import { useDispatch, useSelector } from 'react-redux';
 import { removeItem, increase, decrease} from '../../redux/feature/cartSlice'
 import Cart from '../modal/CartModal';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { Logo } from '../../theme/theme';
 
 
 
 
-
-
-const Menu = ()=>{
+const OrderConfirm = ()=>{
         const [selectedItem,setSelectedItem] = useState([])
         const [selectedCategory, setSelectedCategory] = useState('Main')
-        const {cartItems} = useSelector((store) => store.cart)
+        const {cartItems, amount , total } = useSelector((store) => store.cart)
         const dispatch = useDispatch()
+        const navigate = useNavigate()
+        const [orderList, setOrderList] = useState({
+        Order:[],
+        Total: 0,
+        ItemsAmount: 0,
+        })
+
         
+
+    
+
 
       
 
@@ -46,13 +55,21 @@ const Menu = ()=>{
                 return sort
         }
 
-
-
         useEffect(() => {
-                const itemCategory = menuSort(menuObject[selectedCategory]);
-                setSelectedItem(itemCategory);
-              }, []);
+                
+                
+                setOrderList({
+                  Order: cartItems,
+                  Total: total,
+                  ItemsAmount: amount,
+                });
+                
+              }, [cartItems, amount, total]);
 
+
+       
+
+     
 
               useEffect(() => {
                 if (selectedCategory) {
@@ -62,29 +79,82 @@ const Menu = ()=>{
               }, [selectedCategory]);
 
 
+
+        
+                
+              async function handleSubmit(e){
+                e.preventDefault()
+                console.log('Sending orderList:', orderList);
+
+                try {
+                        await fetch('http://localhost:5000/userOrderList',{
+                                method:"POST",
+                                headers:{
+                                        "Content-Type": "application/json",
+                                },
+                                credentials: 'include',
+                                body:JSON.stringify(orderList)
+
+
+                
+                        })
+                        navigate("/Address")
+                
+                }catch(err){
+                        console.error('Error occured:', err);
+                        window.alert("Error occured. Please try again later.");
+                
+                }
+
+                
+        
+
+        }
+
   
 
 
 
     return(
         
-       <>
-         <Cart/>
-       
-    <ProgressBarContainer>
-        <ProgressBar>
-        </ProgressBar>
+     <>
+     <Logo/>
 
-    <CheckpointContainer>
-        <Checkpoint><div><span></span></div></Checkpoint>
-        <Checkpoint> <div><span></span></div></Checkpoint>
-        <Checkpoint> <div><span></span></div></Checkpoint>
-    </CheckpointContainer>                  
+{cartItems.length == 0 ?
 
 
-    </ProgressBarContainer> 
-    
-       
+<>
+<Cart/>
+<CheckOutWrapper empty_message>
+  Cart is Empty
+</CheckOutWrapper>   
+<PageWrapper blur>
+
+
+ 
+ 
+
+ <form onSubmit={handleSubmit}>
+ 
+
+
+</form>
+   
+   <Footer/>
+   </PageWrapper>
+
+   </>
+   
+   
+   :
+
+        <PageWrapper>
+   
+        <Cart/>
+      
+      
+  
+      <form onSubmit={handleSubmit}>
     <CheckOutWrapper>
         {cartItems.map( items =>{
                             return(
@@ -106,126 +176,71 @@ const Menu = ()=>{
                             </ItemContainer>
                             )
                         })}
-       <ButtonWrapper Confirm_Order>
-       <Link to="/Address"><ButtonTypes.Confirm_Order/></Link>
-        </ButtonWrapper>
-     </CheckOutWrapper>             
 
 
+                        
+     <OrderButtonWrapper>
+       <ButtonTypes.Confirm_Order type="submit"/>
+       </OrderButtonWrapper>
+     </CheckOutWrapper>    
+
+
+     </form>
         
         <Footer/>
-        </>
-
+        </PageWrapper>
+}
+</>
         
     )
 }
 
+const PageWrapper = styled.div`
 
 
 
+${(props)=> props.blur && css`
+filter:blur(100px);
 
-const ProgressBarContainer = styled.div`
-margin-top:20rem;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100px;
-width:70rem;
-margin-left:auto;
-margin-right:auto;
 
+`}
 `
 
-const CheckpointContainer = styled.div`
-display:flex;
-position:absolute;
-width:25rem;
-height:80px;
-display:flex;
-align-items:center;
-gap:8rem;
 
-
-
-
-`
-
-const ProgressBar = styled.div`
-width:100%;
-height:10px;
-background-color:${Theme.colors.Greylite};
-border-radius:10px;
-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-
-`
-const Checkpoint = styled.label`
-height:50px;
-width:50px;
-background-color: ${Theme.colors.Greylite};
-border-radius:50%;
-display:flex;
-justify-contents:center;
-align-items:center;
-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-
-
-
-
-
-&:nth-child(1){
-div{
-height:40px;
-width:40px;
-margin:auto auto;
-background-color: ${Theme.colors.Teal};
-border-radius:50%;
-display:flex;
-justify-contents:center;
-align-items:center;
-animation: fadeIn 2s ease forwards;
-
-@keyframes fadeIn {
-        from {
-          opacity: 0;
-        }
-        to {
-          opacity: 1;
-        }
-      }
-
-
-
-span{
-  
-  margin:auto auto;
-  width: 5px;
-  height: 15px;
-  border: solid white;
-  border-width: 0 3px 3px 0;
-  -webkit-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  transform: rotate(45deg);
-}
-
-}
-
-}
-
-
-
-
-`
 
 const CheckOutWrapper = styled.div`
-padding-bottom:10rem;
+padding-bottom:2rem;
 background-color: ${Theme.colors.white};
-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+
 width:60vw;
-margin-bottom:10rem;
+margin-bottom:20rem;
 margin-left:20vw;
 margin-right:20vw;
+
 display:grid;
 grid-template-columns: repeat(1,1fr);
+grid-template-rows: repeat(auto,1fr);
+
+
+${(props) => props.empty_message && css`
+
+background-color: ${Theme.colors.white};
+display:flex;
+border:.15rem solid ${Theme.colors.white};
+align-content:center;
+justify-content:center;
+width:15vw;
+margin-top:20rem;
+margin-bottom:25rem;
+margin-left:42.5vw;
+margin-right:42.5vw;
+font-family: 'Work Sans', sans-serif;
+font-size:24px;
+box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+z-index:999;
+padding:1rem 1rem;
+text-shadow:0 1px 4px rgba(0, 0, 0, 0.2);
+`}
 
 `
 
@@ -262,20 +277,17 @@ grid-column-end:3;
 grid-row-start:4;
 grid-row-end:4;
 padding-left:2rem;padding-right:2rem;
+`
 
-
-${(props) => props.Confirm_Order && css`
-padding-top:5rem;
-padding-right:5rem;
-grid-column-start:1;
-grid-column-end:1;
-grid-row-start:auto;
-grid-row-end:auto;
+const OrderButtonWrapper = styled.div`
+padding-top:2rem;
+padding-right:2rem;
 align-items:end;
 justify-self:end;
-`}
-
 `
+
+
+
 const DescriptionWrapper = styled.div`
 display:grid;
 grid-template-rows: repeat( 2, 1fr);
@@ -356,7 +368,7 @@ img{
 
 
 
-export default Menu
+export default OrderConfirm
 
 
 

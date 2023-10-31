@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 const ButtonTypes = {
 
-    Confirm_Order:(handleIsCheckpoint)=> (<Button type_normal={true} padding="1.2rem 2rem " text="Confirm Order" onClick={handleIsCheckpoint} fontSize="1rem" backgroundColor={Theme.colors.OrangeLite} borderRadius="1rem"/>),
+    Confirm_Order:()=> (<Button checkout={true} padding="1.2rem 2rem " type="submit" text="Confirm Order"  fontSize="1rem" backgroundColor={"transparent"}/>),
 
     Order_Now:()=> (
     
@@ -30,29 +30,29 @@ const ButtonTypes = {
         return(
     
     <>
-    <Button type_normal={true} onClick={handleAddItems} padding="1.5rem 7rem" text="Add to Cart" fontSize="1rem" backgroundColor={Theme.colors.BackgroundBlack} borderRadius="1rem"/>
+    <Button type_normal={true} onClick={handleAddItems} padding="1rem 3rem" text="Add to Cart" fontSize="1rem" backgroundColor={"transparent"} />
     </>
         )
         },
 
-    Head_to_Check_out:()=> (<Button type_normal={true} padding=".8rem 1.625rem " text="Head to Check Out" fontSize="1rem" backgroundColor={Theme.colors.OrangeLite} borderRadius="1rem"/>),
+    Head_to_Check_out:({type})=> (<Button checkout={true} type={type} padding=".8rem 1.625rem " text="Head to Check Out" fontSize="1rem" backgroundColor={"transparent"} />),
 
     Remove:({handleRemove})=> {
         return(
         <>
     
-    <Button type_normal={true} onClick={handleRemove} padding=".4rem 1.25rem " text="Remove" fontSize="0.75rem" backgroundColor={Theme.colors.Orange} borderRadius="0.625rem"/>
+    <Button checkout={true} onClick={handleRemove} padding=".4rem 1.25rem " text="Remove" fontSize="0.75rem" backgroundColor={"transparent"} />
     </>
         )},
     
 
     Pay_Now:()=> (
-    <Link to="/Payment">
-                    <Button type_normal={true} padding="1.5rem 5rem" text="Pay now" fontSize="1.5rem" backgroundColor={Theme.colors.OrangeLite} borderRadius="1rem"/>
-    </Link>
+    
+                    <Button type_normal={true} padding="1.5rem 5rem" text="Pay now" fontSize="1.5rem" backgroundColor={"transparent"}  type="submit"/>
+  
     ),
 
-    Contact:()=>  (<Button type_normal={true} padding="1.375rem 4.875rem " text="Contact" fontSize="1.5rem" backgroundColor={Theme.colors.OrangeLite} borderRadius="1rem"/>),
+    Contact:()=>  (<Button checkout={true} padding="1.375rem 4.875rem " text="Contact" fontSize="1.5rem" backgroundColor={"transparent"}/>),
 
     Confirm:()=>  (<Button type_normal={true} padding="1.375rem 4.875rem " text="Confirm" fontSize="1.5rem" backgroundColor={Theme.colors.BackgroundBlack} borderRadius="1.5rem"/>),
 
@@ -63,6 +63,9 @@ const ButtonTypes = {
         <p>{count}</p>
         <QuantityButton increase onClick={handleIncreaseCount}> + </QuantityButton>
         </>)},
+
+
+Billing_Address:()=> (  <Button checkout={true} type="submit" padding=".8rem 1.625rem " text="Head to Billing Address" fontSize="1rem" backgroundColor={"transparent"} />),
 
   
         

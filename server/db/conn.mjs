@@ -11,6 +11,6 @@ try {
   console.error(e);
 }
 
-let db = conn.db("FusioneCluster");
+let db = conn.db("fusioneDB");
 
 export default db;

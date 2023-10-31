@@ -4,14 +4,15 @@ import Theme from '../../theme/theme';
 import ButtonTypes from '../../util/Button/ButtonObject';
 import {useDispatch, useSelector} from 'react-redux';
 import { removeItem, increase, decrease } from '../../redux/feature/cartSlice';
-
 import { FaShoppingBag } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 const Cart = ({black}) =>{
-
-       const {cartItems} = useSelector((store) => store.cart)
+       const {Username ,isLoggedin} = useSelector((store) => store.user)
+       const {cartItems,amount} = useSelector((store) => store.cart)
+       
        const [isOpen,setIsOpen] = useState(true)
+       const [isDropDown,setIsDropDown] = useState(true)
        const [isHideNav,setisHideNav] = useState(false)
        const prevScrollY = useRef(0)
        const dispatch = useDispatch()
@@ -37,17 +38,23 @@ const Cart = ({black}) =>{
         setIsOpen((prevIsOpen) => !prevIsOpen)
        }
 
+       const handleOpenDropDown = () =>{
+        setIsDropDown((prevDropDown)=> !prevDropDown)
+       }
+
 
        const handleScroll = () =>{
         const currentScrollY = window.scrollY;
-        console.log(currentScrollY)
         if( currentScrollY > prevScrollY.current){
           setisHideNav(true)
           setIsOpen(true)
+          setIsDropDown(true)
+         
 
           
         }else{
           setisHideNav(false)
+          setIsDropDown(true)
           setIsOpen(true)
           
         }
@@ -62,11 +69,6 @@ const Cart = ({black}) =>{
         return () =>{
           window.removeEventListener('scroll',handleScroll)
         }
-
-
-
-
-
        },[])
 
 
@@ -82,10 +84,36 @@ const Cart = ({black}) =>{
     <NavbarWrapper className={isHideNav ? 'hidden' : ''}>
         <StyledLink to="/Dashboard"><Navigation>Dashboard</Navigation></StyledLink>
         <StyledLink to="/Menu"><Navigation>Menu</Navigation></StyledLink>
-        <StyledLink to="/Order_confirm"><Navigation>Check Out</Navigation></StyledLink>
-        <StyledLink to="/Status"><Navigation>Status</Navigation></StyledLink>
-        <Navigation> Login</Navigation>
-        <Navigation onClick={handleOpenModal} > Cart{black ? <FaShoppingBag style={{color: "black"}}/> : <FaShoppingBag style={{color: "white"}}/> } </Navigation>
+        {Username ? <Navigation dropDown  onClick={handleOpenDropDown}>{Username}
+        {!isDropDown ? (<DropDownWrapper>
+        <DropDownContainer><StyledLink to="/Payment"><Navigation>Check Out</Navigation></StyledLink></DropDownContainer>
+        <DropDownContainer> <StyledLink to="/Status"><Navigation>Status</Navigation></StyledLink></DropDownContainer>
+        <DropDownContainer> <StyledLink to="/"><Navigation>Log out</Navigation></StyledLink></DropDownContainer>
+      </DropDownWrapper>) : null}
+        
+        
+        
+        </Navigation> 
+        
+        
+        
+        
+        : 
+        <Navigation dropDown onClick={handleOpenDropDown}> {isDropDown ? "Login" : <StyledLink to="/login">Login</StyledLink> }
+      {!isDropDown ? (<DropDownWrapper>
+        <DropDownContainer><StyledLink to="/Payment"><Navigation>Check Out</Navigation></StyledLink></DropDownContainer>
+        <DropDownContainer> <StyledLink to="/Status"><Navigation>Status</Navigation></StyledLink></DropDownContainer>
+        <DropDownContainer> <StyledLink to="/"><Navigation>Log out</Navigation></StyledLink></DropDownContainer>
+      </DropDownWrapper>) : null}
+        
+        </Navigation>}
+        
+      
+ 
+
+
+
+        <Navigation onClick={handleOpenModal} > Cart{black ? <FaShoppingBag style={{color: "black"}}/> : <FaShoppingBag style={{color: "white"}}/> } {amount ? <AmountWrapper>{amount}</AmountWrapper> : null} </Navigation>
         
     </NavbarWrapper>
     {!isOpen ? (
@@ -120,7 +148,7 @@ const Cart = ({black}) =>{
                     count={items.Amount}
                   />
                 </IncrementButtonWrapper>
-
+           
                 <ButtonWrapper>
                   <ButtonTypes.Remove
                     handleRemove={() => handleRemoveItem(items.id)}
@@ -131,9 +159,18 @@ const Cart = ({black}) =>{
             );
           })
         )}
-<ButtonContainer>
-        <ButtonTypes.Head_to_Check_out/>
-</ButtonContainer>
+
+
+                  {cartItems.length === 0 ? null :
+                    <ButtonContainer>
+                        <Link to="/Order_confirm"> <ButtonTypes.Head_to_Check_out/></Link>
+                  </ButtonContainer>
+                  }
+
+
+
+
+
 
   </ModalOverlay>
 
@@ -150,6 +187,23 @@ const Cart = ({black}) =>{
     )
 
 }
+
+const AmountWrapper = styled.p`
+
+padding:1px 1px;
+height:15px;
+width:15px;
+display:flex;
+font-size:15px;
+align-items:center;
+justify-content:center;
+border-radius:50%;
+background-color:red;
+position:absolute;
+top:.8rem;
+right:.5rem;
+
+`
 
 const ButtonContainer = styled.div`
 padding-top:1rem;
@@ -272,7 +326,6 @@ justify-items:center;
 background-color: ${Theme.colors.white};
 padding:2rem 1rem;
 font-family: 'Work Sans', sans-serif;
-
 width:500px;
 
 
@@ -300,7 +353,7 @@ grid-template-columns: repeat( 2, 1fr);
 position:relative;
 justify-items:center;
 background-color: ${Theme.colors.white};
-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
 font-family: 'Work Sans', sans-serif;
 width:500px;
 
@@ -333,7 +386,7 @@ z-index:999;
 `
 
 
-const Navigation = styled.ul`
+const Navigation = styled.div`
 padding:20px 20px;
 color:white;
 display:flex;
@@ -341,11 +394,19 @@ gap:0.5rem;
 align-items:center;
 text-decoration:none;
 font-family: 'Work Sans', sans-serif;
-
+overflow: hidden;
 &:hover{
-    color:${Theme.colors.Orange};
-    background-color: ${Theme.colors.ColumnBlack};
+  color:${Theme.colors.Orange};
+  background-color: ${Theme.colors.ColumnBlack};
 }
+
+
+${(props) => props.dropDown && css`
+display:block;
+
+
+
+`}
 `
 
 
@@ -359,6 +420,26 @@ font-family: 'Work Sans', sans-serif;
 &:hover{
     color:${Theme.colors.Orange};
 }
+`
+
+const DropDownContainer = styled.div`
+  background-color: ${Theme.colors.BackgroundBlack};
+  min-width: 120px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+`
+
+const DropDownWrapper = styled.div`
+
+position:absolute;
+margin-left:-20px;
+margin-top:20px;
+color:white;
+align-items:center;
+text-decoration:none;
+font-family: 'Work Sans', sans-serif;
+overflow: hidden;
+flex-direction:column;
 `
 
 

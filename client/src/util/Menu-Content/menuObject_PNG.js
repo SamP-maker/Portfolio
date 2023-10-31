@@ -8,14 +8,14 @@ export const Menu= {
             name:"Braised Lamb Shanks",
             Description: "Lamb shanks marinated with red wine sauce consisting of carrots, apples,potatoes, and gravy",
             Price:"$19.99",
-            Rating:"5 Stars",
+            Rating:require('../../theme/images/Rating_Stars/5stars.png'),
             Image:require('../../theme/images/Main PNG/Braised Lamb Shanks.png'),
         },
         {   
             id:uuidv4(),
             name:"Chicken Dumplings",
             Price:"$8.99",
-            Rating:"5 Stars",
+            Rating:require('../../theme/images/Rating_Stars/5stars.png'),
             Image:require('../../theme/images/Main PNG/Chicken Dumplings.png'),
         },
         {   
@@ -23,7 +23,7 @@ export const Menu= {
             name:"Chicken Green Curry Katsudon",
             Description:"Chicken fried with panko crumbs served with coconut milk, green curry paste, palm sugar, fish sauce, and kaffir lime leaves",
             Price:"$12.99",
-            Rating:"5 Stars",
+            Rating:require('../../theme/images/Rating_Stars/5stars.png'),
             Image:require('../../theme/images/Main PNG/Chicken Green Curry Katsudon.png'),
         },
         {   
@@ -31,7 +31,7 @@ export const Menu= {
             name:"Vietnamese Pho",
             Description:"Traditional Vietnamese vermicelli noodles served with beef broth",
             Price:"$12.99",
-            Rating:"5 Stars",
+            Rating:require('../../theme/images/Rating_Stars/4stars.png'),
             Image:require('../../theme/images/Main PNG/Pho.png'),
         },
         {   
@@ -39,7 +39,7 @@ export const Menu= {
             name:"Risotto",
             Description: "Italian risotto consisting of white wine and parmesan",
             Price:"$15.00",
-            Rating:"5 Stars",
+            Rating:require('../../theme/images/Rating_Stars/4stars.png'),
             Image:require('../../theme/images/Main PNG/Risotto.png'),
         },
         {   
@@ -47,7 +47,7 @@ export const Menu= {
             name:"Salmon Steak",
             Description: "Atlantic Grilled Salmon served with potatoes and asparagus",
             Price:"$18.99",
-            Rating:"5 Stars",
+            Rating:require('../../theme/images/Rating_Stars/5stars.png'),
             Image:require('../../theme/images/Main PNG/Salmon Steak.png'),
         },
         {   
@@ -55,7 +55,7 @@ export const Menu= {
             name:"Seafood Curry Noodles",
             Description:"Curry Noodles served with prawns and squid",
             Price:"$12.99",
-            Rating:"5 Stars",
+            Rating:require('../../theme/images/Rating_Stars/5stars.png'),
             Image:require('../../theme/images/Main PNG/Seafood Curry Noodles.png'),
         },
         {   
@@ -63,7 +63,7 @@ export const Menu= {
             name:"Seafood Pizza",
             Description:"Pizza fusion with prawns, squids and crabsticks",
             Price:"$15.00",
-            Rating:"5 Stars",
+            Rating:require('../../theme/images/Rating_Stars/5stars.png'),
             Image:require('../../theme/images/Main PNG/Seafood Pizza.png'),
         },
         {   
@@ -71,7 +71,7 @@ export const Menu= {
             name:"Smoke Duck Pizza",
             Description:"Pizza fused with duck cooked with peking and barbequed styled",
             Price:"$15.00",
-            Rating:"5 Stars",
+            Rating:require('../../theme/images/Rating_Stars/3stars.png'),
             Image:require('../../theme/images/Main PNG/Smoke Duck Pizza.png'),
         },
         {   
@@ -79,7 +79,7 @@ export const Menu= {
             name:"Southern Style",
             Description:"Chicken wrapped with smoked bacon served with long beans",
             Price:"$15.00",
-            Rating:"5 Stars",
+            Rating:require('../../theme/images/Rating_Stars/3stars.png'),
             Image:require('../../theme/images/Main PNG/Southern Style.png'),
         },
         {   
@@ -87,7 +87,7 @@ export const Menu= {
             name:"Steak with Mash",
             Description:"Steak fillet served with a side of Mash potatoes and gravy",
             Price:"$15.00",
-            Rating:"5 Stars",
+            Rating:require('../../theme/images/Rating_Stars/3stars.png'),
             Image:require('../../theme/images/Main PNG/Steak with Mash.png'),
         },
       
@@ -101,7 +101,7 @@ export const Menu= {
             name:"Beef Bolognese Pasta",
             Description: "Pesto pasta served with bolognese sauce and mince meat with parmesan garnish",
             Price:"$14.99",
-            Rating:"5 Stars",
+            Rating:require('../../theme/images/Rating_Stars/5stars.png'),
             Image:require('../../theme/images/Pasta PNG/Beef Bolognese Pasta.png'),
         },
         {   
@@ -109,7 +109,7 @@ export const Menu= {
             name:"Carbonara Pasta",
             Description: "Spaghetti served with parmesan and egg yolks with parmesan garnish",
             Price:"$14.99",
-            Rating:"5 Stars",
+            Rating:require('../../theme/images/Rating_Stars/4stars.png'),
             Image:require('../../theme/images/Pasta PNG/Carbonara.png'),
         },
         {   
@@ -117,7 +117,7 @@ export const Menu= {
             name:"Chicken Alfredo",
             Description: "Pesto pasta served with Alfredo sauce consisting of broccoli and chicken",
             Price:"$14.99",
-            Rating:"5 Stars",
+            Rating:require('../../theme/images/Rating_Stars/5stars.png'),
             Image:require('../../theme/images/Pasta PNG/Chicken Alfredo.png'),
         },
         {   
@@ -125,7 +125,7 @@ export const Menu= {
             name:"Chicken Maccaroni",
             Description: "Maccaroni pasta served with panko fried chicken and chilli flakes",
             Price:"$14.99",
-            Rating:"5 Stars",
+            Rating:require('../../theme/images/Rating_Stars/5stars.png'),
             Image:require('../../theme/images/Pasta PNG/Chicken Pesto.png'),
         },
         {   
@@ -133,7 +133,7 @@ export const Menu= {
             name:"Fajita",
             Description: "Pesto pasta served with stir fried bell peppers and mozarella",
             Price:"$14.99",
-            Rating:"5 Stars",
+            Rating:require('../../theme/images/Rating_Stars/5stars.png'),
             Image:require('../../theme/images/Pasta PNG/Fajita.png'),
         },
         {   
@@ -141,7 +141,7 @@ export const Menu= {
             name:"Vegan Pesto Pasta",
             Description: "Pesto pasta served with blended spinach, olive oil, sugar, mayonnaise sauce",
             Price:"$14.99",
-            Rating:"5 Stars",
+            Rating:require('../../theme/images/Rating_Stars/5stars.png'),
             Image:require('../../theme/images/Pasta PNG/Pesto Pasta.png'),
         },
         {   
@@ -149,7 +149,7 @@ export const Menu= {
             name:"Tomato Pesto Pasta",
             Description: "Tomato Pesto Pasta served with minced beef,tomato sauce, and mixed cheese",
             Price:"$14.99",
-            Rating:"5 Stars",
+            Rating:require('../../theme/images/Rating_Stars/3stars.png'),
             Image:require('../../theme/images/Pasta PNG/Tomato Pesto Pasta.png'),
         },
         {   
@@ -157,7 +157,7 @@ export const Menu= {
             name:"Vegan Pasta",
             Description: "Stir Fried Pasta with zuccini, mushroom, squash and served with tomato sauce",
             Price:"$14.99",
-            Rating:"5 Stars",
+            Rating:require('../../theme/images/Rating_Stars/5stars.png'),
             Image:require('../../theme/images/Pasta PNG/Vegan spaghetti.png'),
         },
     ],
@@ -170,7 +170,7 @@ export const Menu= {
             name:"Cheesed Apple Bacon",
             Description: "Mashed potato tarts infused with apple wood bacon",
             Price:"$11.99",
-            Rating:"5 Stars",
+            Rating:require('../../theme/images/Rating_Stars/4stars.png'),
             Image:require('../../theme/images/Appetizers PNG/Cheesed Apple Bacon.png'),
         },
         {   
@@ -178,7 +178,7 @@ export const Menu= {
             name:"Flat Meat Cakes",
             Description: "Honey biscuits filled with spam and glassed with butter",
             Price:"$11.99",
-            Rating:"5 Stars",
+            Rating:require('../../theme/images/Rating_Stars/4stars.png'),
             Image:require('../../theme/images/Appetizers PNG/Flat Meat Cakes.png'),
         },
         {   
@@ -186,7 +186,7 @@ export const Menu= {
             name:"Fried Dumplings",
             Description: "Chinese style fried pork dumplings",
             Price:"$11.99",
-            Rating:"5 Stars",
+            Rating:require('../../theme/images/Rating_Stars/4stars.png'),
             Image:require('../../theme/images/Appetizers PNG/Fried Dumplings.png'),
         },
         {   
@@ -194,7 +194,7 @@ export const Menu= {
             name:"Meat Cherry",
             Description: "Ghost peppers wrapped with apple wood bacon",
             Price:"$11.99",
-            Rating:"5 Stars",
+            Rating:require('../../theme/images/Rating_Stars/4stars.png'),
             Image:require('../../theme/images/Appetizers PNG/Meat Cherry.png'),
         },
         {   
@@ -202,7 +202,7 @@ export const Menu= {
             name:"Shrimp Salad",
             Description: "Shrimp mayo on lettuce wraps",
             Price:"$8.99",
-            RRating:"5 Stars",
+            RRating:require('../../theme/images/Rating_Stars/4stars.png'),
             Image:require('../../theme/images/Appetizers PNG/Shrimp Salad.png'),
         },
         {   
@@ -210,7 +210,7 @@ export const Menu= {
             name:"Vegetarian Sticks",
             Description: "Egg, cherry tomato kebabs served with olive oil",
             Price:"$6.99",
-            Rating:"5 Stars",
+            Rating:require('../../theme/images/Rating_Stars/3stars.png'),
             Image:require('../../theme/images/Appetizers PNG/Vegan Sticks.png'),
         },
        
@@ -223,7 +223,7 @@ export const Menu= {
             name:"Citrus Orange Lemon Cocktail",
             Description: "Citrust infused alcohol cocktail",
             Price:"$2.99",
-            Rating:"5 Stars",
+            Rating:require('../../theme/images/Rating_Stars/3stars.png'),
             Image:require('../../theme/images/Beverages PNG/Citrus Orange Lemon Cocktail.png'),
         },
         {   
@@ -231,7 +231,7 @@ export const Menu= {
             name:"Lemon Coke",
             Description: "Lemon Coke",
             Price:"$2.99",
-            Rating:"5 Stars",
+            Rating:require('../../theme/images/Rating_Stars/4stars.png'),
             Image:require('../../theme/images/Beverages PNG/Lemon Coke.png'),
         },
         {   
@@ -239,7 +239,7 @@ export const Menu= {
             name:"Orange Guava Cocktail",
             Description: "Orange Guava infused cocktail",
             Price:"$4.99",
-            Rating:"5 Stars",
+            Rating:require('../../theme/images/Rating_Stars/4stars.png'),
             Image:require('../../theme/images/Beverages PNG/Orange Guava Cocktail.png'),
         },
         {   
@@ -247,7 +247,7 @@ export const Menu= {
             name:"Soda Lime Cocktail",
             Description: "Soda, lime, alcohol",
             Price:"$4.99",
-            Rating:"5 Stars",
+            Rating:require('../../theme/images/Rating_Stars/4stars.png'),
             Image:require('../../theme/images/Beverages PNG/Soda Lime Cocktail.png'),
         },
         {   
@@ -255,7 +255,7 @@ export const Menu= {
             name:"Watermelon Mint",
             Description: "Watermelon, alcohol, mint",
             Price:"$4.99",
-            Rating:"5 Stars",
+            Rating:require('../../theme/images/Rating_Stars/2stars.png'),
             Image:require('../../theme/images/Beverages PNG/Watermelon Mint.png'),
         },
        
@@ -268,7 +268,7 @@ export const Menu= {
             name:"Apple Crumbles",
             Description:"Baked diced apples served on creme tart",
             Price:"$7.99",
-            Rating:"5 Stars",
+            Rating:require('../../theme/images/Rating_Stars/3stars.png'),
             Image:require('../../theme/images/Desserts PNG/Apple Crumbles.png'),
         },
         {   
@@ -276,7 +276,7 @@ export const Menu= {
             name:"Chocolate Tiramisu",
             Description:"Chocolate Coffee Slice",
             Price:"$7.99",
-            Rating:"5 Stars",
+            Rating:require('../../theme/images/Rating_Stars/3stars.png'),
             Image:require('../../theme/images/Desserts PNG/Chocolate Tiramisu.png'),
         },
         {   
@@ -284,7 +284,7 @@ export const Menu= {
             name:"Milk & Corn Panna Cotta",
             Description:"Panna Cotta made with Corn and Goat milk",
             Price:"$7.99",
-            Rating:"5 Stars",
+            Rating:require('../../theme/images/Rating_Stars/3stars.png'),
             Image:require('../../theme/images/Desserts PNG/Goat Milk & Corn Panna Cotta.png'),
         },
         {   
@@ -292,7 +292,7 @@ export const Menu= {
             name:"Granola Butter Cake",
             Description:"Granola bar butter cake",
             Price:"$8.99",
-            Rating:"5 Stars",
+            Rating:require('../../theme/images/Rating_Stars/3stars.png'),
             Image:require('../../theme/images/Desserts PNG/Granola Butter Cake.png'),
         },
         {   
@@ -300,7 +300,7 @@ export const Menu= {
             name:"Panna Cotta Souffle",
             Description:"Panna Cotta with top charred souffle",
             Price:"$9.99",
-            Rating:"5 Stars",
+            Rating:require('../../theme/images/Rating_Stars/3stars.png'),
             Image:require('../../theme/images/Desserts PNG/Panna Cotta Souffle.png'),
         },
         {   
@@ -308,7 +308,7 @@ export const Menu= {
             name:"Tiramisu Panna Cotta",
             Description:"Tiramisu panna cotta served with charred banana and tiramisu cake",
             Price:"$9.99",
-            Rating:"5 Stars",
+            Rating:require('../../theme/images/Rating_Stars/3stars.png'),
             Image:require('../../theme/images/Desserts PNG/Tiramisu Panna Cotta.png'),
         },
     ],
