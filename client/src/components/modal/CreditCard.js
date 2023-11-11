@@ -4,15 +4,18 @@ import Theme from "../../theme/theme";
 import VisaWhite from '../../theme/Icons/Visa_White.png';
 import CreditCardChip from '../../theme/Icons/chip.png';
 import PaywaveWhite from '../../theme/Icons/PaywaveWhite.png';
+import Mastercard from '../../theme/Icons/Mastercard_logo-removebg-preview.png'
 
 
 
 
 
+const Card = ({mastercard,CardNumber,Month,Year,CardName,visa}) =>{
 
-const Card = ({mastercard}) =>{
 
-return(<CreditCardWrapper mastercard={mastercard}>
+
+return(
+<CreditCardWrapper mastercard={mastercard}>
 <PaywaveArtContainer>
     <PaywaveArt></PaywaveArt>
     <PaywaveArt></PaywaveArt>
@@ -26,19 +29,33 @@ return(<CreditCardWrapper mastercard={mastercard}>
 </PaywaveArtContainer>
 <PaywaveWrapper src={PaywaveWhite}/>
 <ChipWrapper src={CreditCardChip}/>
-<CardNumberWrapper mastercard={mastercard}>4123 1247 1239 1230</CardNumberWrapper>
-<GoodTHRU mastercard={mastercard}>GOOD THRU</GoodTHRU> <CardExpireWrapper mastercard={mastercard}>12/23</CardExpireWrapper>
-<CardNameWrapper mastercard={mastercard}>Sam Perry Lee Chin Howe</CardNameWrapper>
-<Visa_ImageWrapper src={VisaWhite}/>
+{visa ? (
+        <>
+          <CardNumberWrapper visa={visa}>{CardNumber}</CardNumberWrapper>
+          <GoodTHRU visa={visa}>GOOD THRU</GoodTHRU>
+          <CardExpireWrapper visa={visa}>{Month}/{Year}</CardExpireWrapper>
+          <CardNameWrapper visa={visa}>{CardName}</CardNameWrapper>
+          <Visa_ImageWrapper src={VisaWhite} />
+        </>
+      ) : (
+        <>
+          <CardNumberWrapper mastercard={mastercard}>{CardNumber}</CardNumberWrapper>
+          <GoodTHRU mastercard={mastercard}>GOOD THRU</GoodTHRU>
+          <CardExpireWrapper mastercard={mastercard}>{Month}/{Year}</CardExpireWrapper>
+          <CardNameWrapper mastercard={mastercard}>{CardName}</CardNameWrapper>
+          <Visa_ImageWrapper src={Mastercard} />
+        </>
+      )}
 
-
-</CreditCardWrapper>)
-
-
-
-
-
+</CreditCardWrapper>
+)
 }
+
+
+
+
+
+
 
 const PaywaveArtContainer = styled.div`
 top:0;
@@ -64,8 +81,7 @@ right:0;
 border-radius:50%;
 background-color:white;
 
-${(props) => props.mastercard && css`
-`}
+
 `
 
 const PaywaveWrapper = styled.img`
@@ -80,7 +96,7 @@ right:0;
 
 const CardExpireWrapper = styled.p`
 position:absolute;
-color:white;
+color:${Theme.colors.white};;
 text-shadow: 0 2px 3px ${Theme.colors.BackgroundBlack};
 font-family: 'Inconsolata', monospace; 
 font-size:23px;
@@ -90,8 +106,13 @@ left:43%;
 display:flex;
 
 ${(props) => props.mastercard && css`
-color:${Theme.colors.BackgroundBlack};
-text-shadow: 0 1px 3px ${Theme.colors.Greylite};
+color:${Theme.colors.white};
+text-shadow: 0 1px 3px ${Theme.colors.BackgroundBlack};
+`}
+
+${(props) => props.visa && css`
+color:${Theme.colors.white};
+text-shadow: 0 1px 3px ${Theme.colors.BackgroundBlack};
 `}
 `
 
@@ -107,8 +128,13 @@ left:40%;
 display:flex;
 
 ${(props) => props.mastercard && css`
-color:${Theme.colors.BackgroundBlack};
-text-shadow: 0 1px 3px ${Theme.colors.Greylite};
+color:${Theme.colors.white};
+text-shadow: 0 1px 3px ${Theme.colors.BackgroundBlack};
+`}
+
+${(props) => props.visa && css`
+color:${Theme.colors.white};
+text-shadow: 0 1px 3px ${Theme.colors.BackgroundBlack};
 `}
 `
 const CardNameWrapper = styled.p`
@@ -122,9 +148,15 @@ left:10%;
 display:flex;
 
 ${(props) => props.mastercard && css`
-color:${Theme.colors.BackgroundBlack};
-text-shadow: 0 1px 3px ${Theme.colors.Greylite};
+color:${Theme.colors.white};
+text-shadow: 0 1px 3px ${Theme.colors.BackgroundBlack};
 
+`}
+
+
+${(props) => props.visa && css`
+color:${Theme.colors.white};
+text-shadow: 0 1px 3px ${Theme.colors.BackgroundBlack};
 `}
 `
 
@@ -154,12 +186,19 @@ margin: 5rem 5rem;
 
 
 ${(props) => props.mastercard && css`
-background-color:hsla(23,0%,70%,1);
+background-color:hsla(0,0%,0%,1);
 background-image:
-radial-gradient(at 88% 19%, hsla(33,100%,37%,1) 0px, transparent 50%),
-radial-gradient(at 80% 100%, hsla(35,100%,50%,1) 0px, transparent 50%),
-radial-gradient(at 76% 49%, hsla(48,96%,48%,1) 0px, transparent 50%);
+radial-gradient(at 15% 84%, hsla(36,81%,46%,1) 0px, transparent 50%),
+radial-gradient(at 95% 58%, hsla(144,7%,28%,1) 0px, transparent 50%),
+radial-gradient(at 24% 46%, hsla(15,85%,38%,1) 0px, transparent 50%),
+radial-gradient(at 7% 15%, hsla(0,97%,51%,1) 0px, transparent 50%);
 box-shadow: 0 2px 3px ${Theme.colors.Greylite};
+`}
+
+
+${(props) => props.visa && css`
+background: #222222; background-image: radial-gradient(at 12.0% 90.0%, #083c54 0px, transparent 50%),radial-gradient(at -23.3% 49.7%, #083c54 0px, transparent 50%),radial-gradient(at -17.5% 1.4%, #083c54 0px, transparent 50%),radial-gradient(at -2.6% 33.5%, hsl(199, 98%, 48%) 0px, transparent 50%),radial-gradient(at 1.1% 97.6%, hsl(199, 98%, 48%) 0px, transparent 50%);
+box-shadow: 0 2px 3px ${Theme.colors.BackgroundBlack};
 `}
 
 `
@@ -178,13 +217,19 @@ position:absolute;
 color:white;
 text-shadow: 0 2px 3px ${Theme.colors.BackgroundBlack};
 font-family: 'Inconsolata', monospace; 
-font-size:40px;
+font-size:36px;
 top:50%;
 left:10%;
 display:flex;
+width:450px;
 ${(props) => props.mastercard && css`
 color:${Theme.colors.BackgroundBlack};
 text-shadow: 0 1px 3px ${Theme.colors.Greylite};
+`}
+
+${(props) => props.visa && css`
+color:white;
+text-shadow: 0 2px 3px ${Theme.colors.BackgroundBlack};
 `}
 
 `

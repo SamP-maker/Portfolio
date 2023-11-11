@@ -15,9 +15,8 @@ import {FaEnvelope} from "react-icons/fa"
 import Footer from "../../util/Footer/Footer";
 import {useDispatch, useSelector} from 'react-redux';
 import { fetchUserDetails, setUserDetails } from "../../redux/feature/registrationSlice";
+import { reduceBorderWidth,leftdividerAnimation,rightdividerAnimation,reduceBeforeAfterWidth,shake} from "../../theme/animations/animations";
 import bcrypt from 'bcryptjs';
-import { reduceBorderWidth,leftdividerAnimation,rightdividerAnimation,reduceBeforeAfterWidth} from "../../theme/animations/animations";
-
 
 
 const Signup = () =>{
@@ -37,18 +36,33 @@ const Signup = () =>{
      function handleAgreement()
      {
             setIsAgree((prev) => !prev)
-          
+            console.log(isAgree)
      }
 
-      function handleForm(value){
 
+     const handleform = (field, value) => {
+      const unsafeChars = /[\{\}\$\.\"\'\&\|\\\n\r\t]/.test(value);
+      const updatedForm = { ...form };
+    
+      if (field === 'name' || field === 'password') {
+        if (unsafeChars) {
+          // Clear the field if unsafe characters are detected
+          updatedForm[field] = '';
+        } else {
+          // Update the field with the sanitized value if it doesn't contain unsafe characters
+          updatedForm[field] = value;
+        }
+      } else {
+        // Handle other fields if needed
+        updatedForm[field] = value;
+      }
+    
+      setForm(updatedForm);
+    };
 
-          setForm((prev) => ({...prev,...value}));
-       
-        
-        
-     }
-
+    const handleError =  async () =>{
+      setErrorMsg((prev) => !prev)
+    }
 
      
        
@@ -62,21 +76,23 @@ const Signup = () =>{
      
 
      async function handleSubmit(e){
-        e.preventDefault();
+      e.preventDefault();
+        
 
 
-        
-        
+
         const hashedPassword = await bcrypt.hash(form.password,10);
         const validEmailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
         const isEmail = validEmailRegex.test(form.email);
-   
-
-
+     
+  
+      
       if(isEmail){
-        const newPerson = {...form,password: hashedPassword};
+      
+      
+        const newPerson = {...form, password:hashedPassword};
 
-
+   
         if(isAgree){
           const response =  await fetch('http://localhost:5000/signup',{
             method:"POST",
@@ -96,17 +112,17 @@ const Signup = () =>{
             email: "",
             password: "",
         });
-       
+   
         
 
-
+      
 
         if(response.ok){
   
 
           try {
             const result = await response.json();
-         
+            
             dispatch(setUserDetails(result.username));
             
              
@@ -125,18 +141,24 @@ const Signup = () =>{
         
        
      }
+     else{
+      handleError(); // Set the state variable to true
+  setTimeout(() => {
+    handleError(); // Reset the state variable after a delay
+  }, 2000);
+     }
 
         
-      }else{
-        window.alert(`Email is invalid: its not an email`)
-      }
+     }else{
+       window.alert(`Email is invalid: its not an email`)
+    }
 
      
 
-     
         
 
     }
+  
     
 
     
@@ -145,11 +167,12 @@ const Signup = () =>{
 
     return(
 
-        <>
-             
+        
+<>
+      
             <FormContainer >
-                <FormWrapper>
-               
+                <FormWrapper onSubmit={handleSubmit}>
+             
                 <Label fontSize="1.5rem" text="Sign Up"/>
                 
                 <InputWrapper>
@@ -163,7 +186,7 @@ const Signup = () =>{
                             name="name" 
                             placeholder="name"
                             value={form.name}
-                            onChange={(e)=> handleForm( { name: e.target.value})}
+                            onChange={(e)=> handleform( "name", e.target.value)}
                             
                            
                             />
@@ -182,7 +205,7 @@ const Signup = () =>{
                             name="password" 
                             placeholder="password"
                             value={form.password}
-                            onChange={(e)=> handleForm({ password: e.target.value})}
+                            onChange={(e)=> handleform( "password", e.target.value)}
                             
                     />
                 </InputWrapper>
@@ -199,12 +222,12 @@ const Signup = () =>{
                             name="email" 
                             placeholder="email" 
                             value={form.email}
-                            onChange={(e)=> handleForm({ email: e.target.value})}
+                            onChange={(e)=> handleform( "email", e.target.value)}
                             
                             />
                 </InputWrapper>
 
-
+             
                
                 <CheckboxWrapper errorMsg={errorMsg}>
                   <label>
@@ -218,14 +241,14 @@ const Signup = () =>{
                 </CheckboxWrapper>
 
 
-    
+               
 
 
 
                 <ButtonWrapper>
                         <Button type="submit" text="Sign Up" Signup={"true"}></Button>
                 </ButtonWrapper>
-
+              
 
 
                 <HyperLink>
@@ -238,7 +261,7 @@ const Signup = () =>{
 
                 </FormWrapper>
              </FormContainer>
-             
+          
              <ContentWrapper>
              <Divider left/>
         <ContainerWrapper>
@@ -256,8 +279,7 @@ const Signup = () =>{
             <FacebookButton/>
             </ImageWrapper>
             <Footer/>
-        </>
-             
+          </>
         )
 }
 
@@ -407,25 +429,8 @@ font-size: .75rem;
 
 ${(props)=>
 props.errorMsg && css`
-      animation: shake 0.5s ease-in-out;
-      
-      @keyframes shake {
-        0% {
-          transform: translateX(0);
-        }
-        25% {
-          transform: translateX(-5px);
-        }
-        50% {
-          transform: translateX(5px);
-        }
-        75% {
-          transform: translateX(-5px);
-        }
-        100% {
-          transform: translateX(0);
-        }
-      }
+      animation: ${shake} 0.5s ease-in-out;
+    
 
       input[type="checkbox"]{
         border:${(props) =>

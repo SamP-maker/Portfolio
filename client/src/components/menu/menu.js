@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addItem, setStoreCategory} from '../../redux/feature/cartSlice';
 import Cart from '../modal/CartModal';
 import { Logo } from '../../theme/theme';
-
+import { useParams } from 'react-router-dom';
 
 
 
@@ -24,6 +24,7 @@ import { Logo } from '../../theme/theme';
 const Menu = ()=>{
         const [selectedItem,setSelectedItem] = useState([])
         const [selectedCategory, setSelectedCategory] = useState('Main')
+        const { name } = useParams()
         
         const dispatch = useDispatch()
 
@@ -32,8 +33,24 @@ const Menu = ()=>{
      
 
         const handleSearch = (e) =>{
+
+               
                 const inputValue = e.target.value;
-                 setSearchItem(inputValue)
+                const trimmedValue = inputValue.trim(); 
+                const isAlphabetWithSpace = /^[a-zA-Z\s]+$/.test(trimmedValue); 
+
+                if(name){
+                        
+                        setSearchItem(name)
+
+                }else{
+                if(isAlphabetWithSpace){
+                        
+                 setSearchItem(trimmedValue)
+                }else{
+                        setSearchItem(inputValue.replace(/[^a-zA-Z\s]/g, ''))
+                }
+        }
        }
         
 
@@ -49,25 +66,26 @@ const Menu = ()=>{
 
                 const category = ['Main','Pasta', 'Appetizers', 'Beverage', 'Desserts']
                 let searchResults = [];
-                for(let i = 0 ; i < category.length ; i++){
-                        const categoryName = category[i];
-                        const menu = menuObject[categoryName]
+               for (let i = 0; i < category.length; i++) {
+    const categoryName = category[i];
+    const menu = menuObject[categoryName];
 
+    if (name) {
+      // If the name parameter is present, try to find a menu item with the same name
+      const menuItem = menu.find((item) => item.name.toLowerCase() === name.toLowerCase());
 
-                        const results = menu.filter(item => item.name.toLowerCase().indexOf(searchItem.toLowerCase()) === 0);
-                       
-                        if (results.length > 0) {
-                                searchResults = searchResults.concat(results);
-                                console.log(searchResults)
-                              }
-                              
-                              
-
-
-                }
-                
-                
+      if (menuItem) {
+        searchResults.push(menuItem);
+      }
+    } else {
+      // If no name parameter, search for items based on the search input
+      const results = menu.filter((item) => item.name.toLowerCase().indexOf(searchItem.toLowerCase()) !== -1);
+      searchResults = searchResults.concat(results);
+    }
+  }
+      
               setSelectedItem(searchResults)
+        
         }
 
        

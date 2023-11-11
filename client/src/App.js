@@ -9,11 +9,12 @@ import Menu from "./components/menu/menu";
 import Order_Confirm from "./components/Checkout/Order_Confirm";
 import Address from "./components/Checkout/Address";
 import CardNumber from './components/modal/BillingCardNumber';
-import Status from './components/Status/Status';
 import Payment from './components/Checkout/Payment';
 import BillingAddress from './components/modal/BillingAddressModal';
-import CreditCard from '../src/components/modal/CreditCard'
-
+import Status from './components/Status/Status';
+import BillingEdit from './components/modal/BillingAddressEdit';
+import AddressEdit from './components/modal/AddressEdit';
+import OrderEdit from './components/modal/OrderEdit';
 
 
 
@@ -35,6 +36,7 @@ function App() {
     <Route path="/Signup" element={<Signup/>} />
     <Route path="/login" element={<Login/>} />
  
+    <Route path="/Menu/:name" element={<Menu/>}/>
     <Route path="/Menu" element={<Menu/>}/>
     <Route path="/Order_confirm" element={<Order_Confirm/>}/>
     <Route path="/Address" element={<Address/>}/>
@@ -43,9 +45,12 @@ function App() {
     <Route path="/Dashboard" element={<Dashboard/>}/>
     <Route path ="/BillingModal" element={<CardNumber/>}/>
     <Route path ="/BillingAddress" element={<BillingAddress/>}/>
+    <Route path ="/Status" element={<Status/>}/>
     
   {/*Testing*/} 
-  <Route path="/CreditCard" element={<CreditCard/>}/>
+    <Route path ="/BillingEdit" element={<BillingEdit/>}/>
+    <Route path ="/AddressEdit" element={<AddressEdit/>}/>
+    <Route path ="/OrderEdit" element={<OrderEdit/>}/>
 
   
   </Routes>

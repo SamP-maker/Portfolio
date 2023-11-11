@@ -7,7 +7,7 @@ import { FaSearch } from 'react-icons/fa';
 import Menu from '../Menu-Content/menuObject';
 import { inputAnimation } from "../../theme/animations/animations";
 
-const Input = ({type,name, placeholder, onChange, value, searchBar,white,register,phone,setPhone}) =>{
+const Input = ({type,name, placeholder, onChange, value, searchBar,white,register,phone,setPhone,maxLength}) =>{
 
 
 
@@ -85,6 +85,7 @@ const Input = ({type,name, placeholder, onChange, value, searchBar,white,registe
                                                                 placeholder={placeholder} 
                                                                 onChange={onChange} 
                                                                 value={value}
+                                                                maxLength={maxLength}
                                                             />
                                                         );
                                                     };

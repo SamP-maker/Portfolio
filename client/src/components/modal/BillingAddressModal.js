@@ -27,7 +27,6 @@ const BillingModal = ()=>{
     Address: '',
     Postal: '',
     Country: '',
-    Zip: '',
     City: '',
     State:''
   })
@@ -45,7 +44,7 @@ const BillingModal = ()=>{
 
 
 try{
-    await fetch(`http://localhost:5000/userBillingAddress`,{
+    await fetch(`http://localhost:5000/BillingAddressPost`,{
       method:'POST',
       headers:{
         'Content-Type': 'application/json',
@@ -96,7 +95,7 @@ try{
     if(isSame){
     return async ()=>{
     try{
-      const response = await fetch(`http://localhost:5000/userAddress`);
+      const response = await fetch(`http://localhost:5000/address`);
       if(!response.ok){
         throw new Error(`an Error occured ${response.statusText}`);
       }

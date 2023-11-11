@@ -5,6 +5,7 @@ import styled,{css} from 'styled-components';
 import Theme from '../../theme/theme';
 import Menu from '../Menu-Content/menuObject_PNG';
 import Button from '../Button/Button';
+import { Link } from 'react-router-dom';
 
 
 const StyledCarousel = styled(Carousel)`
@@ -97,7 +98,7 @@ const CarouselSlide = Menu.Main.map((data) =>{
        
        <p4>{data.Description}</p4>
 
-       <Button checkout={true} backgroundColor={"transparent"} padding={"1.2rem 4rem;"}>Explore</Button>
+       <Link to={`/Menu/${data.name}`}><Button checkout={true} backgroundColor={"transparent"} padding={"1.2rem 4rem;"}>Explore</Button></Link>
      
       
       </DescriptContainer>

@@ -10,6 +10,8 @@ import Wallet from '../../theme/Icons/wallet.png';
 import { Link } from 'react-router-dom';
 import CheckoutModal from '../modal/CheckoutModal';
 import { Logo } from '../../theme/theme';
+import { useSelector} from 'react-redux';
+import BillingEdit from '../../components/modal/BillingAddressEdit'
 
 
 
@@ -18,27 +20,40 @@ import { Logo } from '../../theme/theme';
 const Payment = ()=>{
 
   const [itemDocuments,setItemDocuments] = useState([])
-  const [AddressDocuments,setAddressDocuments] = useState([])
-  const [BillingAddress, setBillingAddress] = useState([])
-  const [cardNumber, setcardNumber] = useState([])
+  const [address,setAdress] = useState({})
+  const [billing,setBillingAdress] = useState({})
+  const [cardDetails,setCardDetai] = useState({})
+  const [selectedCardType, setSelectedCardType] = useState('visa');
+
+
   
 
-  function fetchData(url,setStateFunction){
+
+
+
+
+  function fetchOrder(){
     return async ()=>{
+     
 
     try{
-      const response = await fetch(`${url}`,{
+      const response = await fetch(`http://localhost:5000/userOrderList`,{
         credentials: 'include', // Include credentials in the request
+        headers:{
+          "Content-Type": "application/json",
+      },
       });
+
       if(!response.ok){
         throw new Error(`an Error occured ${response.statusText}`);
     
-      }
+      }else{
       
-      const items = await response.json();
-      setStateFunction(items);
-      const itemArray = [items]
-
+      const data = await response.json();
+      
+      
+      setItemDocuments(data[0].Order)
+      }
    
     }catch(error){
       window.alert(error.message);
@@ -48,12 +63,113 @@ const Payment = ()=>{
 
   }
 
-/*
-  useEffect(()=>fetchData(`http://localhost:5000/userOrderList`,setItemDocuments),[itemDocuments.length])
-  useEffect(()=>fetchData(`http://localhost:5000/userAddress`,setAddressDocuments),[AddressDocuments.length])
-  useEffect(()=>fetchData(`http://localhost:5000/userBillingAddress`,setBillingAddress),[BillingAddress.length])
-  useEffect(()=>fetchData(`http://localhost:5000/userBilling`,setcardNumber),[cardNumber.length])
-*/
+
+  function fetchAddress(){
+    return async ()=>{
+     
+
+    try{
+      const response = await fetch(`http://localhost:5000/address`,{
+        credentials: 'include', // Include credentials in the request
+        headers:{
+          "Content-Type": "application/json",
+      },
+      });
+
+      if(!response.ok){
+        throw new Error(`an Error occured ${response.statusText}`);
+    
+      }else{
+      
+      const data = await response.json();
+      setAdress( data[0])
+      console.log('Address',data)
+      
+     
+
+
+      }
+   
+    }catch(error){
+      window.alert(error.message);
+    }
+      
+  };
+
+  }
+
+
+  
+
+  function fetchBillAddress(){
+    return async ()=>{
+     
+
+    try{
+      const response = await fetch(`http://localhost:5000/BillingAddress`,{
+        credentials: 'include', // Include credentials in the request
+        headers:{
+          "Content-Type": "application/json",
+      },
+      });
+
+      if(!response.ok){
+        throw new Error(`an Error occured ${response.statusText}`);
+    
+      }else{
+      
+      const data = await response.json();
+      console.log('Billing Address',data[0])
+      setBillingAdress(data[0])
+     
+
+
+      }
+   
+    }catch(error){
+      window.alert(error.message);
+    }
+      
+  };
+
+  }
+
+
+
+  function fetchCreditCard(){
+    return async ()=>{
+      try{
+        const response = await fetch('https://localhost:5000/userBilling',{
+          credentials: 'include',
+          headers:{
+            "Content-Type": "application/json",
+          },
+        });
+        if(!response.ok){
+          throw new Error(`an Error occured ${response.statusText}`);
+        }
+      }catch(err){
+        window.alert(err)
+      }
+
+    }
+
+
+
+  }
+
+  useEffect(()=>{
+
+    const fetchOrderFunction = fetchOrder();
+    const fetchAddressFunction = fetchAddress();
+    const fetchBillingAddress = fetchBillAddress();
+    fetchOrderFunction();
+    fetchAddressFunction();
+    fetchBillingAddress();
+  
+   
+  },[])
+
 
     return(
       
@@ -76,14 +192,16 @@ const Payment = ()=>{
     <PaymentInfoWrapper>
         <div><h1>Choose a payment method</h1></div>
     <PaymentMethodWrapper>
-    <Link to="/BillingModal">
+    <Link to="/BillingModal?cardType=visa">
     <img src={VisaCard}/>
 
     </Link>
-    <Link to="/BillingModal">
+    <Link to="/BillingModal?cardType=mastercard">
     <img src={MasterCard}/>
-
+    
     </Link>
+
+ 
    
     <img src={Wallet}/>
 
@@ -98,9 +216,17 @@ const Payment = ()=>{
            
             <StyledLink to="/Order_confirm"> <EditButton>Edit</EditButton></StyledLink>
 
-{itemDocuments.length === 0 ?    ( 
+{itemDocuments.length === 0  ?   ( 
+
+<OrderContentContainer>
+                      <InvalidOrder>No Orders Found</InvalidOrder>
+</OrderContentContainer> ) : ( 
                                      <OrderContentContainer>
                                                       {itemDocuments.map(items =>{
+                                                        const itemName = items.name
+                                                        const itemMatch = itemDocuments.filter(item=> item.name === itemName)
+                                                        const quantity = itemMatch.length
+                                              
                                                         return(
                                                                 <>
                                                                   <ItemContainer>
@@ -112,110 +238,65 @@ const Payment = ()=>{
                                                                   </DetailsContainer>
 
                                                                   <QuantityContainer>
-                                                                      <p>{items.amount}</p>
+                                                                
+                                                                      <p>Quantity: {quantity} </p>
                                                                   </QuantityContainer>
                                                                 </>
                                                               )
                                                       })}
-                                     </OrderContentContainer>):( 
-
-                                      <OrderContentContainer>
-                                                          <ItemContainer>
-                                                                        <p>Aglio Olio Pasta</p>
-                                                                        <p>Aglio Olio Pasta</p>
-                                                                        <p>Aglio Olio Pasta</p>
-                                                          </ItemContainer>
-                                                          <DetailsContainer>
-                                                                        <p>Remarks:<span> None</span></p>
-                                                                        <p>Remarks:<span> None</span></p>
-                                                                        <p>Remarks:<span> None</span></p>
-                                                          </DetailsContainer>
-                                                          <QuantityContainer>
-                                                                        <p>1</p>
-                                                                        <p>1</p>
-                                                                        <p>1</p>
-                                                          </QuantityContainer>
-                                      </OrderContentContainer> )
+                                     </OrderContentContainer>
+                                     
+                                     )
                                        
 
                            }
            
             </Section_Order_Confirmation>
 
-
+      
 {/*Second card */}
-              <Section_Delivery_Address>
+<Section_Delivery_Address>
               <StyledLink to="/BillingModal"> <EditButton>Edit</EditButton></StyledLink>
-                                    {AddressDocuments.length === 0 ? (
-                                    <AddressContainer>
-                                            <Address_Item_Container>
-                                                                  <p>Surname: Lee</p>
-                                                                  <p>Name: Sam Perry Chin Howe</p>
-                                                                  <p>Address: Five Stones Condominium, Block E, Level 5, Unit 02, 47300, Petaling Jaya</p>
-                                                                  <p>Phone: +60 102367603</p>
-                                            </Address_Item_Container>
-                                    </AddressContainer>  )
-                                    :
+                                    {address ? 
                                 ( <AddressContainer>
                                             <Address_Item_Container>
-                                                        {AddressDocuments.map(items => {
-                                                                   return(
-                                                                      <>
-                                                                      <p>Surname: {items.LastName}</p>
-                                                                      <p>Name: {items.FirstName}</p>
-                                                                      <p>Address: {items.Address}</p>
-                                                                      <p>Phone: {items.Postal},{items.District}</p>
-                                                                      <p>{items.Phone ? items.Phone : "No Phone Number Found"}</p>
-                                                                      </>
-                                                                    )})}           
+                                                       
+                                                                      <div key={address._id}>
+                                                                      <p1>Surname: {address.LastName}</p1>
+                                                                      <p1>Name: {address.FirstName}</p1>
+                                                                      <p1>Address: {address.Address}</p1>
+                                                                      <p1>Post Code: {address.Postal}, District: {address.District}</p1>
+                                                                      <p1>Phone: +{address.Phone}</p1>  
+                                                                      </div>
+                                                                        
                                             </Address_Item_Container>
                           </AddressContainer>
-                          )}
+
+
+                          ) :
+                          (
+                            <AddressContainer>
+                                    <Address_Item_Container>
+                                                         <InvalidAddress>No Address Found</InvalidAddress>
+                                    </Address_Item_Container>
+                            </AddressContainer>  )
+                            
+                            }
             
               </Section_Delivery_Address>
 
-
-
-
 {/*Third card */}
-<Section_Payment_Billing>
-              <StyledLink to="/BillingAddress"> <EditButton>Edit</EditButton></StyledLink>
-                                   <BillingContainer>
-                                    {BillingAddress.length === 0 ? 
-                              ( <Billing_Item_Container>
-                                <p>Card: **** **** **** 1234</p>
-                                <p>Name: Sam Perry Lee Chin Howe</p>
-                                <p>Address: Five Stones Condominium, Block E, Level 5, Unit 02, 47300, Petaling Jaya</p>
-                              </Billing_Item_Container>) :
-                              
-
-                              (<Billing_Item_Container>
-                              {cardNumber.map((items,index)=>{
-                                return(
-                                  <>
-                                <p>Card: {items.cardNumber}</p>
-                                <p>Name:{items.Firstname}, {items.LastName}</p>
-                          
-                                  
-                                  </>
-                                )
 
 
-                              })}
-                              </Billing_Item_Container>
-                              
-                              )}
-                              
-                             
 
-                                </BillingContainer>
-</Section_Payment_Billing>
+
+<BillingEdit/>
 
 
 
 
 
-{/*Fourth card */}
+
 
     </PaymentInfoWrapper>
  
@@ -229,6 +310,23 @@ const Payment = ()=>{
         
     )
 }
+
+
+const InvalidOrder = styled.p`
+font-size:20px;
+position:absolute;
+left:40%;
+top:50%;
+`
+
+
+const InvalidAddress = styled.p`
+font-size:20px;
+position:absolute;
+left:60%;
+top:30%;
+
+`
 
 
 const StyledLink = styled(Link)`
@@ -296,12 +394,18 @@ const Address_Item_Container = styled.div`
 grid-column-start:1;
 grid-column-end:3;
 font-size:0.825rem;
-display:flex;
-flex-direction:column;
-gap:10px;
 height:200px;
 position:relative;
 font-size:1rem;
+margin-top:0;
+
+
+
+p1{
+
+  padding: .5rem .5rem;
+  display:flex;
+}
 
 
 `
@@ -309,7 +413,7 @@ font-size:1rem;
 
 
 const AddressContainer = styled.div`
-margin-top:3%;
+margin-top:1%;
 display:grid;
 grid-template-columns: repeat(3,1fr);
 grid-template-rows: repeat(auto,1fr);
@@ -372,11 +476,15 @@ font-size:1rem;
 `
 
 const OrderContentContainer = styled.div`
-margin-top:3%;
+grid-column-start:1;
+grid-column-end:3;
+font-size:0.825rem;
 display:grid;
-grid-template-columns: repeat(3,1fr);
-grid-template-rows: repeat(auto,1fr);
-justify-items:center;
+flex-direction:column;
+gap:10px;
+height:200px;
+position:relative;
+font-size:1rem;
 
 `
 
@@ -468,12 +576,6 @@ img{
     width:50px;
     
 }
-`
-
-const RightWrapper = styled.div`
-display:flex;
-justify-item:flex-end;
-gap:1rem;
 `
 
 

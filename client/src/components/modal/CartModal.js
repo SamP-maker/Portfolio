@@ -103,7 +103,6 @@ const Cart = ({black}) =>{
       {!isDropDown ? (<DropDownWrapper>
         <DropDownContainer><StyledLink to="/Payment"><Navigation>Check Out</Navigation></StyledLink></DropDownContainer>
         <DropDownContainer> <StyledLink to="/Status"><Navigation>Status</Navigation></StyledLink></DropDownContainer>
-        <DropDownContainer> <StyledLink to="/"><Navigation>Log out</Navigation></StyledLink></DropDownContainer>
       </DropDownWrapper>) : null}
         
         </Navigation>}

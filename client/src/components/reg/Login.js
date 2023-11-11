@@ -24,16 +24,38 @@ const Login = () =>{
         identifier: "",
         password:"",
     })
-
-
+  
     const navigate = useNavigate();
-
+      
      //Form Handling//
-     const handleform = (value) =>{
-        return setNewDocuments((prev) =>{
-            return {...prev,...value}
-        })
-    }
+     const handleform = (field, value) => {
+      const unsafeChars = /[\{\}\$\.\"\'\&\|\\\n\r\t]/.test(value);
+    
+      if (field === 'identifier' || field === 'password') {
+        if (unsafeChars) {
+          // Clear the field if unsafe characters are detected
+          
+          setNewDocuments((prevForm) => ({
+            ...prevForm,
+            [field]: '',
+          }));
+        } else {
+          // Update the field with the sanitized value if it doesn't contain unsafe characters
+          console.log(newDocument.identifier)
+          setNewDocuments((prevForm) => ({
+            ...prevForm,
+            [field]: value,
+          }));
+        }
+      }
+      console.log(newDocument.identifier)
+      setNewDocuments((prevForm) => ({
+        ...prevForm,
+        [field]: value,
+      }));
+    };
+
+   
 
 
 
@@ -57,8 +79,6 @@ const Login = () =>{
            
             dispatch(setUserDetails(data.username));
             navigate("/Dashboard")
-          }else{
-            window.alert('Login Failed');
           }
 
        
@@ -77,7 +97,7 @@ const Login = () =>{
 
     
     return(
-<>
+<form onSubmit={handleSubmit}>
         <FormContainer>
             
                 <FormWrapper>
@@ -93,8 +113,9 @@ const Login = () =>{
                            register={"true"}
                             type="text" 
                             name="identifier" 
-                            placeholder="Username or Password"
-                            onChange={(e) => handleform({identifier : e.target.value})}
+                            placeholder="Username"
+                            value={newDocument.identifier}
+                            onChange={(e) => handleform("identifier", e.target.value)}
                             
                             
                             
@@ -112,7 +133,8 @@ const Login = () =>{
                             type="password" 
                             name="password" 
                             placeholder="Password"
-                            onChange={(e) => handleform({password : e.target.value})} 
+                            value={newDocument.password}
+                            onChange={(e) => handleform("password", e.target.value)} 
                             
                             />
                 </InputWrapper>
@@ -154,7 +176,7 @@ const Login = () =>{
            
             <Footer/>
       
-</>             
+</form>             
         )
     }
 

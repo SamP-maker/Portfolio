@@ -1,17 +1,16 @@
-import React, {useState,useEffect, useRef} from 'react';
+import React from 'react';
 import styled,{css} from 'styled-components';
 import Theme from '../../theme/theme';
 import Footer from '../../util/Footer/Footer';
 import 'react-international-phone/style.css';
 import Cart from '../modal/CartModal';
-import MenuButton from '../../util/Button/DropdownButton';
-import ButtonTypes from '../../util/Button/ButtonObject';
+import BackgroundImg from '../../theme/images/BackgroundImg.jpg'
 
 
 
 
 
-const Address = ()=>{
+const Status = ()=>{
         
 
 
@@ -23,18 +22,26 @@ const Address = ()=>{
        <>
 
       <Cart/>
+      <Top_section/>
+
+
+       
+
 
       <Modal>
-        <StatusContent>
 
 
+        <Grid_Box> Checking for your Order</Grid_Box>
+        <Grid_Box> Restaurant is preparing your food</Grid_Box>
+        <Grid_Box> Making sure your order is correct</Grid_Box>
+        <Grid_Box> Delivery rider picking up your food</Grid_Box>
+        <Grid_Box> Delivery is on it's way!</Grid_Box>
+        <Grid_Box> Check Status</Grid_Box>
 
-
-        </StatusContent>
-
+     
 
       </Modal>
-
+      <Status_Box> Delivery Status</Status_Box>
 
 
 
@@ -53,15 +60,42 @@ const Address = ()=>{
         
     )
 }
+const Status_Box = styled.div`
+width:100%;
+height:500px;
+border:1px solid red;
+`
+
+const Grid_Box = styled.div`
+width:(100/3)%;
+height:500px;
+border:1px solid red;
+
+&:nth-child(1),&:nth-child(3),&:nth-child(5){
+background-color:red;
+}
+`
+
+const Top_section = styled.div`
+width:100%;
+height:800px;
+background: url(${BackgroundImg});
+background-repeat: no-repeat;
+background-size: cover;
+background-position: 30% 10%;
+
+`
 
 const Modal = styled.div`
-margin-top:20rem;
-margin-bottom:20rem;
-padding:20rem 20rem;
-display:flex;
-justify-content:center;
-align-items:center;
+display:grid;
+grid-template-columns:repeat(3,1fr);
+grid-template-rows:repeat(2,1fr);
+grid-gap: 0;
+
 `
+
+
+
 const StatusContent = styled.div`
 
 box-shadow: 0 2px 4px ${Theme.colors.Greylite};
@@ -78,7 +112,7 @@ border-radius:1rem;
 
 
 
-export default Address
+export default Status
 
 
 

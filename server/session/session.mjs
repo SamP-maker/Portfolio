@@ -21,7 +21,7 @@ async function comparePassword(plainTextPassword, hashedPassword) {
           });
           
         if(!user){
-            res.status(401).json({ message: 'Login failed' });
+            res.status(401).json({ message: 'No such User' });
             return;
         }else{
 
@@ -42,7 +42,7 @@ async function comparePassword(plainTextPassword, hashedPassword) {
             console.log(req.session.user.email)
             res.status(200).send(responseData)
         }else{
-            res.status(401).json({message: 'Login failed'});
+            res.status(401).json({message: 'NO HASHED PASSWORD'});
         }
     }}catch(err){
         res.status(500).send(`An error occured: ${err}`)
@@ -52,7 +52,7 @@ async function comparePassword(plainTextPassword, hashedPassword) {
 
 
 router.post("/signup", async(req,res)=>{
-
+console.log('LOGIN SUCCESSFUL')
     try {
         let newDocument = {
           Username: req.body.name,

@@ -134,11 +134,7 @@ const OrderConfirm = ()=>{
  
  
 
- <form onSubmit={handleSubmit}>
- 
 
-
-</form>
    
    <Footer/>
    </PageWrapper>

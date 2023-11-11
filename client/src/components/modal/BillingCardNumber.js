@@ -4,10 +4,11 @@ import Theme from '../../theme/theme';
 import Input from '../../util/Input/Input';
 import Label from '../../util/Label/Label';
 import { DateField } from '@mui/x-date-pickers';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate,useLocation  } from 'react-router-dom';
 import Button from '../../util/Button/ButtonObject';
 import Cart from './CartModal';
 import { Logo } from '../../theme/theme';
+import CreditCard from './CreditCard';
 
 
 
@@ -18,7 +19,24 @@ import { Logo } from '../../theme/theme';
 const BillingModal = ()=>{
 
   const navigate = useNavigate()
+  const location = useLocation()
+  const params = new URLSearchParams(location.search);
+ 
+  const cardType = params.get('cardType')
+ 
 
+
+  const handleCardType = () =>{
+
+    if( cardType == 'visa'){
+      return true
+    }else{
+      return false
+    }
+
+
+
+  }
  
   const [form, setForm] = useState({
     CardNumber: '',
@@ -28,7 +46,7 @@ const BillingModal = ()=>{
     Year:'',
   })
 
-  const [isSame,setIsSame] = useState(true)
+ 
  
 
 
@@ -74,27 +92,81 @@ try{
     
   }
 
-  const handleForm = (value)=>{
-    return setForm(prev =>{
-      console.log(value.Month)
-      console.log(value.Year)
-      console.log(form)
-      return {...prev,...value}
-    })
+  
+    
+    /*
+      const formattedInput = value.CardNumber.replace(/\D/g, '').slice(0, 19);
+      let formattedCardNumber = '';
+      for (let i = 0; i < formattedInput.length; i += 4) {
+        formattedCardNumber += formattedInput.slice(i, i + 4) + ' ';
+      }*/
+ 
+  
 
+  
+
+  const handleForm = (field,value)=>{
+    if (field === 'Month' || field === 'Year') {
+      // Use a regular expression to match 2-digit numbers
+      const isNumeric = !isNaN(value);
+  
+      if (isNumeric) {
+        setForm((prevForm) => ({
+          ...prevForm,
+          [field]: value,
+        }));
+      }else{
+        console.log('error not a number')
+      }
+
+
+
+
+
+
+
+    }else if( field === 'FullName'){
+      const trimmedValue = value.trim(); 
+      const isAlphabetWithSpace = /^[a-zA-Z\s]+$/.test(trimmedValue); 
+    
+      if (isAlphabetWithSpace) {
+        setForm((prevForm) => ({
+          ...prevForm,
+          [field]: trimmedValue,
+        }));
+      }else {
+        setForm((prevForm) => ({
+          ...prevForm,
+          [field]: '',
+        }));
+      }
+
+
+    }else if( field === 'CardNumber'){
+     
+
+      const formattedValue = value.replace(/\D/g, '').slice(0, 19).replace(/(\d{4})/g, '$1 ');
+
+        setForm((prevForm) => ({
+          ...prevForm,
+          [field]: formattedValue,
+        }));
+    }
+    
+    else{
+
+      setForm((prevForm) => ({
+        ...prevForm,
+        [field]: value,
+      }));
+    }
+
+    
+   
     
   }
 
-  const handleisSame = ()=>{
-    setIsSame((same)=> !same)
-  }
-
-
-
-
-
-
-
+  
 
 
   
@@ -117,13 +189,22 @@ try{
 
 
 
-
-    
    
     <form onSubmit={handleSubmit}>
      <CheckOutWrapper>
 
-      
+
+{cardType == 'mastercard' ?
+
+<CreditCardWrapper>
+      <CreditCard  mastercard={handleCardType} CardName={form.FullName} CardNumber={form.CardNumber} Month={form.Month} Year={form.Year} />
+</CreditCardWrapper>:
+<CreditCardWrapper>
+      <CreditCard  visa={handleCardType} CardName={form.FullName} CardNumber={form.CardNumber} Month={form.Month} Year={form.Year} />
+</CreditCardWrapper>     }
+ 
+
+
 <Label fontSize="1rem" text="Cardholder's Name"/>    
                 <Input
 
@@ -132,7 +213,8 @@ try{
                     name="firstName" 
                     placeholder="First Name.."
                     value={form.FullName}
-                    onChange={(e) => handleForm({FullName: e.target.value})}
+                    onChange={(e) => handleForm('FullName', e.target.value)}
+
                     />
   
    
@@ -145,11 +227,12 @@ try{
                             name="cardNumber" 
                             placeholder="Card Number.."
                             value={form.CardNumber}
-                            onChange={(e) => handleForm({CardNumber: e.target.value})}
+                            onChange={(e) => handleForm('CardNumber', e.target.value)}
+                            maxlength={19}
                             />
 
                 
-<Label fontSize="1rem" text="DD/MM"/>
+<Label fontSize="1rem" text="MM"/>
                 
                 <Input
                                         white
@@ -157,7 +240,8 @@ try{
                                         name="Month" 
                                         placeholder="Month.."
                                         value={form.Month}
-                                        onChange={(e) => handleForm({Month: e.target.value})}
+                                        onChange={(e) => handleForm('Month', e.target.value)}
+                                        maxLength={2}
                                         />
             
 
@@ -171,7 +255,8 @@ try{
                             name="Year" 
                             placeholder="Year.."
                             value={form.Year}
-                            onChange={(e) => handleForm({Year: e.target.value})}
+                            onChange={(e) =>  handleForm('Year', e.target.value)}
+                            maxLength={2}
                             />
 
 <Label fontSize="1rem" text="CCV"/>
@@ -183,7 +268,8 @@ try{
                     name="CCV" 
                     placeholder="CCV.."
                     value={form.CCV}
-                    onChange={(e) => handleForm({CCV: e.target.value})}
+                    onChange={(e) => handleForm('CCV', e.target.value)}
+                    maxLength={3}
                     />
  
  <ButtonWrapper>
@@ -201,6 +287,12 @@ try{
 
 {/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Styling Sheet~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/ }
 
+
+const CreditCardWrapper = styled.div`
+position:absolute;
+top:-35%;
+left:6%;
+`
 const StyledLink = styled(Link)`
 text-decoration:none;
 color: ${Theme.colors.ColumnBlack};
@@ -256,25 +348,26 @@ width:30vw;
 margin:auto auto;
 grid-template-columns: repeat(2, 1fr);
 grid-template-rows: repeat(auto, 1fr);
-padding: 5rem 5rem;
+padding: 8rem 5rem;
+position:relative;
 
 
 
-Label:nth-child(1){
+Label:nth-child(2){
   grid-column-start:1;
   grid-column-end:1;
   grid-row-start:1;
   grid-row-end:1;
 }
 
-Input:nth-child(2){
+Input:nth-child(3){
   grid-column-start:1;
   grid-column-end:3;
   grid-row-start:2;
   grid-row-end:2;
 }
 
-Label:nth-child(3){
+Label:nth-child(4){
   grid-column-start:1;
   grid-column-end:1;
   grid-row-start:3;
@@ -283,14 +376,14 @@ Label:nth-child(3){
   
 }
 
-Input:nth-child(4){
+Input:nth-child(5){
   grid-column-start:1;
   grid-column-end:3;
   grid-row-start:4;
   grid-row-end:4;
 }
 
-Label:nth-child(5){
+Label:nth-child(6){
   grid-column-start:1;
   grid-column-end:1;
   grid-row-start:5;
@@ -300,7 +393,7 @@ Label:nth-child(5){
 }
 
 
-Input:nth-child(6){
+Input:nth-child(7){
   grid-column-start:1;
   grid-column-end:1;
   grid-row-start:6;
@@ -309,7 +402,7 @@ Input:nth-child(6){
 
 }
 
-Label:nth-child(7){
+Label:nth-child(8){
   grid-column-start:2;
   grid-column-end:2;
   grid-row-start:5;
@@ -318,7 +411,7 @@ Label:nth-child(7){
   
 }
 
-Input:nth-child(8){
+Input:nth-child(9){
   grid-column-start:2;
   grid-column-end:2;
   grid-row-start:6;
@@ -327,7 +420,7 @@ Input:nth-child(8){
 
 }
 
-Label:nth-child(9){
+Label:nth-child(10){
   grid-column-start:1;
   grid-column-end:1;
   grid-row-start:7;
@@ -336,7 +429,7 @@ Label:nth-child(9){
   
 }
 
-Input:nth-child(10){
+Input:nth-child(11){
   grid-column-start:1;
   grid-column-end:1;
   grid-row-start:8;

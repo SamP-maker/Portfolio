@@ -31,3 +31,93 @@ bc37b38e7b69a4eb76d9c562d1b2dc58
         background-color: #f0f0f0; /* Set your background color */
     }
  
+
+  const unsafeChars = /[\{\}\$\.\"\'\&\|\\\n\r\t]/.test(value);
+      const updatedForm = { ...form };
+    
+      if (field === 'name' || field === 'password') {
+        if (unsafeChars) {
+          // Clear the field if unsafe characters are detected
+          updatedForm[field] = '';
+        } else {
+          // Update the field with the sanitized value if it doesn't contain unsafe characters
+          updatedForm[field] = value;
+        }
+      } else {
+        // Handle other fields if needed
+        updatedForm[field] = value;
+      }
+    
+      setForm(updatedForm);
+
+
+
+      
+{/*Second card */}
+              <Section_Delivery_Address>
+              <StyledLink to="/BillingModal"> <EditButton>Edit</EditButton></StyledLink>
+                                    {AddressDocuments.length === 0 ? (
+                                    <AddressContainer>
+                                            <Address_Item_Container>
+                                                                 <InvalidAddress>No Address Found</InvalidAddress>
+                                            </Address_Item_Container>
+                                    </AddressContainer>  )
+                                    :
+                                ( <AddressContainer>
+                                            <Address_Item_Container>
+                                                        {AddressDocuments.map(items => {
+                                                                   return(
+                                                                      <>
+                                                                      <p>Surname: {items.LastName}</p>
+                                                                      <p>Name: {items.FirstName}</p>
+                                                                      <p>Address: {items.Address}</p>
+                                                                      <p>Phone: {items.Postal},{items.District}</p>
+                                                                      <p>{items.Phone ? items.Phone : "No Phone Number Found"}</p>
+                                                                      </>
+                                                                    )})}           
+                                            </Address_Item_Container>
+                          </AddressContainer>
+                          )}
+            
+              </Section_Delivery_Address>
+
+
+
+
+{/*Third card */}
+<Section_Payment_Billing>
+              <StyledLink to="/BillingAddress"> <EditButton>Edit</EditButton></StyledLink>
+                                   <BillingContainer>
+                                    {BillingAddress.length === 0 ? 
+                              ( <Billing_Item_Container>
+                               <InvalidAddress>No Billing Address Found</InvalidAddress>
+                              </Billing_Item_Container>) :
+                              
+
+                              (<Billing_Item_Container>
+                              {cardNumber.map((items,index)=>{
+                                return(
+                                  <>
+                                <p>Card: {items.cardNumber}</p>
+                                <p>Name:{items.Firstname}, {items.LastName}</p>
+                          
+                                  
+                                  </>
+                                )
+
+
+                              })}
+                              </Billing_Item_Container>
+                              
+                              )}
+                              
+                             
+
+                                </BillingContainer>
+</Section_Payment_Billing>
+
+
+
+
+
+{/*Fourth card */}
