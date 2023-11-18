@@ -7,7 +7,7 @@ import { FaSearch } from 'react-icons/fa';
 import Menu from '../Menu-Content/menuObject';
 import { inputAnimation } from "../../theme/animations/animations";
 
-const Input = ({type,name, placeholder, onChange, value, searchBar,white,register,phone,setPhone,maxLength}) =>{
+const Input = ({type,name, placeholder, onChange, value, searchBar,white,register,phone,setPhone,maxLength,checked}) =>{
 
 
 
@@ -22,7 +22,7 @@ const Input = ({type,name, placeholder, onChange, value, searchBar,white,registe
                                                                     type={type}
                                                                     name={name}
                                                                     onChange={onChange}
-                                                                    checked={value}
+                                                                    checked={checked}
                                                                 />
                                                                 <span></span>
                     

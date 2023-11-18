@@ -20,7 +20,11 @@ const CheckoutModal = () => {
 try{
   const response = await fetch("http://localhost:5000/recordSummary",{
     method:"POST",
-    header: "application/json",
+    headers:{
+      "Content-Type": "application/json",
+
+
+},
     credentials:"include",
     body: JSON.stringify()
   })
@@ -42,17 +46,24 @@ try{
       return async () =>{
 
 try{
-    let response = await fetch('http://localhost:5000/userOrderList',{
-      credentials: 'include', // Include credentials in the request
+    let response = await fetch('http://localhost:5000/order',{
+      method:"GET",
+      headers:{
+        "Content-Type": "application/json",
+  
+  
+  },
+      credentials:"include",
     });
 
     if(response.ok){
     
-      const result = await response.json()
+      const result= await response.json()
+   
       
       setOrderTotal({
-        Total: result.Total.toFixed(2),
-        Tax: Math.abs(result.Total * 1.16 - result.Total).toFixed(2),
+        Total: result[0].Total.toFixed(2),
+        Tax: Math.abs(result[0].Total * 1.16 - result[0].Total).toFixed(2),
         
       })
       
@@ -71,7 +82,7 @@ try{
 
 
   }
-})
+},[])
 
 
   return (

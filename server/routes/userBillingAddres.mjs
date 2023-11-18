@@ -101,7 +101,7 @@ router.get("/getBillingAddressHistory", async (req,res) =>{
 
 
 
- router.post("/updateBillingAddress", async (req,res) =>{
+ router.put("/updateBillingAddress", async (req,res) =>{
 
    
  

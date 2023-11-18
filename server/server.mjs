@@ -33,11 +33,11 @@ app.use(cors({
 app.use(express.json());
 
 app.use(User_session);
-app.use( userAddress);
+app.use(userAddress);
 app.use("/userRoute", route);
 app.use(googleAuthRoute);
 app.use("/recordSummary", recordSummary);
-app.use("/userOrderList", userOrderList);
+app.use(userOrderList);
 app.use("/userBilling", userBilling);
 app.use(userBillingAddress);
 

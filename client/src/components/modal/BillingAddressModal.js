@@ -95,7 +95,14 @@ try{
     if(isSame){
     return async ()=>{
     try{
-      const response = await fetch(`http://localhost:5000/address`);
+      const response = await fetch(`http://localhost:5000/address`,{
+        method:'GET',
+        credentials: 'include', // Include credentials in the request
+        headers:{
+          "Content-Type": "application/json",
+
+
+    }});
       if(!response.ok){
         throw new Error(`an Error occured ${response.statusText}`);
       }

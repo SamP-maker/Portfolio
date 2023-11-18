@@ -6,7 +6,7 @@ import { doesNotMatch } from 'assert';
 
 const router  = express.Router()
 
-router.get("/", async (req,res) =>{
+router.get("/order", async (req,res) =>{
 
 
     try{
@@ -115,7 +115,7 @@ try{
 
 
 
-router.post("/updateOrder", async (req,res) =>{
+router.put("/updateOrder", async (req,res) =>{
 
 
  

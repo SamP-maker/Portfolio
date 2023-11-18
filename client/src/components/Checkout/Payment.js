@@ -11,7 +11,9 @@ import { Link } from 'react-router-dom';
 import CheckoutModal from '../modal/CheckoutModal';
 import { Logo } from '../../theme/theme';
 import { useSelector} from 'react-redux';
-import BillingEdit from '../../components/modal/BillingAddressEdit'
+import BillingEdit from '../../components/modal/BillingAddressEdit';
+import AddressEdit from '../../components/modal/AddressEdit';
+import OrderEdit from '../../components/modal/OrderEdit';
 
 
 
@@ -19,121 +21,9 @@ import BillingEdit from '../../components/modal/BillingAddressEdit'
 
 const Payment = ()=>{
 
-  const [itemDocuments,setItemDocuments] = useState([])
-  const [address,setAdress] = useState({})
-  const [billing,setBillingAdress] = useState({})
+
   const [cardDetails,setCardDetai] = useState({})
   const [selectedCardType, setSelectedCardType] = useState('visa');
-
-
-  
-
-
-
-
-
-  function fetchOrder(){
-    return async ()=>{
-     
-
-    try{
-      const response = await fetch(`http://localhost:5000/userOrderList`,{
-        credentials: 'include', // Include credentials in the request
-        headers:{
-          "Content-Type": "application/json",
-      },
-      });
-
-      if(!response.ok){
-        throw new Error(`an Error occured ${response.statusText}`);
-    
-      }else{
-      
-      const data = await response.json();
-      
-      
-      setItemDocuments(data[0].Order)
-      }
-   
-    }catch(error){
-      window.alert(error.message);
-    }
-      
-  };
-
-  }
-
-
-  function fetchAddress(){
-    return async ()=>{
-     
-
-    try{
-      const response = await fetch(`http://localhost:5000/address`,{
-        credentials: 'include', // Include credentials in the request
-        headers:{
-          "Content-Type": "application/json",
-      },
-      });
-
-      if(!response.ok){
-        throw new Error(`an Error occured ${response.statusText}`);
-    
-      }else{
-      
-      const data = await response.json();
-      setAdress( data[0])
-      console.log('Address',data)
-      
-     
-
-
-      }
-   
-    }catch(error){
-      window.alert(error.message);
-    }
-      
-  };
-
-  }
-
-
-  
-
-  function fetchBillAddress(){
-    return async ()=>{
-     
-
-    try{
-      const response = await fetch(`http://localhost:5000/BillingAddress`,{
-        credentials: 'include', // Include credentials in the request
-        headers:{
-          "Content-Type": "application/json",
-      },
-      });
-
-      if(!response.ok){
-        throw new Error(`an Error occured ${response.statusText}`);
-    
-      }else{
-      
-      const data = await response.json();
-      console.log('Billing Address',data[0])
-      setBillingAdress(data[0])
-     
-
-
-      }
-   
-    }catch(error){
-      window.alert(error.message);
-    }
-      
-  };
-
-  }
-
 
 
   function fetchCreditCard(){
@@ -158,17 +48,6 @@ const Payment = ()=>{
 
   }
 
-  useEffect(()=>{
-
-    const fetchOrderFunction = fetchOrder();
-    const fetchAddressFunction = fetchAddress();
-    const fetchBillingAddress = fetchBillAddress();
-    fetchOrderFunction();
-    fetchAddressFunction();
-    fetchBillingAddress();
-  
-   
-  },[])
 
 
     return(
@@ -211,79 +90,11 @@ const Payment = ()=>{
     </PaymentMethodWrapper>
    
 {/*First card */}
-            <Section_Order_Confirmation>
-
-           
-            <StyledLink to="/Order_confirm"> <EditButton>Edit</EditButton></StyledLink>
-
-{itemDocuments.length === 0  ?   ( 
-
-<OrderContentContainer>
-                      <InvalidOrder>No Orders Found</InvalidOrder>
-</OrderContentContainer> ) : ( 
-                                     <OrderContentContainer>
-                                                      {itemDocuments.map(items =>{
-                                                        const itemName = items.name
-                                                        const itemMatch = itemDocuments.filter(item=> item.name === itemName)
-                                                        const quantity = itemMatch.length
-                                              
-                                                        return(
-                                                                <>
-                                                                  <ItemContainer>
-                                                                      {<p>{items.name}</p>}
-                                                                  </ItemContainer>
-
-                                                                  <DetailsContainer>
-                                                                        <p>Remarks:<span> None</span></p>
-                                                                  </DetailsContainer>
-
-                                                                  <QuantityContainer>
-                                                                
-                                                                      <p>Quantity: {quantity} </p>
-                                                                  </QuantityContainer>
-                                                                </>
-                                                              )
-                                                      })}
-                                     </OrderContentContainer>
-                                     
-                                     )
-                                       
-
-                           }
-           
-            </Section_Order_Confirmation>
+<OrderEdit/>
 
       
 {/*Second card */}
-<Section_Delivery_Address>
-              <StyledLink to="/BillingModal"> <EditButton>Edit</EditButton></StyledLink>
-                                    {address ? 
-                                ( <AddressContainer>
-                                            <Address_Item_Container>
-                                                       
-                                                                      <div key={address._id}>
-                                                                      <p1>Surname: {address.LastName}</p1>
-                                                                      <p1>Name: {address.FirstName}</p1>
-                                                                      <p1>Address: {address.Address}</p1>
-                                                                      <p1>Post Code: {address.Postal}, District: {address.District}</p1>
-                                                                      <p1>Phone: +{address.Phone}</p1>  
-                                                                      </div>
-                                                                        
-                                            </Address_Item_Container>
-                          </AddressContainer>
-
-
-                          ) :
-                          (
-                            <AddressContainer>
-                                    <Address_Item_Container>
-                                                         <InvalidAddress>No Address Found</InvalidAddress>
-                                    </Address_Item_Container>
-                            </AddressContainer>  )
-                            
-                            }
-            
-              </Section_Delivery_Address>
+<AddressEdit/>
 
 {/*Third card */}
 
@@ -300,7 +111,7 @@ const Payment = ()=>{
 
     </PaymentInfoWrapper>
  
-<CheckoutModal/>
+    <CheckoutModal/>
 
    
         
@@ -311,22 +122,6 @@ const Payment = ()=>{
     )
 }
 
-
-const InvalidOrder = styled.p`
-font-size:20px;
-position:absolute;
-left:40%;
-top:50%;
-`
-
-
-const InvalidAddress = styled.p`
-font-size:20px;
-position:absolute;
-left:60%;
-top:30%;
-
-`
 
 
 const StyledLink = styled(Link)`
@@ -346,169 +141,6 @@ border-radius: .5rem;
 `
 
 
-
-const Billing_Item_Container = styled.div`
-grid-column-start:1;
-grid-column-end:3;
-font-size:0.825rem;
-display:flex;
-flex-direction:column;
-gap:10px;
-height:200px;
-position:relative;
-font-size:1rem;
-
-
-`
-
-
-
-const BillingContainer = styled.div`
-margin-top:3%;
-display:grid;
-grid-template-columns: repeat(3,1fr);
-grid-template-rows: repeat(auto,1fr);
-`
-
-
-
-const Section_Payment_Billing = styled.div`
-grid-row:5;
-margin-top:5%;
-height:20rem;
-padding-top:20px;
-padding-left:5rem;
-grid-column-start:1;
-grid-column-end:3;
-background-color: ${Theme.colors.white};
-border-radius:20px;
-box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-font-family: 'Work Sans', sans-serif;
-
-
-
-`
-
-
-const Address_Item_Container = styled.div`
-grid-column-start:1;
-grid-column-end:3;
-font-size:0.825rem;
-height:200px;
-position:relative;
-font-size:1rem;
-margin-top:0;
-
-
-
-p1{
-
-  padding: .5rem .5rem;
-  display:flex;
-}
-
-
-`
-
-
-
-const AddressContainer = styled.div`
-margin-top:1%;
-display:grid;
-grid-template-columns: repeat(3,1fr);
-grid-template-rows: repeat(auto,1fr);
-`
-
-const Section_Delivery_Address = styled.div`
-grid-row:4;
-margin-top:5%;
-height:20rem;
-padding-top:20px;
-padding-left:5rem;
-grid-column-start:1;
-grid-column-end:3;
-background-color: ${Theme.colors.white};
-border-radius:20px;
-box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-font-family: 'Work Sans', sans-serif;
-
-
-
-`
-
-
-const EditButton = styled.p`
-margin-left:92%;
-margin-top:2%;
-color:${Theme.colors.Teal};
-
-&:hover{
-  cursor:pointer;
-  text-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-}
-
-`
-
-const ItemContainer = styled.div`
-grid-column:1;
-font-size:0.825rem;
-display:flex;
-flex-direction:column;
-gap:1rem;
-font-size:1rem;
-
-`
-const DetailsContainer = styled.div`
-grid-column:2;
-font-size:0.825rem;
-display:flex;
-flex-direction:column;
-gap:1rem;
-font-size:1rem;
-`
-const QuantityContainer = styled.div`
-grid-column:3;
-font-size:0.825rem;
-display:flex;
-flex-direction:column;
-gap:1rem;
-font-size:1rem;
-`
-
-const OrderContentContainer = styled.div`
-grid-column-start:1;
-grid-column-end:3;
-font-size:0.825rem;
-display:grid;
-flex-direction:column;
-gap:10px;
-height:200px;
-position:relative;
-font-size:1rem;
-
-`
-
-const Section_Order_Confirmation = styled.div`
-grid-row:3;
-margin-top:5%;
-height:20rem;
-padding-top:20px;
-padding-left:5rem;
-grid-column-start:1;
-grid-column-end:3;
-background-color: ${Theme.colors.white};
-border-radius:20px;
-box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-font-family: 'Work Sans', sans-serif;
-
-
-
-p1{
-  top:0;
-  left:0;
-  border:1px solid red;
-}
-`
 
 const PaymentMethodWrapper = styled.div`
 display: flex;

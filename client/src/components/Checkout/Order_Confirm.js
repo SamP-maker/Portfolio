@@ -87,7 +87,7 @@ const OrderConfirm = ()=>{
                 console.log('Sending orderList:', orderList);
 
                 try {
-                        await fetch('http://localhost:5000/userOrderList',{
+                        await fetch('http://localhost:5000/postOrder',{
                                 method:"POST",
                                 headers:{
                                         "Content-Type": "application/json",

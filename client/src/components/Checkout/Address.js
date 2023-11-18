@@ -40,7 +40,7 @@ const Address = ()=>{
 
 
               try{
-                await fetch('http://localhost:5000/addressPost',{
+                await fetch('http://localhost:5000/postAddress',{
                   method:"POST",
                   headers:{
                     "Content-Type":"application/json",

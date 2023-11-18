@@ -61,8 +61,8 @@ router.post("/postAddress", async (req,res) =>{
 
             
         let newDocument = {
-            FirstName:req.body.firstName,
-            LastName :req.body.lastName,
+            FirstName:req.body.FirstName,
+            LastName :req.body.LastName,
             Address : req.body.Address,
             Postal : req.body.Postal,
             District : req.body.District,
@@ -99,7 +99,7 @@ router.post("/postAddress", async (req,res) =>{
 
 
 
-router.post("/updateAddress", async (req,res) =>{
+router.put("/updateAddress", async (req,res) =>{
     try{
         if (!req.session.user || !req.session.user.email) {
             res.status(401).json({ message: 'Unauthorized' });

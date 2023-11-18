@@ -54,7 +54,7 @@ const ButtonTypes = {
 
     Contact:()=>  (<Button checkout={true} padding="1.375rem 4.875rem " text="Contact" fontSize="1.5rem" backgroundColor={"transparent"}/>),
 
-    Confirm:()=>  (<Button type_normal={true} padding="1.375rem 4.875rem " text="Confirm" fontSize="1.5rem" backgroundColor={Theme.colors.BackgroundBlack} borderRadius="1.5rem"/>),
+    Confirm:({onClick})=>  (<Button type_normal={true} type="submit"  onClick={onClick} padding=".6rem 1.5rem" text="Confirm" fontSize="1rem" backgroundColor={Theme.colors.BackgroundBlack} borderRadius=".8rem"/>),
 
     Increment:({handleDecreaseCount,count,handleIncreaseCount})=> {
     
@@ -66,6 +66,9 @@ const ButtonTypes = {
 
 
 Billing_Address:()=> (  <Button checkout={true} type="submit" padding=".8rem 1.625rem " text="Head to Billing Address" fontSize="1rem" backgroundColor={"transparent"} />),
+
+
+Cancel:({onClick})=>  (<Button onClick={onClick} type_normal={true} padding=".6rem 1.5rem" text="Cancel" fontSize="1rem" backgroundColor={Theme.colors.BackgroundBlack} borderRadius=".8rem"/>),
 
   
         

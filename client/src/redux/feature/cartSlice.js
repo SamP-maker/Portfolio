@@ -25,8 +25,9 @@ const cartSlice = createSlice({
         },
         addItem: (state,action)=>{
             const itemId = action.payload;
-            console.log('Selected Category:', state.setCategory);
-            console.log('Items in Selected Category:', menuObject[state.setCategory]);
+            
+        
+            
             const itemToAdd = menuObject[state.setCategory].find(items => items.id === itemId)
 
             if(itemToAdd){
@@ -42,6 +43,8 @@ const cartSlice = createSlice({
                 state.total += itemToAdd.Price;
                 console.log( 'items added to list:', JSON.stringify(itemToAdd, null, 2))
                 console.log( JSON.parse(JSON.stringify(state.cartItems)))
+
+                console.log(state.cartItems)
             }
 
             
@@ -52,14 +55,30 @@ const cartSlice = createSlice({
         },
         removeItem: (state, action) =>{
             const itemId = action.payload;
-            state.amount = 0 ;
-            state.cartItems = state.cartItems.filter((item) => item.id !== itemId);
+            
+            const removedItem = state.cartItems.find((item) => item.id !== itemId);
+            const cartItem = state.cartItems.find((item) => item.id === itemId);
+
+
+
+            if(removedItem){
+                console.log(removedItem.Amount)
+                state.total -= removedItem.Price * removeItem.Amount;
+                state.cartItems = state.cartItems.filter((item) => item.id !== itemId);
+                state.amount -=  cartItem.Amount;
+            }else{
+                state.total -= removedItem.Price * removeItem.Amount;
+                state.cartItems = state.cartItems.filter((item) => item.id !== itemId);
+                state.amount -= removedItem.Amount ;
+
+            }
         },
         increase: (state,action) =>{
             const itemId = action.payload;
             const cartItem = state.cartItems.find( (item) => item.id === itemId);
             if (cartItem) {
                     cartItem.Amount += 1;
+                    console.log(cartItem)
                     state.amount += 1;
                     state.total += cartItem.Price
             }
@@ -89,7 +108,8 @@ const cartSlice = createSlice({
                 total += item.Amount * item.Price;
             });
             state.total = (total/100).toFixed(2);
-        }
+        },
+   
     }
 });
 

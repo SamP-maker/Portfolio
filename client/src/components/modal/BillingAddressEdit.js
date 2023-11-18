@@ -2,6 +2,7 @@ import React, {useState,useEffect, useRef} from 'react';
 import styled,{css} from 'styled-components';
 import Theme from '../../theme/theme';
 import { Link } from 'react-router-dom';
+import Input from '../../util/Input/Input';
 
 
 
@@ -12,6 +13,7 @@ const BillingEdit = () =>{
 
     const [billingState, setBillingState] = useState({})
     const [recentBillingState, setrecentBillingState] = useState({})
+    const [selectedBillingAddresses, setSelectedBillingAddresses] = useState([]);
     const [toggle,setToggle] = useState(false)
 
 
@@ -21,6 +23,20 @@ const BillingEdit = () =>{
         setToggle((prev) => !prev)
 
     }
+
+
+    const handleCheckbox = (itemId) =>{
+
+      if (selectedBillingAddresses.length > 1 || !selectedBillingAddresses.includes(itemId)) {
+        setSelectedBillingAddresses([itemId]); // Update selection to include only the clicked item
+          // If AddressState holds the full details, update recentAddressState directly
+          const selectedBillingAddressDetails = billingState.find((address) => address._id === itemId._id);
+          setrecentBillingState(selectedBillingAddressDetails); // Update recentAddressState
+        
+      
+        }
+
+  }
 
 
 useEffect(()=>{
@@ -33,7 +49,8 @@ useEffect(()=>{
      
 
     try{
-      const response = await fetch(`http://localhost:5000/BillingAddress`,{
+      const response = await fetch(`http://localhost:5000/getBillingAddress`,{
+        method:'GET',
         credentials: 'include', // Include credentials in the request
         headers:{
           "Content-Type": "application/json",
@@ -46,7 +63,6 @@ useEffect(()=>{
       }else{
       
       const data = await response.json();
-      console.log('Billing Address',data[0])
       setrecentBillingState(data[0])
      
 
@@ -66,7 +82,8 @@ useEffect(()=>{
 const fetchUserAllBillingAddress = async()=>{
     
     try{
-        const response = await fetch('http://localhost:5000/BillingAddressHistory', {
+        const response = await fetch('http://localhost:5000/getBillingAddressHistory', {
+          method:'GET',
             credentials: 'include',
             headers: {
                 "Content-Type": "application/json"
@@ -76,8 +93,7 @@ const fetchUserAllBillingAddress = async()=>{
     if(response.ok){
 
         const result = await response.json()
-        console.log(result)
-        setBillingState(result[0])
+        setBillingState(result)
 
 
     }
@@ -151,19 +167,33 @@ return(
  <Billing_Item_Container>
                                                   {billingState.length > 1 ?      
                                                   
-                                                  (
-                                                  <ItemContainer>
+                                                  billingState.map (items => (
+                                                  <ItemContainer key={items._id}>
+
+                                          <label>
+                                            <Input 
+                                                type="checkbox"
+                                                name="checkbox"
+                                                checked={selectedBillingAddresses.includes(items)}
+                                                onChange={() => handleCheckbox(items)}
+                                                
+                                               
+                                            />
+                                            </label> 
+
+
+                                                    
                 
-                                                       <div key={billingState._id}>
-                                                       <p1>Surname: {billingState.LastName}</p1>
-                                                       <p1>Name: {billingState.FirstName}</p1>
-                                                       <p1>Address: {billingState.Address}</p1>
-                                                       <p1>Post Code: {billingState.Postal}, State: {billingState.State}</p1>
-                                                       <p1>City: {billingState.City}, Country: {billingState.country}</p1>
+                                                       <div>
+                                                       <p1>Surname: {items.LastName}</p1>
+                                                       <p1>Name: {items.FirstName}</p1>
+                                                       <p1>Address: {items.Address}</p1>
+                                                       <p1>Post Code: {items.Postal}, State: {items.State}</p1>
+                                                       <p1>City: {items.City}, Country: {items.country}</p1>
                                                        </div>
                                                          
                                                    </ItemContainer>
-                                                  ): 
+                                                  )): 
                                                   
                                                   (
                                                 <ItemContainer>
@@ -294,10 +324,7 @@ color:${Theme.colors.Teal};
 
 `
 
-const StyledLink = styled(Link)`
-text-decoration:none;
-color: ${Theme.colors.ColumnBlack};
-`
+
 
 
 export default BillingEdit
