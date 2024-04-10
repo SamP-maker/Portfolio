@@ -1,3 +1,7 @@
+//TOTAL REVAMP
+
+
+
 import React, {useState,useEffect, useRef} from 'react';
 import styled,{css} from 'styled-components';
 import Theme from '../../theme/theme';
@@ -109,6 +113,7 @@ const Menu = ()=>{
        
 
         const handleAddItems = (itemId) =>{
+                console.log(itemId)
                 dispatch(addItem(itemId))
         }
 

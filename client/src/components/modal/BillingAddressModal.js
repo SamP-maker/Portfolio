@@ -1,3 +1,14 @@
+
+//total revamp, make this not laggy
+//TRIM ANYTHING HERE. Although items should async render, Too much of this will make it laggy
+//Also make sure that the error checks are done properly. Dont let react return the error. instead, visualize it
+
+
+
+
+
+
+
 import React, {useState,useEffect, useRef} from 'react';
 import styled,{css} from 'styled-components';
 import Theme from '../../theme/theme';
@@ -7,7 +18,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import ButtonTypes from '../../util/Button/ButtonObject';
 import Cart from './CartModal';
 import { Logo } from '../../theme/theme';
-
+import { shake } from '../../theme/animations/animations';
 
 
 
@@ -23,7 +34,7 @@ const BillingModal = ()=>{
  
   const [form, setForm] = useState({
     FirstName: '',
-    lastName: '',
+    LastName: '',
     Address: '',
     Postal: '',
     Country: '',
@@ -32,50 +43,49 @@ const BillingModal = ()=>{
   })
 
   const [isSame,setIsSame] = useState(true)
+  const [emptyFormMessage, setEmptyFormMessage] = useState(false)
+  const [errorMsg, setErrorMsg] = useState(true)
+  
  
 
 
 
   async function handleSubmit(e){
     e.preventDefault();
+    const isFormEmpty = Object.values(form).some( value => value.trim() === '')
 
-    console.log(form)
-    
-
-
-try{
-    await fetch(`http://localhost:5000/BillingAddressPost`,{
-      method:'POST',
-      headers:{
-        'Content-Type': 'application/json',
-      },
-      credentials:"include",
-      body:JSON.stringify(form),
-    })
-
-
-    navigate("/Payment")
-  }catch(err){
-    console.error('Error occured:', err);
-    window.alert("Error occured. Please try again later.");
+if(emptyFormMessage){
+    try{
+      await fetch(`http://localhost:5000/postBillingAddress`,{
+        method:'POST',
+        headers:{
+          'Content-Type': 'application/json',
+        },
+        credentials:"include",
+        body:JSON.stringify(form),
+      })
   
-  } 
+  
+      navigate("/Payment")
+    }catch(err){
+      console.error('Error occured:', err);
+      window.alert("Error occured. Please try again later.");
+    
+    } 
+  }else{
+    if(isFormEmpty){
+      setTimeout(()=>
+      setErrorMsg(false), 100)
 
-
-    
-    
-    
-    
-    
-    
-    
-
-
-
-
-
-    
+      setTimeout(()=> setErrorMsg(true), 1500)
+    }else{
+      setEmptyFormMessage(true)
+    }
   }
+}
+
+
+
 
   const handleForm = (value)=>{
     return setForm(prev =>{
@@ -95,7 +105,7 @@ try{
     if(isSame){
     return async ()=>{
     try{
-      const response = await fetch(`http://localhost:5000/address`,{
+      const response = await fetch(`http://localhost:5000/getBillingAddress`,{
         method:'GET',
         credentials: 'include', // Include credentials in the request
         headers:{
@@ -169,7 +179,7 @@ try{
 
 {/*Line ends here for the card*/ }
 
-<Label fontSize="1rem" text="Billing Address"/>
+{errorMsg ?<Label fontSize="1rem" text="Billing Address"/> : <ErrorMessage>**This field is required**</ErrorMessage>}
 
 
 
@@ -186,7 +196,7 @@ try{
                     />
 
 
-<Label fontSize="1rem" text="Postal Code"/>    
+{errorMsg ? <Label fontSize="1rem" text="Postal Code"/> : <ErrorMessage>**This field is required**</ErrorMessage>}
                 <Input
                     white
                     type="text" 
@@ -196,7 +206,7 @@ try{
                     onChange={(e) => handleForm({Postal: e.target.value})}
                     />
 
-<Label fontSize="1rem" text="Country"/>    
+{errorMsg ? <Label fontSize="1rem" text="Country"/>   : <ErrorMessage>**This field is required**</ErrorMessage>}
                 <Input
                     white
                     type="text" 
@@ -205,7 +215,7 @@ try{
                     value={form.Country}
                     onChange={(e) => handleForm({Country: e.target.value})}
                     />
-<Label fontSize="1rem" text="State"/>    
+{errorMsg ? <Label fontSize="1rem" text="State"/>    : <ErrorMessage>**This field is required**</ErrorMessage>}
                 <Input
                     white
                     type="text" 
@@ -214,7 +224,7 @@ try{
                     value={form.State}
                     onChange={(e) => handleForm({State: e.target.value})}
                     />
-<Label fontSize="1rem" text="City"/>    
+{errorMsg ? <Label fontSize="1rem" text="City"/> : <ErrorMessage>**This field is required**</ErrorMessage>}
                 <Input
                     white
                     type="text" 
@@ -264,6 +274,14 @@ border-radius: .5rem;
 &:hover{
   cusor:pointer;
 }
+`
+
+const ErrorMessage = styled.p`
+padding-left:2rem;
+color: ${Theme.colors.Red};
+font-family: 'Hammersmith One', sans-serif;
+
+animation:${shake} .5s ease-in-out;
 `
 
 

@@ -1,7 +1,6 @@
 import React, {useState,useEffect, useRef} from 'react';
 import styled,{css} from 'styled-components';
 import Theme from '../../theme/theme';
-import Footer from '../../util/Footer/Footer';
 import 'react-international-phone/style.css';
 import Cart from '../modal/CartModal';
 import VisaCard from '../../theme/Icons/Visa.png';
@@ -10,10 +9,18 @@ import Wallet from '../../theme/Icons/wallet.png';
 import { Link } from 'react-router-dom';
 import CheckoutModal from '../modal/CheckoutModal';
 import { Logo } from '../../theme/theme';
-import { useSelector} from 'react-redux';
-import BillingEdit from '../../components/modal/BillingAddressEdit';
-import AddressEdit from '../../components/modal/AddressEdit';
-import OrderEdit from '../../components/modal/OrderEdit';
+
+import CreditEdit from '../modal/ModalEdit/CreditCredentialsEdit';
+import OrderEdit from '../../components/modal/ModalEdit/OrderEdit';
+import BillingEdit from '../modal/ModalEdit/BillingAddressEdit';
+import AddressEdit from '../modal/ModalEdit/AddressEdit';
+
+
+
+
+
+
+
 
 
 
@@ -22,32 +29,7 @@ import OrderEdit from '../../components/modal/OrderEdit';
 const Payment = ()=>{
 
 
-  const [cardDetails,setCardDetai] = useState({})
-  const [selectedCardType, setSelectedCardType] = useState('visa');
-
-
-  function fetchCreditCard(){
-    return async ()=>{
-      try{
-        const response = await fetch('https://localhost:5000/userBilling',{
-          credentials: 'include',
-          headers:{
-            "Content-Type": "application/json",
-          },
-        });
-        if(!response.ok){
-          throw new Error(`an Error occured ${response.statusText}`);
-        }
-      }catch(err){
-        window.alert(err)
-      }
-
-    }
-
-
-
-  }
-
+ 
 
 
     return(
@@ -96,13 +78,12 @@ const Payment = ()=>{
 {/*Second card */}
 <AddressEdit/>
 
+
 {/*Third card */}
-
-
-
-
 <BillingEdit/>
 
+{/*Fourth card */}
+<CreditEdit/>
 
 
 

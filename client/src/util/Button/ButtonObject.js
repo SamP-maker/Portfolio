@@ -71,7 +71,7 @@ Billing_Address:()=> (  <Button checkout={true} type="submit" padding=".8rem 1.6
 Cancel:({onClick})=>  (<Button onClick={onClick} type_normal={true} padding=".6rem 1.5rem" text="Cancel" fontSize="1rem" backgroundColor={Theme.colors.BackgroundBlack} borderRadius=".8rem"/>),
 
   
-        
+AddAddress:({onClick})=> (  <Button onClick={onClick} checkout={true} borderRadius={".5rem"}  padding="1rem 1rem" text="Add Address" fontSize="1rem" backgroundColor={"transparent"} />),
         
     
 

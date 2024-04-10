@@ -1,17 +1,31 @@
+//total revamp, make this not laggy
+
+/**TRIM ANYTHING HERE. Although items should async render, Too much of this will make it laggy
+ * 1. Move all of the functions here into util, create an opportunity to use util to actually segregrate everything. And use proper error handling.
+ */
+
+
+
+//Also make sure that the error checks are done properly. Dont let react return the error. instead, visualize it
+
+
+
+
+
 import React, {useState,useEffect, useRef} from 'react';
 import styled,{css} from 'styled-components';
 import Theme from '../../theme/theme';
 import Input from '../../util/Input/Input';
 import Label from '../../util/Label/Label';
-import { DateField } from '@mui/x-date-pickers';
 import { Link, useNavigate,useLocation  } from 'react-router-dom';
 import Button from '../../util/Button/ButtonObject';
 import Cart from './CartModal';
 import { Logo } from '../../theme/theme';
 import CreditCard from './CreditCard';
-
-
-
+import bcrypt from 'bcryptjs'
+import { useDispatch} from 'react-redux';
+import { setCreditCardCredentials,clearCreditCardCredentials } from '../../redux/feature/CardCredentialSlice';
+import { shake } from '../../theme/animations/animations';
 
 
 
@@ -21,9 +35,11 @@ const BillingModal = ()=>{
   const navigate = useNavigate()
   const location = useLocation()
   const params = new URLSearchParams(location.search);
- 
+  const dispatch = useDispatch()
   const cardType = params.get('cardType')
- 
+  const [emptyFormMessage, setEmptyFormMessage] = useState(false)
+  const [errorMsg, setErrorMsg] = useState(true)
+  
 
 
   const handleCardType = () =>{
@@ -44,35 +60,45 @@ const BillingModal = ()=>{
     CCV:'',
     Month:'',
     Year:'',
+    cardType:cardType,
   })
 
- 
  
 
 
 
   async function handleSubmit(e){
 
-
-    console.log(form)
-
+  
+    
     e.preventDefault();
+    const isFormEmpty = Object.values(form).some(value =>  value.trim() === '')
+    
 
   
     
 
-
+if(emptyFormMessage){
 try{
-  
-    const response = await fetch(`http://localhost:5000/userBilling`,{
+ 
+ 
+  const newForm = {...form}
+    const response = await fetch(`http://localhost:5000/postCreditCrendentials`,{
       method:'POST',
       headers:{
         'Content-Type': 'application/json',
       },
       credentials:"include",
-      body:JSON.stringify(form),
+      body:JSON.stringify(newForm),
       }
   );
+
+  const storedCredentials = localStorage.getItem('creditCardCredentials');
+if (storedCredentials) {
+  const credentials = JSON.parse(storedCredentials);
+  // Dispatch an action to set the stored credentials in your Redux store
+  dispatch(setCreditCardCredentials(credentials));
+}
 
 
   navigate("/BillingAddress")
@@ -81,6 +107,17 @@ try{
   console.error('Error occured:', err);
   window.alert("Error occured. Please try again later.");
 
+}
+}else{
+  if(isFormEmpty){
+    setTimeout(()=>
+    setErrorMsg(false), 100)
+
+    setTimeout(()=> setErrorMsg(true),1500)
+  }else{
+    setEmptyFormMessage(true)
+    setErrorMsg(true)
+  }
 }
 
     
@@ -132,7 +169,7 @@ try{
       if (isAlphabetWithSpace) {
         setForm((prevForm) => ({
           ...prevForm,
-          [field]: trimmedValue,
+          [field]: value,
         }));
       }else {
         setForm((prevForm) => ({
@@ -162,7 +199,6 @@ try{
     }
 
     
-   
     
   }
 
@@ -205,7 +241,7 @@ try{
  
 
 
-<Label fontSize="1rem" text="Cardholder's Name"/>    
+{errorMsg ? <Label fontSize="1rem" text="Cardholder's Name"/> : <ErrorMessage>**This field is required**</ErrorMessage>} 
                 <Input
 
                     white
@@ -218,7 +254,7 @@ try{
                     />
   
    
-    <Label fontSize="1rem" text="Card Number"/>
+{errorMsg ? <Label fontSize="1rem" text="Card Number"/> : <ErrorMessage>**This field is required**</ErrorMessage>}
                 
                
                         <Input
@@ -232,7 +268,7 @@ try{
                             />
 
                 
-<Label fontSize="1rem" text="MM"/>
+{errorMsg ? <Label fontSize="1rem" text="MM"/> : <ErrorMessage>**This field is required**</ErrorMessage>}
                 
                 <Input
                                         white
@@ -247,7 +283,7 @@ try{
 
 
 
-    <Label fontSize="1rem" text="YYYY"/>
+{errorMsg ? <Label fontSize="1rem" text="YYYY"/> : <ErrorMessage>**This field is required**</ErrorMessage>}
                 
     <Input
                             white
@@ -259,7 +295,7 @@ try{
                             maxLength={2}
                             />
 
-<Label fontSize="1rem" text="CCV"/>
+{errorMsg ? <Label fontSize="1rem" text="CCV"/> : <ErrorMessage>**This field is required**</ErrorMessage>}
                 
                
                 <Input
@@ -273,7 +309,7 @@ try{
                     />
  
  <ButtonWrapper>
-        <Button.Billing_Address/>
+        <Button.Billing_Address />
 </ButtonWrapper>         
      </CheckOutWrapper>
      </form>
@@ -287,6 +323,13 @@ try{
 
 {/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Styling Sheet~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/ }
 
+const ErrorMessage = styled.p`
+padding-left:2rem;
+color: ${Theme.colors.Red};
+font-family: 'Hammersmith One', sans-serif;
+
+animation:${shake} .5s ease-in-out;
+`
 
 const CreditCardWrapper = styled.div`
 position:absolute;

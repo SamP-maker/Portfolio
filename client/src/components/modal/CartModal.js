@@ -1,3 +1,11 @@
+//total revamp, make this not laggy
+//TRIM ANYTHING HERE. Although items should async render, Too much of this will make it laggy
+//Also make sure that the error checks are done properly. Dont let react return the error. instead, visualize it
+
+
+
+
+
 import React, {useState,useEffect, useRef} from 'react';
 import styled,{css} from 'styled-components';
 import Theme from '../../theme/theme';
@@ -6,10 +14,12 @@ import {useDispatch, useSelector} from 'react-redux';
 import { removeItem, increase, decrease } from '../../redux/feature/cartSlice';
 import { FaShoppingBag } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import { setUserDetails } from '../../redux/feature/registrationSlice';
 
 const Cart = ({black}) =>{
-       const {Username ,isLoggedin} = useSelector((store) => store.user)
        const {cartItems,amount} = useSelector((store) => store.cart)
+       const name= localStorage.getItem('name')
+       const Username = name.replace(/^"(.*)"$/, '$1')
        
        const [isOpen,setIsOpen] = useState(true)
        const [isDropDown,setIsDropDown] = useState(true)
@@ -71,6 +81,14 @@ const Cart = ({black}) =>{
         }
        },[])
 
+       useEffect(() =>{
+        
+        
+            const username = localStorage.getItem('Username')
+            dispatch(setUserDetails(username))
+
+       },[])
+
 
 
        
@@ -84,10 +102,10 @@ const Cart = ({black}) =>{
     <NavbarWrapper className={isHideNav ? 'hidden' : ''}>
         <StyledLink to="/Dashboard"><Navigation>Dashboard</Navigation></StyledLink>
         <StyledLink to="/Menu"><Navigation>Menu</Navigation></StyledLink>
-        {Username ? <Navigation dropDown  onClick={handleOpenDropDown}>{Username}
+        {name ? <Navigation dropDown  onClick={handleOpenDropDown}>{Username}
         {!isDropDown ? (<DropDownWrapper>
         <DropDownContainer><StyledLink to="/Payment"><Navigation>Check Out</Navigation></StyledLink></DropDownContainer>
-        <DropDownContainer> <StyledLink to="/Status"><Navigation>Status</Navigation></StyledLink></DropDownContainer>
+        
         <DropDownContainer> <StyledLink to="/"><Navigation>Log out</Navigation></StyledLink></DropDownContainer>
       </DropDownWrapper>) : null}
         
@@ -102,7 +120,7 @@ const Cart = ({black}) =>{
         <Navigation dropDown onClick={handleOpenDropDown}> {isDropDown ? "Login" : <StyledLink to="/login">Login</StyledLink> }
       {!isDropDown ? (<DropDownWrapper>
         <DropDownContainer><StyledLink to="/Payment"><Navigation>Check Out</Navigation></StyledLink></DropDownContainer>
-        <DropDownContainer> <StyledLink to="/Status"><Navigation>Status</Navigation></StyledLink></DropDownContainer>
+        
       </DropDownWrapper>) : null}
         
         </Navigation>}

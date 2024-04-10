@@ -17,6 +17,8 @@ export const leftdividerAnimation = keyframes`
 
 
 
+
+
 export const rightdividerAnimation = keyframes`
 0% {
   

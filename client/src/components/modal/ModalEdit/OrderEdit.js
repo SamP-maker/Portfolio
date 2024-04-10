@@ -1,9 +1,9 @@
 import React, {useState,useEffect, useRef} from 'react';
 import styled,{css} from 'styled-components';
-import Theme from '../../theme/theme';
+import Theme from '../../../theme/theme';
 import { Link } from 'react-router-dom';
-import ButtonTypes from '../../util/Button/ButtonObject';
-import {fetchOrderData,removeItem,decrease, increase,cancelCart} from '../../redux/feature/DBcartSlice';
+import ButtonTypes from '../../../util/Button/ButtonObject';
+import {fetchOrderData,removeItem,decrease, increase,cancelCart} from '../../../redux/feature/DBcartSlice';
 import { useDispatch, useSelector } from 'react-redux';
 
 
@@ -96,15 +96,13 @@ async function handleSubmit(e){
  }
 
 return(
-/*First card */
+
 <>
   
       
   
 {!toggle ? 
 
-
-/*First card */
 
 
 
@@ -134,7 +132,9 @@ return(
    
    <ItemContainer>
     <p1>. . . . .</p1>
-   </ItemContainer> :
+   </ItemContainer> 
+   
+   :
    <>
    <ItemContainer>
        <p1>{itemName}</p1>

@@ -14,6 +14,7 @@ export const Menu= {
         {   
             id:uuidv4(),
             name:"Chicken Dumplings",
+            Description: "Minced chicken meat seasoned with garlic, ginger, black pepper and salt wrapped in a dumpling, served with vinegar.",
             Price:"$8.99",
             Rating:require('../../theme/images/Rating_Stars/5stars.png'),
             Image:require('../../theme/images/Main PNG/Chicken Dumplings.png'),

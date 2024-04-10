@@ -4,7 +4,7 @@ import "./loadEnvironment.mjs";
 import route from "./routes/userRoute.mjs";
 import googleAuthRoute from './routes/googleAuthRoute.mjs';
 import userAddress from './routes/userAddress.mjs';
-import userBilling from './routes/userBilling.mjs';
+import userCreditCredentials from './routes/userCreditCredentials.mjs';
 import userBillingAddress from './routes/userBillingAddres.mjs';
 import userOrderList from './routes/userOrderList.mjs';
 import recordSummary from './routes/recordSummary.mjs'; 
@@ -38,7 +38,7 @@ app.use("/userRoute", route);
 app.use(googleAuthRoute);
 app.use("/recordSummary", recordSummary);
 app.use(userOrderList);
-app.use("/userBilling", userBilling);
+app.use(userCreditCredentials);
 app.use(userBillingAddress);
 
 

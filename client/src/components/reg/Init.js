@@ -1,3 +1,5 @@
+//total revamp, make this not laggy
+//TRIM ANYTHING HERE. Although items should async render, Too much of this will make it laggy
 
 import React from "react";
 import styled,{css} from "styled-components";

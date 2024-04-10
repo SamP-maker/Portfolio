@@ -8,13 +8,13 @@ import Dashboard from "./components/menu/dashboard";
 import Menu from "./components/menu/menu";
 import Order_Confirm from "./components/Checkout/Order_Confirm";
 import Address from "./components/Checkout/Address";
-import CardNumber from './components/modal/BillingCardNumber';
+import CardNumber from './components/modal/CreditCredentialsModal';
 import Payment from './components/Checkout/Payment';
 import BillingAddress from './components/modal/BillingAddressModal';
 import Status from './components/Status/Status';
-import BillingEdit from './components/modal/BillingAddressEdit';
-import AddressEdit from './components/modal/AddressEdit';
-import OrderEdit from './components/modal/OrderEdit';
+import BillingEdit from './components/modal/ModalEdit/BillingAddressEdit';
+import AddressEdit from './components/modal/ModalEdit/AddressEdit';
+import OrderEdit from './components/modal/ModalEdit/OrderEdit';
 
 
 
@@ -39,7 +39,7 @@ function App() {
     <Route path="/Menu/:name" element={<Menu/>}/>
     <Route path="/Menu" element={<Menu/>}/>
     <Route path="/Order_confirm" element={<Order_Confirm/>}/>
-    <Route path="/Address" element={<Address/>}/>
+    <Route path="/Address" element={<Address/>} />
     <Route path="/Status" element={<Status/>}/>
     <Route path="/Payment" element={<Payment/>}/>
     <Route path="/Dashboard" element={<Dashboard/>}/>

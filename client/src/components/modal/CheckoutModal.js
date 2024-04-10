@@ -1,8 +1,17 @@
-import React, { useState } from "react";
+//total revamp, make this not laggy
+//TRIM ANYTHING HERE. Although items should async render, Too much of this will make it laggy
+//Also make sure that the error checks are done properly. Dont let react return the error. instead, visualize it
+
+
+
+
+
+
+import React, { useState, useEffect} from "react";
 import {styled,css} from 'styled-components';
 import Theme from "../../theme/theme";
-import { useEffect } from "react";
-
+import { useSelector} from 'react-redux';
+import bcrypt from 'bcryptjs';
 
 const CheckoutModal = () => {
 
@@ -14,9 +23,102 @@ const CheckoutModal = () => {
   })
 
 
+  const {cartItems, amount, total , Order_id} = useSelector((store)=> store.PaymentCart)
+  const address = JSON.parse(localStorage.getItem('address'))
+  const billing = JSON.parse(localStorage.getItem('billing'))
+  const credit = JSON.parse(localStorage.getItem('credit'))
+
+
+
+
+  
+
+
+
+ 
+
+  const [userReceipt, setUserReceipt ] = useState({
+    Order:{
+      CartItems: [],
+      Amount: '',
+      Total: '',
+      Order_id: '',
+    },
+    Address:{
+      FirstName:'',
+      LastName:'',
+      Address:'',
+      Postal:'',
+      District:'',
+      Phone:'',
+    },
+    BillingAddress:{
+      FirstName:'',
+      LastName:'',
+      Address:'',
+      Postal:'',
+      Country:'',
+      City:'',
+      State:'',
+    },
+    CardCredentials:{
+      CardNumber:'',
+      FullName:'',
+      CCV:'',
+      Month:'',
+      Year:''
+    }
+  })
+
+
+
+
+
+
 
   async function handleSubmit(e){
-    e.preventDefault()
+    e.preventDefault();
+
+    
+
+ 
+
+    setUserReceipt({
+      Order:{
+        CartItems:cartItems,
+        Amount:amount,
+        Total:total,
+        Order_id: Order_id
+      },
+      Address:{
+        FirstName:address.FirstName,
+        LastName:address.LastName,
+        Address:address.Address,
+        Postal:address.Postal,
+        District:address.District,
+        Phone:address.Phone,
+      },
+      BillingAddress:{
+        FirstName:billing.FirstName,
+        LastName:billing.LastName,
+        Address:billing.Address,
+        Postal:billing.Postal,
+        Country:billing.Country,
+        City:billing.City,
+        State:billing.State,
+      },
+      CardCredentials:{
+        CardNumber:credit.CardNumber,
+        FullName:credit.FullName,
+        CCV:credit.CCV,
+        Month:credit.Month,
+        Year:credit.Year,
+      }
+
+
+
+
+    })
 try{
   const response = await fetch("http://localhost:5000/recordSummary",{
     method:"POST",
@@ -26,13 +128,18 @@ try{
 
 },
     credentials:"include",
-    body: JSON.stringify()
+    body: JSON.stringify(userReceipt)
   })
 
 
   if(response.ok){
     const data = response.json()
     console.log(`Receipt:`, data)
+    localStorage.removeItem('address')
+    localStorage.removeItem('credit')
+    localStorage.removeItem('billing')
+
+    
   }
 }catch(err){
   console.error(`an error has occured`, err)
@@ -43,6 +150,10 @@ try{
 
 
   useEffect(()=>{
+
+     
+
+
       return async () =>{
 
 try{

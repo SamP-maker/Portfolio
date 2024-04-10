@@ -45,8 +45,27 @@ const cartSlice = createSlice({
                 console.log( JSON.parse(JSON.stringify(state.cartItems)))
 
                 console.log(state.cartItems)
-            }
-
+            } else {
+                // If the item is not found in its reported category,
+                // handle it by searching across all categories
+            
+                const categories = ['Main', 'Pasta', 'Appetizers', 'Beverage', 'Desserts'];
+            
+                for (const category of categories) {
+                  const categoryItem = menuObject[category].find((item) => item.id === itemId);
+            
+                  if (categoryItem) {
+                    state.cartItems.push({ ...categoryItem, Amount: 1 });
+                    state.amount += 1;
+                    state.total += categoryItem.Price;
+            
+                    console.log('Item added to list:', JSON.stringify(categoryItem, null, 2));
+                    console.log(JSON.parse(JSON.stringify(state.cartItems)));
+                    console.log(state.cartItems);
+                    break; // Exit loop if item is found in any category
+                  }
+                }
+              }
             
            
         },

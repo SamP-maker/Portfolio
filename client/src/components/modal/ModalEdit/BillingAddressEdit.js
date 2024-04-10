@@ -1,8 +1,11 @@
 import React, {useState,useEffect, useRef} from 'react';
 import styled,{css} from 'styled-components';
-import Theme from '../../theme/theme';
+import Theme from '../../../theme/theme';
+import Input from '../../../util/Input/Input';
+import { useSelector, useDispatch } from 'react-redux';
+import { setBillingAddress,clearBillingAddress,fetchBillAddress,fetchUserAllBillingAddress } from '../../../redux/feature/BillingAddressSlice';
+import ButtonTypes from '../../../util/Button/ButtonObject';
 import { Link } from 'react-router-dom';
-import Input from '../../util/Input/Input';
 
 
 
@@ -11,11 +14,14 @@ import Input from '../../util/Input/Input';
 
 const BillingEdit = () =>{
 
-    const [billingState, setBillingState] = useState({})
-    const [recentBillingState, setrecentBillingState] = useState({})
-    const [selectedBillingAddresses, setSelectedBillingAddresses] = useState([]);
+ 
     const [toggle,setToggle] = useState(false)
+    const {BillingAddress, BillingAddressAll} = useSelector((store) => store.billing)
+    const [selectedBillingAddresses, setSelectedBillingAddresses]  = useState([])
+    const dispatch = useDispatch()
 
+
+  
 
 
     const handleToggle = () =>{
@@ -25,92 +31,43 @@ const BillingEdit = () =>{
     }
 
 
+
     const handleCheckbox = (itemId) =>{
 
       if (selectedBillingAddresses.length > 1 || !selectedBillingAddresses.includes(itemId)) {
         setSelectedBillingAddresses([itemId]); // Update selection to include only the clicked item
           // If AddressState holds the full details, update recentAddressState directly
-          const selectedBillingAddressDetails = billingState.find((address) => address._id === itemId._id);
-          setrecentBillingState(selectedBillingAddressDetails); // Update recentAddressState
+          const selectedBillingAddressDetails = BillingAddressAll.find((address) => address._id === itemId._id);
+          
         
-      
+          dispatch(setBillingAddress(selectedBillingAddressDetails));
+          localStorage.setItem('billing', JSON.stringify(selectedBillingAddressDetails));
         }
+        
 
   }
 
-
-useEffect(()=>{
-
-
+  
+  useEffect(() => {
+    const storedBilling = localStorage.getItem('billing');
     
-
-  const fetchBillAddress = async() =>{
-    
-     
-
-    try{
-      const response = await fetch(`http://localhost:5000/getBillingAddress`,{
-        method:'GET',
-        credentials: 'include', // Include credentials in the request
-        headers:{
-          "Content-Type": "application/json",
-      },
-      });
-
-      if(!response.ok){
-        throw new Error(`an Error occured ${response.statusText}`);
-    
-      }else{
+    if (storedBilling) {
+      const parsedBilling = JSON.parse(storedBilling);
       
-      const data = await response.json();
-      setrecentBillingState(data[0])
-     
-
-
+      if (!BillingAddress._id) {
+        dispatch(setBillingAddress(parsedBilling)); // Update Redux state only if Address is not present
       }
-   
-    }catch(error){
-      window.alert(error.message);
-    }
+      dispatch(fetchBillAddress());
+  
+      // Fetch AllAddress unconditionally when data is available in local storage
+      dispatch(fetchUserAllBillingAddress());
+    } else {
+      // Fetch both Address and AllAddress if not available in local storage
+      dispatch(fetchBillAddress());
       
-
-
-  }
-
-
-
-const fetchUserAllBillingAddress = async()=>{
-    
-    try{
-        const response = await fetch('http://localhost:5000/getBillingAddressHistory', {
-          method:'GET',
-            credentials: 'include',
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
-
-    if(response.ok){
-
-        const result = await response.json()
-        setBillingState(result)
-
-
+      dispatch(fetchUserAllBillingAddress());
     }
-}catch(err){
-    window.alert(err)
-}
-
-
-
-
-
-
-}
-fetchUserAllBillingAddress()
-fetchBillAddress()
-
-}, [])
+  }, []);
 
 return(
     <>
@@ -131,17 +88,17 @@ return(
 
  <Billing_Item_Container>
                                                   
-                                                    <ItemContainer>
+                                                    <SingleItemContainer>
                                                        
-                                                       <div key={recentBillingState._id}>
-                                                       <p1>Surname: {recentBillingState.LastName}</p1>
-                                                       <p1>Name: {recentBillingState.FirstName}</p1>
-                                                       <p1>Address: {recentBillingState.Address}</p1>
-                                                       <p1>Post Code: {recentBillingState.Postal}, State: {recentBillingState.State}</p1>
-                                                       <p1>City: {recentBillingState.City}, Country: {recentBillingState.country}</p1>
+                                                       <div key={BillingAddress._id}>
+                                                       <p1>Surname: {BillingAddress.LastName}</p1>
+                                                       <p1>Name: {BillingAddress.FirstName}</p1>
+                                                       <p1>Address: {BillingAddress.Address}</p1>
+                                                       <p1>Post Code: {BillingAddress.Postal}, State: {BillingAddress.State}</p1>
+                                                       <p1>City: {BillingAddress.City}, Country: {BillingAddress.country}</p1>
                                                        </div>
                                                          
-                                                   </ItemContainer>
+                                                   </SingleItemContainer>
                                                  
                                                   
                                      
@@ -159,17 +116,17 @@ return(
 
 
 
-<Section_Payment_Billing>
+<Section_Payment_Billing_fetch_All>
 
 <h2>Billing Address</h2>
 <EditButton onClick={handleToggle}>close</EditButton>
 
  <Billing_Item_Container>
-                                                  {billingState.length > 1 ?      
+                                                  {BillingAddressAll.length > 1 ?      
                                                   
-                                                  billingState.map (items => (
-                                                  <ItemContainer key={items._id}>
-
+                                                  BillingAddressAll.map (items => ((
+                                                 
+<Selection_Wrapper key={items._id}>
                                           <label>
                                             <Input 
                                                 type="checkbox"
@@ -183,7 +140,7 @@ return(
 
 
                                                     
-                
+                <ItemContainer>
                                                        <div>
                                                        <p1>Surname: {items.LastName}</p1>
                                                        <p1>Name: {items.FirstName}</p1>
@@ -193,20 +150,23 @@ return(
                                                        </div>
                                                          
                                                    </ItemContainer>
-                                                  )): 
+                                                   </Selection_Wrapper>
+
+                                                
+))): 
                                                   
                                                   (
-                                                <ItemContainer>
+                                                <SingleItemContainer>
                                                        
-                                                       <div key={recentBillingState._id}>
-                                                       <p1>Surname: {recentBillingState.LastName}</p1>
-                                                       <p1>Name: {recentBillingState.FirstName}</p1>
-                                                       <p1>Address: {recentBillingState.Address}</p1>
-                                                       <p1>Post Code: {recentBillingState.Postal}, State: {recentBillingState.State}</p1>
-                                                       <p1>City: {recentBillingState.City}, Country: {recentBillingState.country}</p1>
+                                                       <div key={BillingAddress._id}>
+                                                       <p1>Surname: {BillingAddress.LastName}</p1>
+                                                       <p1>Name: {BillingAddress.FirstName}</p1>
+                                                       <p1>Address: {BillingAddress.Address}</p1>
+                                                       <p1>Post Code: {BillingAddress.Postal}, State: {BillingAddress.State}</p1>
+                                                       <p1>City: {BillingAddress.City}, Country: {BillingAddress.country}</p1>
                                                        </div>
                                                          
-                                                   </ItemContainer>
+                                                   </SingleItemContainer>
 
                                                   )
                                                    
@@ -228,9 +188,12 @@ return(
                                                   
                                      
  </Billing_Item_Container>
-                         
+ <FinalizeButtonWrapper>
+ <ButtonTypes.Confirm onClick={handleToggle}/>
+</FinalizeButtonWrapper>                   
+                                      
                         
-</Section_Payment_Billing>
+</Section_Payment_Billing_fetch_All>
 
 
 
@@ -244,8 +207,7 @@ return(
 }
 
 
-
-const ItemContainer = styled.div`
+const SingleItemContainer = styled.div`
 grid-column-start:1;
 grid-column-end:3;
 font-size:0.825rem;
@@ -253,8 +215,6 @@ height:200px;
 position:relative;
 font-size:1rem;
 margin-top:0;
-
-
 
 p1{
 
@@ -264,17 +224,93 @@ p1{
 `
 
 
-
-const Billing_Item_Container = styled.div`
+const Section_Payment_Billing_fetch_All = styled.div`
+grid-row:5;
+margin-top:5%;
+height: auto;
+padding-top:20px;
+padding-bottom:20px;
+padding-left:5rem;
 grid-column-start:1;
 grid-column-end:3;
-font-size:0.825rem;
-display:flex;
-flex-direction:column;
-gap:10px;
-height:200px;
+background-color: ${Theme.colors.white};
+border-radius:20px;
+box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+font-family: 'Work Sans', sans-serif;
 position:relative;
-font-size:1rem;
+height: auto;
+
+
+
+p1{
+  top:0;
+  left:0;
+
+}
+
+h2{
+    position:absolute;
+    top:-20px;
+    left:3rem;
+    font-size:36px;
+    text-shadow: rgba(0, 0, 0, 0.24) 0px 3px 2px;
+}
+`
+
+
+const Selection_Wrapper = styled.div`
+display: grid;
+grid-template-columns: repeat(1,10rem);
+grid-template-rows: repeat(1,10rem);
+padding-bottom:2rem;
+padding-top:2rem;
+  
+  justify-items:center;
+  align-items:center;
+
+  label {
+  
+    align-items:center;
+    justify-items:center;
+    grid-column-start: 1;
+    grid-column-end: 1;
+  }
+
+`
+
+const FinalizeButtonWrapper = styled.div`
+display:flex;
+justify-content:space-between;
+width:250px;
+margin-left:80%;
+
+
+`
+
+const ItemContainer = styled.div`
+grid-column-start:2;
+grid-column-end:2;
+font-size: 0.825rem;
+
+position: relative;
+font-size: 1rem;
+margin-top: 0;
+
+
+p1 {
+  padding: 0.5rem 0.5rem;
+  display: flex;
+}
+`
+
+
+
+const Billing_Item_Container = styled.div`
+margin-top:1%;
+display:grid;
+grid-template-columns: repeat(1,1fr);
+grid-template-rows: repeat(1,1fr);
+
 
 
 `

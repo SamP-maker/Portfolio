@@ -1,3 +1,16 @@
+/*
+    1. Sign up button Info, Make sure that there is data flowing through.
+      - Must redirect to the other page.
+    2. Sign in button Info, Make sure that there is data flowing through.
+    - Must redirect to the other page
+
+
+
+*/
+
+
+
+
 import React, { useEffect,useState} from 'react';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 import { useDispatch } from 'react-redux';

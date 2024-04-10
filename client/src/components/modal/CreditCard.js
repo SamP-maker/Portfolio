@@ -1,3 +1,24 @@
+//total revamp, make this not laggy
+
+/**TRIM ANYTHING HERE. Although items should async render, Too much of this will make it laggy
+ * 1. I think a lot of the items here actually lags the production. This can be shown when typing in the card Numbers and details etc.
+ * 2. I also think that the art is okay.
+ * 
+ * 
+ */
+
+
+
+//Also make sure that the error checks are done properly. Dont let react return the error. instead, visualize it
+
+
+
+
+
+
+
+
+
 import React, {useState, useEffect} from "react";
 import styled,{css} from "styled-components";
 import Theme from "../../theme/theme";

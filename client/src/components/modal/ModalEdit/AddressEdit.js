@@ -1,9 +1,12 @@
-import React, {useState,useEffect, useRef} from 'react';
+import React, {useState,useEffect} from 'react';
+import { useNavigate, useLocation, Link} from 'react-router-dom';
 import styled,{css} from 'styled-components';
-import Theme from '../../theme/theme';
-import { Link } from 'react-router-dom';
-import Input from '../../util/Input/Input';
-import ButtonTypes from '../../util/Button/ButtonObject';
+import Theme from '../../../theme/theme';
+import Input from '../../../util/Input/Input';
+import ButtonTypes from '../../../util/Button/ButtonObject';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchSingleAddress,fetchUserAllAddress,setAddress,clearAddress } from '../../../redux/feature/AddressSlice';
+
 
 
 
@@ -13,10 +16,15 @@ import ButtonTypes from '../../util/Button/ButtonObject';
 const AddressEdit = () =>{
 
 
-    const [AddressState, setAddressState] = useState([])
-    const [recentAddressState, setrecentAddressState] = useState({})
-    const [selectedAddresses, setSelectedAddresses] = useState([]);
+   
     const [toggle,setToggle] = useState(false)
+    
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const addressType = useLocation()
+    const {Address, AllAddress} = useSelector((store) => store.address)
+    const [selectedAddresses, setSelectedAddresses] = useState([])
+
 
 
     const handleToggle = () =>{
@@ -26,117 +34,56 @@ const AddressEdit = () =>{
 
     }
 
+   
+
+ 
+
+   
+
 
     const handleCheckbox = (itemId) =>{
 
         if (selectedAddresses.length > 1 || !selectedAddresses.includes(itemId)) {
             setSelectedAddresses([itemId]); // Update selection to include only the clicked item
             // If AddressState holds the full details, update recentAddressState directly
-            const selectedAddressDetails = AddressState.find((address) => address._id === itemId._id);
-            setrecentAddressState(selectedAddressDetails); // Update recentAddressState
-          
-        
+            const selectedAddressDetails = AllAddress.find((address) => address._id === itemId._id);
+            dispatch(setAddress(selectedAddressDetails));
+            localStorage.setItem('selectedAddress', JSON.stringify(selectedAddressDetails));
+            console.log(selectedAddressDetails)
           }
 
     }
 
 
-
-
-useEffect(()=>{
-
-const fetchAllAddress = async () =>{
-
-    try{
-        const response = await fetch('http://localhost:5000/getAddress', {
-            method:'GET',
-            credentials: 'include',
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
-
-    if(response.ok){
-
-        const result = await response.json()
-        setrecentAddressState(result[0])
-
-
-    }
-}catch(err){
-    window.alert(err)
-}
-};
-
-
-const fetchUserAllAddress = async () =>{
-
-    try{
-        const response = await fetch('http://localhost:5000/getAddressHistory', {
-            method:'GET',
-            credentials: 'include',
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
-
-    if(response.ok){
+    useEffect(() => {
+      const storedAddress = localStorage.getItem('selectedAddress');
+      
+      if (storedAddress) {
+        const parsedAddress = JSON.parse(storedAddress);
+    
+        if (!Address._id) {
+          dispatch(setAddress(parsedAddress)); // Update Redux state only if Address is not present
+        }
+        dispatch(fetchSingleAddress());
+        // Fetch AllAddress unconditionally when data is available in local storage
+        dispatch(fetchUserAllAddress());
+      } else {
+        // Fetch both Address and AllAddress if not available in local storage
+        dispatch(fetchSingleAddress());
         
-        const result = await response.json()
-        setAddressState(result)
+        dispatch(fetchUserAllAddress());
+      }
+    }, []);
 
 
+    const handleDataCheck = () =>{
+      Address.LastName ?  <Link to='/Payment'></Link> : window.alert('form needs to be filled') 
     }
-}catch(err){
-    window.alert(err)
-}
-};
 
 
-
-
-fetchUserAllAddress()
-fetchAllAddress()
-}, [])
-
-
-
-
-async function handleSubmit(e){
-   
-  
-
-    e.preventDefault()
     
-     
-     try{
-       const response = await fetch(`http://localhost:5000/postAddress`,{
-         method:'POST',
-         credentials: 'include', // Include credentials in the request
-         headers:{
-           "Content-Type": "application/json",
-       },
-       body: JSON.stringify(recentAddressState)
-       });
-  
-       if(!response.ok){
-         throw new Error(`an Error occured ${response.statusText}`);
-     
-       }else{
-       
-       
-        console.log('i sent something')
-  
-       
-       }
-    
-     }catch(error){
-       window.alert(error.message);
-     }
-       
-  
-   }
-  
+
+
 
 
 
@@ -162,11 +109,11 @@ return(
                                                   
                                                     <SingleItemContainer>
                                                        
-                                                       <div key={recentAddressState._id}>
-                                                       <p1>Surname: {recentAddressState.LastName}</p1>
-                                                       <p1>Name: {recentAddressState.FirstName}</p1>
-                                                       <p1>Address: {recentAddressState.Address}</p1>
-                                                       <p1>Post Code: {recentAddressState.Postal}, District: {recentAddressState.District}</p1>
+                                                       <div key={Address._id}>
+                                                       <p1>Surname: {Address.LastName}</p1>
+                                                       <p1>Name: {Address.FirstName}</p1>
+                                                       <p1>Address: {Address.Address}</p1>
+                                                       <p1>Post Code: {Address.Postal}, District: {Address.District}</p1>
                                                        </div>
                                                          
                                                    </SingleItemContainer>
@@ -175,9 +122,13 @@ return(
                                      
  </Address_Item_Container>
                          
-                         
-                           
-
+ {addressType.pathname === '/Address' ?  
+  <FinalizeButtonWrapper>
+     <ButtonTypes.Confirm onClick={handleDataCheck}/>
+  </FinalizeButtonWrapper>
+  : 
+  null
+}
                
 
 </Section_Payment_Billing>
@@ -187,15 +138,15 @@ return(
 
 
 
-<Section_Payment_Billing_fetch_All onSubmit={handleSubmit}>
+<Section_Payment_Billing_fetch_All>
 
 <h2>Address</h2>
 <EditButton onClick={handleToggle}>close</EditButton>
 
  <Billing_Item_Container>
-                                                  {AddressState.length > 1 ?   
+                                                  {AllAddress.length > 1 ?   
 
-                                                     AddressState.map( items => (
+                                                     AllAddress.map( items => (
                                                     
                                                   
                                                     (
@@ -237,11 +188,11 @@ return(
                                            
                                                   (
                                                 <ItemContainer>
-                                                       <div key={recentAddressState._id}>
-                                                       <p1>Surname: {recentAddressState.LastName}</p1>
-                                                       <p1>Name: {recentAddressState.FirstName}</p1>
-                                                       <p1>Address: {recentAddressState.Address}</p1>
-                                                       <p1>Post Code: {recentAddressState.Postal}, District: {recentAddressState.District}</p1>
+                                                       <div key={AllAddress._id}>
+                                                       <p1>Surname: {AllAddress.LastName}</p1>
+                                                       <p1>Name: {AllAddress.FirstName}</p1>
+                                                       <p1>Address: {AllAddress.Address}</p1>
+                                                       <p1>Post Code: {AllAddress.Postal}, District: {AllAddress.District}</p1>
                                                        </div>
                                                          
                                                    </ItemContainer>
@@ -269,7 +220,8 @@ return(
                                      
  </Billing_Item_Container>
  <FinalizeButtonWrapper>
-                                                   <ButtonTypes.Confirm type="submit"/>
+                 
+     <ButtonTypes.Confirm onClick={handleDataCheck}/>
 </FinalizeButtonWrapper>                   
                         
 </Section_Payment_Billing_fetch_All>
@@ -319,6 +271,8 @@ const Selection_Wrapper = styled.div`
 display: grid;
 grid-template-columns: repeat(1,10rem);
 grid-template-rows: repeat(1,10rem);
+padding-bottom:2rem;
+padding-top:2rem;
   
   justify-items:center;
   align-items:center;
@@ -362,7 +316,7 @@ grid-template-rows: repeat(1,1fr);
 
 `
 
-const Section_Payment_Billing_fetch_All = styled.form`
+const Section_Payment_Billing_fetch_All = styled.div`
 grid-row:4;
 margin-top:5%;
 height: auto;

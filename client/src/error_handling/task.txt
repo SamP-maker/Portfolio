@@ -1,0 +1,23 @@
+** HELLO THERE **
+
+To the user which is trying to undertake this project
+
+
+LIFT & SHIFT
+1. move any existing error handling precautions here
+
+
+SERVER SIDED ERROR
+1. Have the visuals created here.
+2. Retrieve those visuals in the server side.
+* The error retrieving must fully identify the errors caused. If cannot find error then u gg.
+
+
+
+
+
+
+
+
+
+

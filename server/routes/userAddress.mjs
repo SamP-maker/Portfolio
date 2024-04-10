@@ -71,13 +71,19 @@ router.post("/postAddress", async (req,res) =>{
             timestampField: new Date()
         }
 
-        let result = await collection.insertOne(newDocument)
+        const isFormEmpty = Object.values(newDocument).some(value => value.trim() === '')
 
-        if(result.insertedCount === 1){
-            res.status(200).json({message: 'Document inserted successfully'});
+
+        if(isFormEmpty){
+            res.status(400).json({message: 'Empty Values are not allowed'})
         }else{
-            res.status(500).json({error: 'Insertion failed'});
+        let result = await collection.insertOne(newDocument)
+        res.status(200).send(result)
         }
+
+       
+
+       
     
         
 
@@ -136,11 +142,9 @@ router.put("/updateAddress", async (req,res) =>{
                 }
             }
             let result = await collection.updateOne(updateFilter,update)
-            if(result.matchedCount === 0){
-                res.status(404).json({message : 'Document not found'})
-            }else{
-                res.status(200).json({message : 'Document updated successfully'})
-            }
+
+            
+           
         }
 
     }catch(err){

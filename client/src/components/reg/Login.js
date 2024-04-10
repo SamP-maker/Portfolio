@@ -1,3 +1,9 @@
+
+//total revamp, make this not laggy
+//TRIM ANYTHING HERE. Although items should async render, Too much of this will make it laggy
+
+
+
 import React, {useState, useEffect} from "react";
 import { useNavigate} from "react-router";
 import styled,{css} from "styled-components";
@@ -14,6 +20,7 @@ import FacebookButton from "../../auth/metaAuth";
 import {useDispatch, useSelector} from 'react-redux';
 import { setUserDetails } from "../../redux/feature/registrationSlice";
 import { reduceBorderWidth,leftdividerAnimation,rightdividerAnimation,reduceBeforeAfterWidth} from "../../theme/animations/animations";
+import { saveNameToLocalStorage } from "../../redux/actions/actionCreator";
 
 const Login = () =>{
     
@@ -76,8 +83,9 @@ const Login = () =>{
 
           if(response.ok){
             const data = await response.json();
-           
+            localStorage.setItem('Username', data.username)
             dispatch(setUserDetails(data.username));
+            dispatch(saveNameToLocalStorage(data.username));
             navigate("/Dashboard")
           }
 

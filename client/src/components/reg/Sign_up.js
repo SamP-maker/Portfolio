@@ -1,3 +1,9 @@
+//total revamp, make this not laggy
+//TRIM ANYTHING HERE. Although items should async render, Too much of this will make it laggy
+
+
+
+
 
 import React, {useState} from "react";
 import { useNavigate } from "react-router-dom";
@@ -123,7 +129,9 @@ const Signup = () =>{
           try {
             const result = await response.json();
             
-            dispatch(setUserDetails(result.username));
+            localStorage.setItem('Username', result.username)
+            const username = localStorage.getItem('Username')
+            dispatch(setUserDetails(username));
             
              
              

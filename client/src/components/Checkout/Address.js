@@ -8,7 +8,8 @@ import Label from '../../util/Label/Label';
 import 'react-international-phone/style.css';
 import Cart from '../modal/CartModal';
 import { Link, useNavigate } from 'react-router-dom';
-
+import AddressEdit from '../modal/ModalEdit/AddressEdit';
+import { shake } from '../../theme/animations/animations';
 
 
 
@@ -16,14 +17,26 @@ import { Link, useNavigate } from 'react-router-dom';
 const Address = ()=>{
         const navigate = useNavigate()
         const [form,setForm] = useState({
-          firstName: '',
-          lastName: '',
+          FirstName: '',
+          LastName: '',
           Address: '',
           Postal:'',
           District:'',
           Phone:'',
 
         })
+
+        const [emptyFormMessage, setEmptyFormMessage] = useState(false)
+        const [errorMsg, setErrorMsg] = useState(true)
+        
+
+
+
+        const [toggle, setToggle] = useState(false)
+
+        const handleToggle = () =>{
+          setToggle((prev) => !prev)
+        }
 
       
 
@@ -38,8 +51,10 @@ const Address = ()=>{
         async function handleSubmit(e){
           e.preventDefault();
 
-
-              try{
+          const isFormEmpty = Object.values(form).some(value => value.trim() === '');
+          
+          if(emptyFormMessage){
+                try{
                 await fetch('http://localhost:5000/postAddress',{
                   method:"POST",
                   headers:{
@@ -48,7 +63,8 @@ const Address = ()=>{
                   credentials: 'include',
                 body: JSON.stringify(form)
                 })
-                navigate("/Payment")
+                
+                
 
               
                 
@@ -56,9 +72,30 @@ const Address = ()=>{
                 console.error("Error occured,", err);
                 window.alert("Error occured. Please try again later.")
               }
+            }else{
+      
+              if(isFormEmpty){
+                setTimeout(()=>
+                  setErrorMsg(false)
+                ,100)
+                setTimeout(()=>
+                setErrorMsg(true)
+              ,1500)
+              }else{
+                setEmptyFormMessage(true)
+                
 
+              }
+
+            }
+          }
+        
+
+
+          
+        
             
-        }
+        
 
          
 
@@ -82,19 +119,25 @@ const Address = ()=>{
     <HeaderWrapper>
     
         <StyledLink to="/Order_confirm"><RedirectWrapper><p>Back to Order Confirm</p> </RedirectWrapper></StyledLink>
-     
+        
                  <RightWrapper>
-
+                 <ButtonTypes.AddAddress onClick={handleToggle} />
   
         </RightWrapper>
     </HeaderWrapper>
 
+    <AddressEditWrapper>
+        <AddressEdit/>
+</AddressEditWrapper>
 
 
-    
+
+
+
+{toggle ? 
     <form onSubmit={handleSubmit}>
     <CheckOutWrapper>
-    <Label fontSize="1.5rem" text="First Name"/>
+    {errorMsg ? <Label fontSize="1.5rem" text="First Name"/> : <ErrorMessage>**This field is required**</ErrorMessage> }
                 
                
                         <Input
@@ -102,11 +145,11 @@ const Address = ()=>{
                             type="text" 
                             name="firstName" 
                             placeholder="First Name.."
-                            value={form.firstName}
-                            onChange={(e) => handleForm({firstName: e.target.value})}
+                            value={form.FirstName}
+                            onChange={(e) => handleForm({FirstName: e.target.value})}
                             />
 
-<Label fontSize="1.5rem" text="Last Name"/>
+{errorMsg ? <Label fontSize="1.5rem" text="Last Name"/> : <ErrorMessage>**This field is required**</ErrorMessage> }
                 
                
                 <Input
@@ -114,11 +157,11 @@ const Address = ()=>{
                     type="text" 
                     name="lastName" 
                     placeholder="Last Name.."
-                    value={form.lastName}
-                    onChange={(e) => handleForm({lastName: e.target.value})}
+                    value={form.LastName}
+                    onChange={(e) => handleForm({LastName: e.target.value})}
                     />
 
-<Label fontSize="1.5rem" text="Address"/>
+{errorMsg ? <Label fontSize="1.5rem" text="Address"/> : <ErrorMessage>**This field is required**</ErrorMessage> }
                 
                
                 <Input
@@ -130,7 +173,7 @@ const Address = ()=>{
                     onChange={(e) => handleForm({Address: e.target.value})}
                     />
 
-<Label fontSize="1.5rem" text="Postal Code"/>
+{errorMsg ? <Label fontSize="1.5rem" text="Postal Code"/> : <ErrorMessage>**This field is required**</ErrorMessage> }
                 
                
                 <Input
@@ -142,7 +185,7 @@ const Address = ()=>{
                     onChange={(e) => handleForm({Postal: e.target.value})}
                     />
 
-<Label fontSize="1.5rem" text="District"/>
+{errorMsg ? <Label fontSize="1.5rem" text="District"/> : <ErrorMessage>**This field is required**</ErrorMessage> }
 <Input
                     white
                     type="text" 
@@ -155,7 +198,7 @@ const Address = ()=>{
                
                 
 
-<Label fontSize="1.5rem" text="Phone Number"/>
+{errorMsg ? <Label fontSize="1.5rem" text="Phone Number"/> : <ErrorMessage>**This field is required**</ErrorMessage> }
 <Input
                     white
                     type="Phone" 
@@ -167,7 +210,7 @@ const Address = ()=>{
                
 
 
-<Label fontSize="1rem" text="*Delivery is only available in the same state within 20km*"/>
+{errorMsg ? <Label fontSize="1rem" text="*Delivery is only available in the same state within 20km*"/> : <ErrorMessage>**This field is required**</ErrorMessage> }
 
             
     <PaynowWrapper>
@@ -176,7 +219,11 @@ const Address = ()=>{
               
      </CheckOutWrapper>
 </form>             
+:
+<>
 
+</>
+}
 
         
         <Footer/>
@@ -185,6 +232,19 @@ const Address = ()=>{
         
     )
 }
+
+const ErrorMessage = styled.p`
+padding-left:2rem;
+color: ${Theme.colors.Red};
+font-family: 'Hammersmith One', sans-serif;
+
+animation:${shake} .5s ease-in-out;
+`
+
+const AddressEditWrapper = styled.div`
+padding-left:20rem;
+padding-right:20rem;
+`
 
 const StyledLink = styled(Link)`
 text-decoration:none;

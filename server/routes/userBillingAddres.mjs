@@ -11,7 +11,9 @@ const router = express.Router();
       let collection = await db.collection('userBillingAddress');
       let result = await collection.find({ user_id: req.session.user.email})
         .sort({timestampField: -1})
+        .limit(1)
         .toArray()
+        
        
       res.json(result).status(200);
       
@@ -57,7 +59,7 @@ router.get("/getBillingAddressHistory", async (req,res) =>{
         }
 
         const userEmail = req.session.user.email
-        const { FirstName, lastName, Address, Postal, Country, Zip, City, State} = req.body
+        const { FirstName, LastName, Address, Postal, Country, Zip, City, State} = req.body
 
         let collection = await db.collection("userBillingAddress");
         
@@ -65,14 +67,14 @@ router.get("/getBillingAddressHistory", async (req,res) =>{
 
             let newDocument ={
                 FirstName: FirstName,
-                lastName: lastName,
+                LastName: LastName,
                 Address: Address,
                 Postal: Postal,
                 Country: Country,
                 Zip: Zip,
                 City: City,
                 State:State,
-                userEmail: userEmail,
+                user_id: userEmail,
                 timestampField: new Date()
             }
            

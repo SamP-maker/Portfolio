@@ -1,4 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
+import { saveNameToLocalStorage } from '../actions/actionCreator';
 
 
 const initialState = {
@@ -11,14 +12,16 @@ const userSlice = createSlice({
     initialState,
     reducers:{
         setUserDetails:(state,action)=>{
+        
             state.isLoggedin= true;
             state.Username= action.payload;
-            console.log(state.Username)
+          
+            
         },
         clearUserDetails: (state)=>{
             state.isLoggedin = false;
             state.Username = ''
-            console.log(state.Username)
+         
         }
     },
 });

@@ -4,17 +4,34 @@ import db from '../db/conn.mjs';
 
 const router = express.Router();
 
+router.get("/getCreditCredentials", async (req,res)=>{
+    try{
+        let collection = await db.collection('userBillingCard').find({
+            user_id: req.session.user.email
+        }).sort({timestampField: -1})
+        .limit(1)
+        .toArray()
+        res.status(200).send(collection);
+    }catch(err){
+        console.log(err)
+    }
+})
 
-router.get("/", async (req,res)=>{
+
+router.get("/getCreditCredentialsHistory", async (req,res)=>{
+    try{
     let collection = await db.collection("userBillingCard");
     let results = await collection.find({}).toArray();
     res.send(results).status(200);
+    }catch(err){
+        console.log(err)
+    }
 });
 
 
-router.post("/", async (req,res) =>{
+router.post("/postCreditCrendentials", async (req,res) =>{
     try{
-        const { CardNumber, FullName, CCV, Month, Year} = req.body
+        const { CardNumber, FullName, CCV, Month, Year, cardType} = req.body
 
         if (!req.session.user || !req.session.user.email) {
             res.status(401).json({ message: 'Unauthorized' });
@@ -29,6 +46,8 @@ router.post("/", async (req,res) =>{
             Month: Month,
             Year: Year,
             user_id: userEmail,
+            CardType: cardType,
+            timestampField: new Date()
         }
         let collection = await db.collection("userBillingCard");
         let result = await collection.insertOne(newDocument)

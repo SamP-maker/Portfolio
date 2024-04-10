@@ -1,3 +1,18 @@
+/**
+ *  1. Add in Sign up.
+ *    - Currently only sign in, but then it does not redirect into the main menu as well
+ *    - Need a sign up, then redirect to the main menu
+ * 
+ * 
+ * 
+ * 
+ * 
+ */
+
+
+
+
+
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import google_button from '../theme/Icons/google.png';
