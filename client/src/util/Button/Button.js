@@ -57,6 +57,10 @@ const ButtonWrapper = styled.button`
 text-decoration: none;
 border:none;
 
+&:hover{
+  cursor:pointer;
+}
+
 ${(props)=> props.Signup && css`
 font-family: 'Work Sans', sans-serif;
 border:.2rem solid ${Theme.colors.BackgroundBlack};
@@ -368,14 +372,15 @@ box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 
 
 ${(props) => props.navbar && css`
-padding:${props.padding};
 
+padding:2rem 9.057rem;; /* Fixed padding */
+flex-grow: 1; /* Allow buttons to grow equally */
 background-color: ${Theme.colors.BackgroundBlack};
 font-family: 'Work Sans', sans-serif;
 color: ${Theme.colors.white};
-font-size:1.5rem;
-
-
+font-size: 1.5rem;
+border: none;
+cursor: pointer;
 
 
 &:hover{

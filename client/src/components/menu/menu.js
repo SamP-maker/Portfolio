@@ -15,6 +15,8 @@ import { addItem, setStoreCategory} from '../../redux/feature/cartSlice';
 import Cart from '../modal/CartModal';
 import { Logo } from '../../theme/theme';
 import { useParams } from 'react-router-dom';
+import Login from '../Auth/Login';
+import Signup from '../Auth/Sign_up';
 
 
 
@@ -29,6 +31,7 @@ const Menu = ()=>{
         const [selectedItem,setSelectedItem] = useState([])
         const [selectedCategory, setSelectedCategory] = useState('Main')
         const { name } = useParams()
+        const { isFormOpen, isSignUpFormOpen} = useSelector((state) => state.auth);
         
         const dispatch = useDispatch()
 
@@ -113,7 +116,6 @@ const Menu = ()=>{
        
 
         const handleAddItems = (itemId) =>{
-                console.log(itemId)
                 dispatch(addItem(itemId))
         }
 
@@ -138,7 +140,15 @@ const Menu = ()=>{
 
 
     return(
-       <PageWrapper>
+        <>
+
+          {isFormOpen == true ?  <Login/> : null }
+          {isSignUpFormOpen == true ?  <Signup/> : null }
+
+       <PageWrapper isFormOpen={isFormOpen} isSignUpFormOpen={isSignUpFormOpen}>
+
+
+          
     
     <Cart/>
         
@@ -158,6 +168,9 @@ const Menu = ()=>{
  
  
  /> 
+
+
+ 
  
  </InputWrapper>   
            
@@ -165,9 +178,9 @@ const Menu = ()=>{
         </HeaderWrapper>
 
         
-                <NavWrapper>
-                        <Navbar  handleSelectedCategory={handleSelectedCategory}/>
-                </NavWrapper>
+        <Navbar  handleSelectedCategory={handleSelectedCategory}/>
+                        
+       
 
 
         
@@ -196,13 +209,16 @@ const Menu = ()=>{
         
         <Footer/>
         </PageWrapper>
-
+        </>
         
     )
 }
 
 const PageWrapper = styled.div`
 overflow-x:hidden;
+filter: ${props => (props.isFormOpen || props.isSignUpFormOpen ? 'blur(30px)' : 'none')};
+    /* Adjust the blur radius as needed */
+    pointer-events: ${props => (props.isFormOpen || props.isSignUpFormOpen ? 'none' : 'auto')};
 
 `
 
@@ -263,7 +279,6 @@ margin-top:-20px;
 
 
 const NavWrapper = styled.div`
-grid-row-start:2;
 
 `
 

@@ -78,6 +78,28 @@ export const shake = keyframes`
 `
 
 
+export const error_shake = keyframes`
+
+0% {
+  transform: translateX(0) rotate(.5deg);
+}
+25% {
+  transform: translateX(-5px)  rotate(-.5deg);
+}
+50% {
+  transform: translateX(5px)  rotate(.5deg);
+}
+75% {
+  transform: translateX(-5px) rotate(-.5deg);
+}
+100% {
+  transform: translateX(0);
+}
+
+`
+
+
+
 
 
 

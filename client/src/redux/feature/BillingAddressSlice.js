@@ -1,6 +1,5 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import { saveBillingToLocalStorage } from '../actions/actionCreator';
-import { useDispatch } from 'react-redux';
 
  
 export const fetchBillAddress = createAsyncThunk('Billing/fetchBillAddress',  async (_,{dispatch}) =>{
@@ -15,23 +14,33 @@ export const fetchBillAddress = createAsyncThunk('Billing/fetchBillAddress',  as
         "Content-Type": "application/json",
     },
     });
-
-    if(!response.ok){
-      throw new Error(`an Error occured ${response.statusText}`);
-  
-    }else{
     
-    const data = await response.json();
-    const { FirstName , LastName , Postal ,Address, Country, City, State, _id} = data[0]
-    dispatch(saveBillingToLocalStorage(data[0]));
-    return { FirstName , LastName , Postal ,Address, Country, City, State, _id}
 
-   
+ 
+    if(response.ok){
 
 
+        
+        
+        const data = await response.json();
+      
+        
+        if(data){
+            const { FirstName , LastName , Postal ,Address, Country, City, State, _id} = data[0] || {};
+            dispatch(saveBillingToLocalStorage(data[0]));
+            return { FirstName , LastName , Postal ,Address, Country, City, State, _id}
+        }else{
+            return null;
+        }
+        
+    
+       
+    
+     
     }
  
   }catch(error){
+   
     window.alert(error.message);
   }
     
@@ -40,7 +49,7 @@ export const fetchBillAddress = createAsyncThunk('Billing/fetchBillAddress',  as
 });
 
 
-export const fetchUserAllBillingAddress  = createAsyncThunk('Billing/fetchUserAllBillingAddress' , async()=>{
+export const fetchUserAllBillingAddress  = createAsyncThunk('Billing/fetchUserAllBillingAddress' , async(_,{dispatch})=>{
     
     try{
         const response = await fetch('http://localhost:5000/getBillingAddressHistory', {
@@ -53,13 +62,22 @@ export const fetchUserAllBillingAddress  = createAsyncThunk('Billing/fetchUserAl
 
     if(response.ok){
 
-        const result = await response.json()
-        console.log(result)
-        return result
+    
+        const result = await response.json();
+
+        if(result){
+            
+            return result
+        }else{
+            return null;
+        }
+       
+        
 
 
     }
 }catch(err){
+
     window.alert(err)
 }
 
@@ -74,13 +92,24 @@ const initialState ={
     BillingAddress:{
         FirstName:'',
         LastName:'',
-        Postal:'',
         Address:'',
-        District: '',
-        Phone:'',
+        Postal:'',
+        Country:'',
+        City:'',
+        State: '',
         _id:''
     },
-    BillingAddressAll:[]
+    BillingAddressAll:[],
+    PrevBillingAddress:{
+        FirstName:'',
+        LastName:'',
+        Address:'',
+        Postal:'',
+        Country:'',
+        City:'',
+        State: '',
+        _id:''
+    },
 
 }
 
@@ -90,15 +119,16 @@ const BillingAddressSlice = createSlice({
     initialState,
     reducers:{
         setBillingAddress:(state,action) =>{
-            const { FirstName , LastName , Postal ,Address, Country, City, State, _id} = action.payload
+            const { FirstName , LastName , Postal ,Address, Country, City, State, _id} = action.payload || {};
             state.BillingAddress ={
                 FirstName,
                 LastName,
-                Postal,
                 Address,
+                Postal,
                 Country,
                 City,
                 State,
+                _id
                 
                 
             }
@@ -108,10 +138,22 @@ const BillingAddressSlice = createSlice({
             state.BillingAddress = {}
             localStorage.remove('Billing')
         },
+        setPrevBillingAddress:(state) =>{
+
+         
+                state.PrevBillingAddress = {
+                    ...state.BillingAddress
+                  };
+            
+            
+
+        }
     },
     extraReducers:(builder)=>{
         builder.addCase(fetchBillAddress.fulfilled,(state,action)=>{
-            const { FirstName , LastName , Postal ,Address, Country, City, State, _id} = action.payload
+            if(action.payload)
+{
+    const { FirstName , LastName , Postal ,Address, Country, City, State, _id} = action.payload || {};
             state.BillingAddress ={
                 FirstName,
                 LastName,
@@ -123,13 +165,22 @@ const BillingAddressSlice = createSlice({
                 _id
                 
             }
-            
+}            
+            else{
+                state.BillingAddress = {
+                ...initialState.BillingAddress
+            }
+            }
         }).addCase(fetchUserAllBillingAddress.fulfilled, (state,action)=>{
-            state.BillingAddressAll = [...action.payload.map((item) =>({...item}))]
+            if(action.payload){
+                state.BillingAddressAll = [...action.payload.map((item) =>({...item}))]
+            }else{
+                state.BillingAddressAll = [...initialState.BillingAddressAll];
+            }
             
           });
     }
 })
 
-export const {setBillingAddress, clearBillingAddress} = BillingAddressSlice.actions;
+export const {setBillingAddress, clearBillingAddress, setPrevBillingAddress} = BillingAddressSlice.actions;
 export default BillingAddressSlice.reducer;

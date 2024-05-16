@@ -59,7 +59,7 @@ router.get("/getBillingAddressHistory", async (req,res) =>{
         }
 
         const userEmail = req.session.user.email
-        const { FirstName, LastName, Address, Postal, Country, Zip, City, State} = req.body
+        const { FirstName, LastName, Address, Postal, Country, City, State} = req.body
 
         let collection = await db.collection("userBillingAddress");
         
@@ -71,7 +71,6 @@ router.get("/getBillingAddressHistory", async (req,res) =>{
                 Address: Address,
                 Postal: Postal,
                 Country: Country,
-                Zip: Zip,
                 City: City,
                 State:State,
                 user_id: userEmail,
@@ -114,7 +113,7 @@ router.get("/getBillingAddressHistory", async (req,res) =>{
         }
 
         const userEmail = req.session.user.email
-        const { FirstName, lastName, Address, Postal, Country, Zip, City, State} = req.body
+        const { FirstName, lastName, Address, Postal, Country, City, State} = req.body
 
         let collection = await db.collection("userBillingAddress");
         
@@ -139,7 +138,6 @@ router.get("/getBillingAddressHistory", async (req,res) =>{
                 Address: Address,
                 Postal: Postal,
                 Country: Country,
-                Zip: Zip,
                 City: City,
                 State:State,
                 user_id: userEmail,

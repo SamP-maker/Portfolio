@@ -20,7 +20,7 @@ import styled from 'styled-components';
 import { FaFacebookSquare } from 'react-icons/fa';
 import Theme from '../theme/theme';
 
-const FacebookLoginButton = () => {
+const FacebookLoginButton = ({label}) => {
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -86,7 +86,7 @@ const FacebookLoginButton = () => {
         <button onClick={renderProps.onClick}>
           <FaFacebookSquare />
           
-          Sign in with Facebook
+          {label}
         </button>
       )}
       

@@ -28,26 +28,22 @@ return(
 <NavigationContainer>
   <Draggable innerRef={SliderRef} rootClass={"drag"}>
  
-    <NavbarWrapper>
-      <SectionWrapper>
-                    <Button navbar={"true"} padding="2rem 9.2rem" text="Appetizers"  onClick={() =>handleClick('Appetizers')}/>
-      </SectionWrapper>
-      <SectionWrapper>
-                    <Button navbar={"true"} padding="2rem 9.2rem" text="Main"  onClick={() =>handleClick('Main')}/>
-      </SectionWrapper>
+      
+                    <Button navbar={"true"} padding="2rem 10rem" text="Appetizers"  onClick={() =>handleClick('Appetizers')}/>
+      
+                    <Button navbar={"true"} padding="2rem 10rem" text="Main"  onClick={() =>handleClick('Main')}/>
+     
     
-      <SectionWrapper>
-                    <Button navbar={"true"} padding="2rem 9.2rem" text="Pasta"  onClick={() =>handleClick('Pasta')}/>
-      </SectionWrapper>
+      
+                    <Button navbar={"true"} padding="2rem 10rem" text="Pasta"  onClick={() =>handleClick('Pasta')}/>
+     
 
-      <SectionWrapper>
-                    <Button navbar={"true"} padding="2rem 9.2rem" text="Beverage"  onClick={() =>handleClick('Beverage')}/>
-      </SectionWrapper>
-    
-      <SectionWrapper>
-                    <Button navbar={"true"} padding="2rem 9.2rem" text="Desserts" onClick={() =>handleClick('Desserts')}/>
-      </SectionWrapper>
-   </NavbarWrapper>
+      
+                    <Button navbar={"true"} padding="2rem 10rem" text="Beverage"  onClick={() =>handleClick('Beverage')}/>
+      
+                    <Button navbar={"true"} padding="2rem 10rem" text="Desserts" onClick={() =>handleClick('Desserts')}/>
+      
+   
 
   </Draggable>
 </NavigationContainer>
@@ -63,9 +59,11 @@ return(
 
 const NavbarWrapper = styled.nav`
   display: flex;
-  flex-direction: row;
- 
-  width:100vw;
+  justify-content: space-between; /* Adjust alignment as needed */
+  width:100%; /* Optional: Set a maximum width */
+
+  
+
 
   
 
@@ -75,6 +73,7 @@ const NavbarWrapper = styled.nav`
 const SectionWrapper = styled.section`
 position:relative;
 align-items:center;
+width:100%;
 
 
 `
@@ -82,6 +81,12 @@ align-items:center;
 const NavigationContainer = styled.div`
 display:flex;
 align-self:center;
+width:100%;
+flex-direction:row;
+grid-column-start:1;
+grid-column-end:3;
+
+
 
 
 `

@@ -1,6 +1,5 @@
 import express from "express";
 import db from "../db/conn.mjs";
-import { ObjectId } from "mongodb";
 
 const router = express.Router();
 
@@ -71,7 +70,10 @@ router.post("/postAddress", async (req,res) =>{
             timestampField: new Date()
         }
 
-        const isFormEmpty = Object.values(newDocument).some(value => value.trim() === '')
+        const isFormEmpty = Object.values(newDocument).some(value => {
+
+            return typeof value === 'string' && value.trim() === '';
+        })
 
 
         if(isFormEmpty){

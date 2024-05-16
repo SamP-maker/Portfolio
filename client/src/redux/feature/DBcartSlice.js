@@ -1,8 +1,9 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
+import {setCartLoadStatus ,setCardStatus} from '../feature/ErrorManagement';
 
 
 
-export const fetchOrderData = createAsyncThunk('DBcart/fetchOrderData', async () => {
+export const fetchOrderData = createAsyncThunk('DBcart/fetchOrderData', async (_,{dispatch}) => {
     try {
       const response = await fetch(`http://localhost:5000/order`, {
         method: 'GET',
@@ -11,18 +12,20 @@ export const fetchOrderData = createAsyncThunk('DBcart/fetchOrderData', async ()
           'Content-Type': 'application/json',
         },
       });
-  
-      if (!response.ok) {
-        throw new Error(`An error occurred: ${response.statusText}`);
+   
+      if (response.ok) {
+           
+            const data = await response.json();
+            const {Order,Total, ItemsAmount} = data[0];
+            return {Order,Total,ItemsAmount};
+
+        
       }
+
   
-      const data = await response.json();
-      const {Order,Total, ItemsAmount} = data[0]
-    
   
-      return {Order,Total,ItemsAmount};
     } catch (error) {
-      throw error;
+  
     }
   });
 
@@ -37,6 +40,7 @@ const initialState = {
     cartItems: [],
     Order_id: 0,
     amount:0,
+    tax:0,
     total:0,
     setCategory: 'Main',
     isLoading:true,
@@ -59,6 +63,7 @@ const DBcartSlice = createSlice({
             state.cartItems.push(...state.cartItems,...Order.map(item => ({ ...item })));
             state.total += Total
             state.amount += ItemsAmount
+            
             
           
 
@@ -110,7 +115,6 @@ const DBcartSlice = createSlice({
         },
         cancelCart: (state) =>{
             state.cartItems = [...state.originalData.map((item) => ({...item}))]
-            console.log(state.cartItems)
             state.amount = state.tempAmount
             state.total = state.tempTotal
            
@@ -126,10 +130,11 @@ const DBcartSlice = createSlice({
             state.cartItems = [...Order.map((item) => ({...item}))];
             state.originalData =  [...Order.map((item) => ({...item}))];
             state.Order_id = _id
-            state.total = Total
+            state.total = Total.toFixed(2)
             state.tempAmount = ItemsAmount
             state.tempTotal = Total
             state.amount = ItemsAmount
+            state.tax = Math.abs(Total * 1.16 - Total).toFixed(2)
         })
     }
 });

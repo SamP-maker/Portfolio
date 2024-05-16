@@ -7,29 +7,61 @@ import ButtonTypes from '../../util/Button/ButtonObject';
 import { useDispatch, useSelector } from 'react-redux';
 import { removeItem, increase, decrease} from '../../redux/feature/cartSlice'
 import Cart from '../modal/CartModal';
-import { useNavigate } from 'react-router-dom';
 import { Logo } from '../../theme/theme';
-
-
+import AddressEdit from '../modal/ModalEdit/AddressEdit';
+import AddressEditSlider from '../modal/ModalEdit/AddressEditSlider';
+import AddAddress from './Address';
+import PaymentModal from '../modal/PaymentModal';
+import CheckoutModal from '../modal/CheckoutModal';
+import BillingModal from '../modal/ModalEdit/BillingAddressModal';
+import BillingEditSlider from '../modal/ModalEdit/BillingAddressEditSlider';
+import CreditCredentialsModal from '../modal/CreditCredentialsModal';
+import CreditCardEditSlider from '../modal/ModalEdit/CreditCredentialEditSlider';
+import CheckoutModalUI from '../../FetchAPI/CheckoutModalAPI';
+import BankListModal from '../modal/ModalEdit/BankListModal';
+import Login from '../Auth/Login';
+import Signup from '../Auth/Sign_up';
+import AddressUI from '../../FetchAPI/AddressAPI';
+import BillingAddressUI from '../../FetchAPI/BillingAddressAPI';
 
 
 const OrderConfirm = ()=>{
         const [selectedItem,setSelectedItem] = useState([])
         const [selectedCategory, setSelectedCategory] = useState('Main')
-        const {cartItems, amount , total } = useSelector((store) => store.cart)
+        const {cartItems, amount , total,setCategory,isOpen } = useSelector((store) => store.cart)
+        const [hideModal,setHideModal] = useState(false)
+        const {AuthLoad,RecordSummLoad,AddressLoad,BillingAddressLoad,CreditCardLoad} = useSelector((store) => store.load);
+        const { isFormOpen, isSignUpFormOpen} = useSelector((store) => store.auth);
+        const {RecordSummary,AddressPost,BillingAddressPost} = useSelector((store)=> store.post);
+        const {Receipt} = useSelector((store) => store.receipt);
         const dispatch = useDispatch()
-        const navigate = useNavigate()
-        const [orderList, setOrderList] = useState({
-        Order:[],
-        Total: 0,
-        ItemsAmount: 0,
-        })
+        const {BillingAddress} = useSelector((store) => store.billing)
+        const {Address} = useSelector((store) => store.address)
+
+     
+
+        useEffect(()=>{
+
+                if(AddressLoad.openForm || AddressLoad.openSliderForm || 
+                        BillingAddressLoad.openForm || BillingAddressLoad.openSliderForm || isOpen||
+                   CreditCardLoad.openForm || CreditCardLoad.openSliderForm || CreditCardLoad.openBankListForm){
+                             setHideModal(true)
+     
+                     }else{
+                             setHideModal(false)
+                     }
+
+        },[AddressLoad.openForm,AddressLoad.openSliderForm,BillingAddressLoad.openForm, 
+                BillingAddressLoad.openSliderForm,isOpen,CreditCardLoad.openForm,
+                CreditCardLoad.openSliderForm,CreditCardLoad.openBankListForm])
+                
+        
 
         
 
     
 
-
+        
       
 
         const handleIncreaseAmount = (itemId) =>{
@@ -45,6 +77,9 @@ const OrderConfirm = ()=>{
                 dispatch(removeItem(itemId))
         }
 
+
+      
+
       
 
 
@@ -55,19 +90,7 @@ const OrderConfirm = ()=>{
                 return sort
         }
 
-        useEffect(() => {
-                
-                
-                setOrderList({
-                  Order: cartItems,
-                  Total: total,
-                  ItemsAmount: amount,
-                });
-                
-              }, [cartItems, amount, total]);
-
-
-       
+      
 
      
 
@@ -76,40 +99,14 @@ const OrderConfirm = ()=>{
                   const itemCategory = menuSort(menuObject[selectedCategory]);
                   setSelectedItem(itemCategory);
                 }
+
+              
               }, [selectedCategory]);
 
 
 
         
-                
-              async function handleSubmit(e){
-                e.preventDefault()
-                console.log('Sending orderList:', orderList);
-
-                try {
-                        await fetch('http://localhost:5000/postOrder',{
-                                method:"POST",
-                                headers:{
-                                        "Content-Type": "application/json",
-                                },
-                                credentials: 'include',
-                                body:JSON.stringify(orderList)
-
-
-                
-                        })
-                        navigate("/Address")
-                
-                }catch(err){
-                        console.error('Error occured:', err);
-                        window.alert("Error occured. Please try again later.");
-                
-                }
-
-                
-        
-
-        }
+              
 
   
 
@@ -118,17 +115,30 @@ const OrderConfirm = ()=>{
     return(
         
      <>
+
+{isFormOpen == true ?  <Login/> : null }
+          {isSignUpFormOpen == true ?  <Signup/> : null }
+
+
+   
      <Logo/>
+     {AddressPost.AddressPostStatus ? <AddressUI form={Address}/> : null}
+     {BillingAddressPost.BillingAddressPostStatus ? <BillingAddressUI billingAddressForm={BillingAddress}/> : null}
+     {RecordSummary.UserRecordSummPostStatus ? <CheckoutModalUI userReceipt={Receipt}/> : null }
+     
 
 {cartItems.length == 0 ?
 
 
 <>
+
+
+
 <Cart/>
 <CheckOutWrapper empty_message>
   Cart is Empty
 </CheckOutWrapper>   
-<PageWrapper blur>
+<PageWrapper blur  isFormOpen={isFormOpen} isSignUpFormOpen={isSignUpFormOpen} >
 
 
  
@@ -144,15 +154,38 @@ const OrderConfirm = ()=>{
    
    :
 
-        <PageWrapper>
-   
+        <PageWrapper isFormOpen={isFormOpen} isSignUpFormOpen={isSignUpFormOpen}>
+             
         <Cart/>
-      
+        
+
+        <OverlayWrapper isCartOpen={
+                AddressLoad.openForm || AddressLoad.openSliderForm || 
+                BillingAddressLoad.openForm || BillingAddressLoad.openSliderForm ||
+                CreditCardLoad.openForm || CreditCardLoad.openSliderForm ||
+                CreditCardLoad.openBankListForm
+                }/>
+        
+        {AddressLoad.openForm ? <AddAddress/> : null}
+        {AddressLoad.openForm ? null : <AddressEditSlider  isHidden={AddressLoad.openSliderForm}/>}
+        {BillingAddressLoad.openForm ? <BillingModal/> : null}
+        {BillingAddressLoad.openForm ? null : <BillingEditSlider  isHidden={BillingAddressLoad.openSliderForm}/>}
+        {CreditCardLoad.openForm ? <CreditCredentialsModal/> : null}
+        {CreditCardLoad.openForm ? null : <CreditCardEditSlider  isHidden={CreditCardLoad.openSliderForm}/>}
+        {CreditCardLoad.openBankListForm ? <BankListModal/> : null}
+
+    
+<OrderConfirmFlexBox>
+<OrderConfirmContainer>
+
+      <AddressEdit/>
+      <PaymentModal/>
       
   
-      <form onSubmit={handleSubmit}>
-    <CheckOutWrapper>
-        {cartItems.map( items =>{
+      <FormWrapper>
+ <CheckOutContainer>
+        <CheckOutWrapper>
+                {cartItems.map( items =>{
                             return(
                             <ItemContainer key={items.id}>
                                <img src={items.Image}/>
@@ -167,22 +200,28 @@ const OrderConfirm = ()=>{
         </IncrementButtonWrapper>
         
         <ButtonWrapper>
+
                 <ButtonTypes.Remove handleRemove={() => handleRemoveItem(items.id)}/>
+
         </ButtonWrapper>
                             </ItemContainer>
                             )
                         })}
 
 
-                        
-     <OrderButtonWrapper>
-       <ButtonTypes.Confirm_Order type="submit"/>
-       </OrderButtonWrapper>
-     </CheckOutWrapper>    
+                       
+        </CheckOutWrapper>    
+ </CheckOutContainer>
 
+ 
 
-     </form>
-        
+     </FormWrapper>
+
+     
+</OrderConfirmContainer>    
+</OrderConfirmFlexBox>
+                                <CheckoutModal isHidden={hideModal}/>
+
         <Footer/>
         </PageWrapper>
 }
@@ -191,7 +230,62 @@ const OrderConfirm = ()=>{
     )
 }
 
+
+const OrderConfirmFlexBox = styled.div`
+display:flex;
+justify-content:center;
+
+
+`
+
+
+const FormWrapper = styled.form`
+grid-column-start:1;
+  grid-column-end:1;
+  grid-row-start:2;
+  grid-row-end:2;
+  width:680px;
+`
+
+
+const OverlayWrapper = styled.div`
+position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 101;
+  display: ${(props) => (props.isCartOpen ? 'block' : 'none')};
+
+
+`
+
+const OrderConfirmContainer = styled.div`
+display: grid;
+grid-template-columns: repeat(1,1fr);
+grid-template-rows: repeat(1,250px);
+margin-bottom:20rem;
+gap:2rem;
+height:100%;
+`
+
+const CheckOutContainer = styled.div`
+top: 0;
+left: 0;
+height: 100%;
+  grid-column-start:1;
+  grid-column-end:1;
+  width:100%;
+  
+ 
+`
+
 const PageWrapper = styled.div`
+overflow-x:hidden;
+filter: ${props => (props.isFormOpen || props.isSignUpFormOpen ? 'blur(10px)' : 'none')};
+    /* Adjust the blur radius as needed */
+    pointer-events: ${props => (props.isFormOpen || props.isSignUpFormOpen? 'none' : 'auto')};
 
 
 
@@ -207,11 +301,6 @@ filter:blur(100px);
 const CheckOutWrapper = styled.div`
 padding-bottom:2rem;
 background-color: ${Theme.colors.white};
-
-width:60vw;
-margin-bottom:20rem;
-margin-left:20vw;
-margin-right:20vw;
 
 display:grid;
 grid-template-columns: repeat(1,1fr);
@@ -275,12 +364,6 @@ grid-row-end:4;
 padding-left:2rem;padding-right:2rem;
 `
 
-const OrderButtonWrapper = styled.div`
-padding-top:2rem;
-padding-right:2rem;
-align-items:end;
-justify-self:end;
-`
 
 
 

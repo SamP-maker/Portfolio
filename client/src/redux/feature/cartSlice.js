@@ -9,7 +9,7 @@ const initialState = {
     amount:0,
     total:0,
     setCategory: 'Main',
-    isLoading:true
+    isOpen:false
 };
 
 
@@ -41,10 +41,7 @@ const cartSlice = createSlice({
               
                 state.amount += 1;
                 state.total += itemToAdd.Price;
-                console.log( 'items added to list:', JSON.stringify(itemToAdd, null, 2))
-                console.log( JSON.parse(JSON.stringify(state.cartItems)))
-
-                console.log(state.cartItems)
+               
             } else {
                 // If the item is not found in its reported category,
                 // handle it by searching across all categories
@@ -59,9 +56,7 @@ const cartSlice = createSlice({
                     state.amount += 1;
                     state.total += categoryItem.Price;
             
-                    console.log('Item added to list:', JSON.stringify(categoryItem, null, 2));
-                    console.log(JSON.parse(JSON.stringify(state.cartItems)));
-                    console.log(state.cartItems);
+                    
                     break; // Exit loop if item is found in any category
                   }
                 }
@@ -81,7 +76,7 @@ const cartSlice = createSlice({
 
 
             if(removedItem){
-                console.log(removedItem.Amount)
+              
                 state.total -= removedItem.Price * removeItem.Amount;
                 state.cartItems = state.cartItems.filter((item) => item.id !== itemId);
                 state.amount -=  cartItem.Amount;
@@ -97,7 +92,7 @@ const cartSlice = createSlice({
             const cartItem = state.cartItems.find( (item) => item.id === itemId);
             if (cartItem) {
                     cartItem.Amount += 1;
-                    console.log(cartItem)
+                    
                     state.amount += 1;
                     state.total += cartItem.Price
             }
@@ -128,6 +123,10 @@ const cartSlice = createSlice({
             });
             state.total = (total/100).toFixed(2);
         },
+        setOpenCart: (state,action) =>{
+            state.isOpen = action.payload
+        }
+
    
     }
 });
@@ -139,5 +138,5 @@ const cartSlice = createSlice({
 
 
 
-export const { clearCart, removeItem, increase, decrease, calculateTotal,addItem,setStoreCategory} = cartSlice.actions;
+export const { clearCart, removeItem, increase, decrease, calculateTotal,addItem,setStoreCategory,setOpenCart} = cartSlice.actions;
 export default cartSlice.reducer

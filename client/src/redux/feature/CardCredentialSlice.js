@@ -1,6 +1,7 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import { saveCreditToLocalStorage } from '../actions/actionCreator';
-import { useDispatch } from 'react-redux';
+
+
 export const fetchCreditCardCredential = createAsyncThunk('CreditCardSlice/fetchCreditCardCredential', async(_,{dispatch}) =>{
   
    
@@ -14,19 +15,27 @@ export const fetchCreditCardCredential = createAsyncThunk('CreditCardSlice/fetch
     },
     });
 
-    if(!response.ok){
-      throw new Error(`an Error occured ${response.statusText}`);
-  
-    }else{
-    
-    const data = await response.json();
-    const { CardNumber, FullName, CCV, Month, Year, cardType, _id } = data[0]
-    dispatch(saveCreditToLocalStorage(data[0]))
    
-    return { CardNumber, FullName, CCV, Month, Year, cardType, _id } 
+    if(response.ok){
+
+  
+    const data = await response.json();
+    
+    if(data){
+      const { CardNumber, FullName, CCV, Month, Year, cardType, _id } = data[0] || {};
+      dispatch(saveCreditToLocalStorage(data[0]))
+      return { CardNumber, FullName, CCV, Month, Year, cardType, _id }
+      
+    }else{
+      return null;
+    }
+
+     
+  
     }
  
   }catch(error){
+    
     window.alert(error.message);
   }
     
@@ -49,7 +58,13 @@ export const fetchAllUserCardCredentials = createAsyncThunk('CreditCardSlice/fet
     if(response.ok){
 
         const result = await response.json()
-        return result
+        
+
+        if(result){
+          return result;
+        }else{
+          return null;
+        }
         
 
 
@@ -88,7 +103,7 @@ const CreditCardCredentialsSlice = createSlice({
     initialState,
     reducers:{
         setCreditCardCredentials:(state,action) =>{
-            const { CardNumber, FullName, CCV, Month, Year, cardType } = action.payload;
+            const { CardNumber, FullName, CCV, Month, Year, cardType } = action.payload || {};
             state.CreditCardCredentials = {
                 CardNumber,
                 FullName,
@@ -115,7 +130,7 @@ const CreditCardCredentialsSlice = createSlice({
     extraReducers:(builder)=>{
       builder
       .addCase(fetchCreditCardCredential.fulfilled,(state,action)=>{
-        const { CardNumber, FullName, CCV, Month, Year, cardType, _id } = action.payload;
+        const { CardNumber, FullName, CCV, Month, Year, cardType, _id } = action.payload || {};
             state.CreditCardCredentials = {
                 CardNumber,
                 FullName,
@@ -130,7 +145,11 @@ const CreditCardCredentialsSlice = createSlice({
           
       })
       .addCase(fetchAllUserCardCredentials.fulfilled, (state,action)=>{
-        state.CreditCardCredentialsAll = [...action.payload.map((item)=>({...item}))]
+        if(action.payload){
+          state.CreditCardCredentialsAll = [...action.payload.map((item)=>({...item}))]
+        }else{
+          return null;
+        }
     
       });
     }

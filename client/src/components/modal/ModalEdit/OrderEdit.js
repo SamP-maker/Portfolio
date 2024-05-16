@@ -5,8 +5,7 @@ import { Link } from 'react-router-dom';
 import ButtonTypes from '../../../util/Button/ButtonObject';
 import {fetchOrderData,removeItem,decrease, increase,cancelCart} from '../../../redux/feature/DBcartSlice';
 import { useDispatch, useSelector } from 'react-redux';
-
-
+import  updateOrderAPI from '../../../FetchAPI/updateOrderAPI'
 
 
 const OrderEdit = React.memo(() =>{
@@ -66,31 +65,7 @@ async function handleSubmit(e){
      ItemsAmount: amount,
    }
    
-
-   try{
-     const response = await fetch(`http://localhost:5000/updateOrder`,{
-       method:'PUT',
-       credentials: 'include', // Include credentials in the request
-       headers:{
-         "Content-Type": "application/json",
-     },
-     body: JSON.stringify(updatedOrder)
-     });
-
-     if(!response.ok){
-       throw new Error(`an Error occured ${response.statusText}`);
-   
-     }else{
-     
-     
-      
-
-     
-     }
-  
-   }catch(error){
-     window.alert(error.message);
-   }
+   updateOrderAPI(updatedOrder);
      
 
  }

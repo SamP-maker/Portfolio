@@ -1,7 +1,3 @@
-//TOTAL REVAMP
-
-
-
 
 import React, {useState,useEffect, useRef} from 'react';
 import styled,{css} from 'styled-components';
@@ -15,6 +11,9 @@ import Footer from '../../util/Footer/Footer';
 import Cart from '../modal/CartModal'
 import { Logo } from '../../theme/theme';
 import Button from '../../util/Button/Button';
+import { useSelector } from 'react-redux';
+import Login from '../Auth/Login';
+import Signup from '../Auth/Sign_up';
 
 
 
@@ -33,6 +32,9 @@ const Dashboard = ()=>{
 
     const [selectedItem, setSelectedItem] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
+    const { isFormOpen, isSignUpFormOpen} = useSelector((state) => state.auth);
+    const {cartItems,amount,total,setCategory, isOpen} = useSelector((store) => store.cart)
+       
 
     const handleSelectedCategory = (category) =>{
         setSelectedCategory(category)
@@ -69,7 +71,7 @@ const Dashboard = ()=>{
 
 
     
-
+    console.log(isFormOpen)
     
     
 },[selectedCategory])
@@ -96,9 +98,14 @@ margin-bottom:2rem;
 
 
     return(
-        <PageWrapper>
+        <>
+          {isFormOpen == true ?  <Login/> : null }
+          {isSignUpFormOpen == true ?  <Signup/> : null }
+          <Cart/>
+          
+        <PageWrapper  isCartOpen={isOpen} isFormOpen={isFormOpen} isSignUpFormOpen={isSignUpFormOpen}>
   
-  <Cart/>
+        <OverlayWrapper isCartOpen={isOpen}/>
 
     <ContentWrapper>
     
@@ -123,7 +130,7 @@ margin-bottom:2rem;
 
 
                   
-
+              
 
 
 
@@ -198,13 +205,32 @@ margin-bottom:2rem;
                
     </ContentWrapper>
     <Footer/>
+    
     </PageWrapper>
 
+   
+    </>
     )
 }
 
 const PageWrapper = styled.div`
 overflow-x:hidden;
+filter: ${props => (props.isFormOpen || props.isSignUpFormOpen ? 'blur(10px)' : 'none')};
+    /* Adjust the blur radius as needed */
+    pointer-events: ${props => (props.isFormOpen || props.isSignUpFormOpen? 'none' : 'auto')};
+`
+
+const OverlayWrapper = styled.div`
+position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 2;
+  display: ${(props) => (props.isCartOpen ? 'block' : 'none')};
+
+
 `
 
 const ButtonWrapper = styled.div`
@@ -334,7 +360,6 @@ display:flex;
 flex-wrap:wrap;
 width:100vw;
 gap:0.5rem;
-
 margin-top:-20px;
 
 `

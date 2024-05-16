@@ -6,8 +6,12 @@ import addressReducer from './feature/AddressSlice'
 import billingAddressReducer from './feature/BillingAddressSlice'
 import creditCardCredentialsReducer from './feature/CardCredentialSlice'
 import localStorageMiddleware from './middleware/middleware'
-import thunk from 'redux-thunk'; // Assuming you're using redux-thunk for async actions
-
+import { ErrorReducer} from './feature/ErrorManagement';
+import { LoadReducer } from './feature/LoadManagement';
+import { PostReducer } from './feature/PostManagement';
+import { ReceiptReducer } from './feature/ReceiptSlice';
+import authReducer from './feature/authSlice';
+import { PaymentReducer } from './feature/PaymentManagement'
 
 
 
@@ -22,6 +26,12 @@ const store =  configureStore({
         address: addressReducer,
         billing: billingAddressReducer,
         credit : creditCardCredentialsReducer,
+        error : ErrorReducer,
+        load: LoadReducer,
+        post: PostReducer,
+        receipt: ReceiptReducer,
+        auth: authReducer,
+        Payment: PaymentReducer,
         
 
     },

@@ -1,6 +1,12 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import { saveAddressToLocalStorage } from '../actions/actionCreator';
-import { useDispatch } from 'react-redux';
+import { setAddressFetchLoadStatus, setAllAddressFetchLoadStatus } from './LoadManagement';
+
+
+
+
+
+
 export const fetchSingleAddress = createAsyncThunk('Address/fetchSingleAddress',async (_,{dispatch}) =>{
 
 
@@ -12,25 +18,47 @@ export const fetchSingleAddress = createAsyncThunk('Address/fetchSingleAddress',
             credentials: 'include',
             headers: {
                 "Content-Type": "application/json"
+            },
+            onProgress:(event)=>{
+
+                if(event.lengthComputable){
+                  
+                }
+
             }
         });
+
+      
+
+
+   
 
     if(response.ok){
 
         const result = await response.json()
-        const { FirstName, LastName, Postal, District, Phone, _id }  = result[0]
-        dispatch(saveAddressToLocalStorage(result[0]))
-        return { FirstName, LastName, Postal, District, Phone, _id} 
 
-
+        
+if (result && result.length > 0) {
+    const { FirstName, LastName, Address, Postal, District, Phone, _id, Status } = result[0];
+    dispatch(saveAddressToLocalStorage(result[0]))
+       
+    return { FirstName, LastName, Address, Postal, District, Phone, _id, Status} 
+} else {
+    return null
+}
+        
     }
 }catch(err){
     window.alert(err)
+    
+    
+    
+   
 }
 });
 
 
-export const fetchUserAllAddress = createAsyncThunk('Address/fetchAllAddress',async () =>{
+export const fetchUserAllAddress = createAsyncThunk('Address/fetchAllAddress',async (_,{dispatch}) =>{
 
 
     try{
@@ -40,19 +68,36 @@ export const fetchUserAllAddress = createAsyncThunk('Address/fetchAllAddress',as
             credentials: 'include',
             headers: {
                 "Content-Type": "application/json"
+            },
+            onProgress:(event)=>{
+                if(event.lengthComputable){
+                 
+                }
             }
         });
+
+      
+
+    
 
     if(response.ok){
         
         const result = await response.json()
-        return result
+
+        if(result){
+
+            return result
+        }else{
+            return null
+        }
+        
         
 
 
     }
 }catch(err){
     window.alert(err)
+  
 }
 });
 
@@ -66,11 +111,26 @@ const initialState ={
         LastName:'',
         Postal:'',
         Address:'',
-        District: '',
+        District:'',
         Phone:'',
-        _id:''
+        _id:'',
+        Status:false,
+        
     },
-    AllAddress:[]
+    AllAddress:[],
+    PrevAddress:{
+        FirstName:'',
+        LastName:'',
+        Postal:'',
+        Address:'',
+        District:'',
+        Phone:'',
+        _id:'',
+        Status:false,
+
+    }
+    
+   
 
 }
 
@@ -81,7 +141,7 @@ const AddressSlice = createSlice({
     reducers:{
         setAddress:(state,action) =>{
            
-            const { FirstName, LastName, Postal, Address, District, Phone} = action.payload;
+            const { FirstName, LastName, Postal, Address, District, Phone,_id, Status} = action.payload;
       state.Address = {
         FirstName,
         LastName,
@@ -89,19 +149,39 @@ const AddressSlice = createSlice({
         Address,
         District,
         Phone,
+        _id,
+        Status,
       };
       
+     
         },
         clearAddress: (state)=>{
             state.Address = {}
             localStorage.removeItem('Address')
         },
+        setPrevAddress:(state) =>{
+            
+            state.PrevAddress={
+                ...state.Address
+            }
+
+            
+      
+
+     
+
+        },
+        
+       
+        
     },
+    
     extraReducers: (builder)=>{
         builder
         .addCase(fetchSingleAddress.fulfilled, (state,action) =>{
-            
-            const { FirstName, LastName, Postal,Address, District, Phone, _id} = action.payload;
+            if(action.payload){
+                
+            const { FirstName, LastName, Postal,Address, District, Phone, _id, Status} = action.payload || {};
 
             state.Address = {
               FirstName,
@@ -110,16 +190,30 @@ const AddressSlice = createSlice({
               Address,
               District,
               Phone,
-              _id
+              _id,
+              Status,
             };
+        
+            }else{
+                state.Address = { 
+                    ...initialState.Address
+                };
+            }
+            
+            
            
         })
         .addCase(fetchUserAllAddress.fulfilled, (state,action) =>{
             
-            state.AllAddress = [...action.payload.map((item) =>({...item}))]
+            if(action.payload){
+            state.AllAddress = [...action.payload.map((item) =>({...item}))] ;
+            }else{
+                state.AllAddress = [...initialState.AllAddress];
+            }
         });
-    }
+    },
+    
 });
 
-export const {setAddress, clearAddress} = AddressSlice.actions;
+export const {setAddress, clearAddress,setPrevAddress} = AddressSlice.actions;
 export default AddressSlice.reducer;

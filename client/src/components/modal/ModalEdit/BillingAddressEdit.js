@@ -3,9 +3,9 @@ import styled,{css} from 'styled-components';
 import Theme from '../../../theme/theme';
 import Input from '../../../util/Input/Input';
 import { useSelector, useDispatch } from 'react-redux';
-import { setBillingAddress,clearBillingAddress,fetchBillAddress,fetchUserAllBillingAddress } from '../../../redux/feature/BillingAddressSlice';
-import ButtonTypes from '../../../util/Button/ButtonObject';
-import { Link } from 'react-router-dom';
+import { setBillingAddress,clearBillingAddress,fetchBillAddress,fetchUserAllBillingAddress,setPrevBillingAddress} from '../../../redux/feature/BillingAddressSlice';
+
+import { setOpenBillingSliderForm } from '../../../redux/feature/LoadManagement';
 
 
 
@@ -16,93 +16,120 @@ const BillingEdit = () =>{
 
  
     const [toggle,setToggle] = useState(false)
-    const {BillingAddress, BillingAddressAll} = useSelector((store) => store.billing)
+    const {BillingAddress, BillingAddressAll,PrevBillingAddress} = useSelector((store) => store.billing)
     const [selectedBillingAddresses, setSelectedBillingAddresses]  = useState([])
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
+    const name= localStorage.getItem('Username')
+    let Username = ''
+    
+
+    name ? Username = name.replace(/^"(.*)"$/, '$1') : Username = '';
+
+    
 
 
   
 
 
-    const handleToggle = () =>{
+    
+    const handleOpenSliderForm = () =>{
 
-        setToggle((prev) => !prev)
-
-    }
-
-
-
-    const handleCheckbox = (itemId) =>{
-
-      if (selectedBillingAddresses.length > 1 || !selectedBillingAddresses.includes(itemId)) {
-        setSelectedBillingAddresses([itemId]); // Update selection to include only the clicked item
-          // If AddressState holds the full details, update recentAddressState directly
-          const selectedBillingAddressDetails = BillingAddressAll.find((address) => address._id === itemId._id);
-          
-        
-          dispatch(setBillingAddress(selectedBillingAddressDetails));
-          localStorage.setItem('billing', JSON.stringify(selectedBillingAddressDetails));
-        }
-        
+      dispatch(setOpenBillingSliderForm(true))
 
   }
 
+
+
   
   useEffect(() => {
-    const storedBilling = localStorage.getItem('billing');
+   
+      dispatch(fetchBillAddress());
+      
+      dispatch(fetchUserAllBillingAddress());
     
-    if (storedBilling) {
-      const parsedBilling = JSON.parse(storedBilling);
-      
-      if (!BillingAddress._id) {
-        dispatch(setBillingAddress(parsedBilling)); // Update Redux state only if Address is not present
-      }
-      dispatch(fetchBillAddress());
-  
-      // Fetch AllAddress unconditionally when data is available in local storage
-      dispatch(fetchUserAllBillingAddress());
-    } else {
-      // Fetch both Address and AllAddress if not available in local storage
-      dispatch(fetchBillAddress());
-      
-      dispatch(fetchUserAllBillingAddress());
-    }
-  }, []);
+
+
+    dispatch(setPrevBillingAddress())
+  }, [dispatch]);
 
 return(
-    <>
-  
-      
-  
-{!toggle ? 
+   
+<>
 
-
-/*First card */
-
-
-
+{BillingAddress.FirstName ?
 <Section_Payment_Billing>
+
+<SectionWrapper>
 <h2>Billing Address</h2>
 
-<EditButton onClick={handleToggle}>Edit</EditButton>
+<EditButton onClick={handleOpenSliderForm}>Edit</EditButton>
+</SectionWrapper>
 
  <Billing_Item_Container>
-                                                  
-                                                    <SingleItemContainer>
+                                                   
+                                                    <SingleItemContainer key={BillingAddress._id}>
                                                        
-                                                       <div key={BillingAddress._id}>
-                                                       <p1>Surname: {BillingAddress.LastName}</p1>
-                                                       <p1>Name: {BillingAddress.FirstName}</p1>
-                                                       <p1>Address: {BillingAddress.Address}</p1>
-                                                       <p1>Post Code: {BillingAddress.Postal}, State: {BillingAddress.State}</p1>
-                                                       <p1>City: {BillingAddress.City}, Country: {BillingAddress.country}</p1>
-                                                       </div>
-                                                         
+                                                    <TopContainer>
+                                                    <p1>{BillingAddress.Address}</p1>
+                                                    <p2>{BillingAddress.State}</p2>
+                                                    
+            
+                                                    </TopContainer>
+                                                    <MidContainer>
+
+                                                    <p3>{BillingAddress.City}</p3>
+                                                    
+                                                    </MidContainer>
+
+                                                    
+                                                    <BottomContainer>
+                                                    
+                                                    <p4>{BillingAddress.Country}</p4>
+                                                    <p5> {BillingAddress.Postal}</p5>
+                                                    </BottomContainer>
+                                                    <p6> {BillingAddress.LastName}  {BillingAddress.FirstName}</p6>  
                                                    </SingleItemContainer>
                                                  
                                                   
                                      
  </Billing_Item_Container>
+
+
+
+                         
+                         
+                           
+
+               
+
+</Section_Payment_Billing> : 
+
+
+<Section_Payment_Billing login>
+
+<SectionWrapper>
+<h2>Billing Address</h2>
+
+<EditButton onClick={handleOpenSliderForm}>Edit</EditButton>
+</SectionWrapper>
+
+ <Billing_Item_Container  login>
+                                           {Username ?      <SingleItemContainer login>
+                                                       
+                                                       <p>Add a Billing Address</p>
+                                                      </SingleItemContainer>
+                                                      :
+                                                    <SingleItemContainer login>
+                                                       
+                                                    <p>Login in to Add an Address</p>
+                                                   </SingleItemContainer>
+                                                 
+                                           } 
+                                     
+ </Billing_Item_Container>
+
+
+
                          
                          
                            
@@ -110,209 +137,137 @@ return(
                
 
 </Section_Payment_Billing>
+}
 
 
-   :
+</>
 
 
 
-<Section_Payment_Billing_fetch_All>
-
-<h2>Billing Address</h2>
-<EditButton onClick={handleToggle}>close</EditButton>
-
- <Billing_Item_Container>
-                                                  {BillingAddressAll.length > 1 ?      
-                                                  
-                                                  BillingAddressAll.map (items => ((
-                                                 
-<Selection_Wrapper key={items._id}>
-                                          <label>
-                                            <Input 
-                                                type="checkbox"
-                                                name="checkbox"
-                                                checked={selectedBillingAddresses.includes(items)}
-                                                onChange={() => handleCheckbox(items)}
-                                                
-                                               
-                                            />
-                                            </label> 
-
-
-                                                    
-                <ItemContainer>
-                                                       <div>
-                                                       <p1>Surname: {items.LastName}</p1>
-                                                       <p1>Name: {items.FirstName}</p1>
-                                                       <p1>Address: {items.Address}</p1>
-                                                       <p1>Post Code: {items.Postal}, State: {items.State}</p1>
-                                                       <p1>City: {items.City}, Country: {items.country}</p1>
-                                                       </div>
-                                                         
-                                                   </ItemContainer>
-                                                   </Selection_Wrapper>
-
-                                                
-))): 
-                                                  
-                                                  (
-                                                <SingleItemContainer>
-                                                       
-                                                       <div key={BillingAddress._id}>
-                                                       <p1>Surname: {BillingAddress.LastName}</p1>
-                                                       <p1>Name: {BillingAddress.FirstName}</p1>
-                                                       <p1>Address: {BillingAddress.Address}</p1>
-                                                       <p1>Post Code: {BillingAddress.Postal}, State: {BillingAddress.State}</p1>
-                                                       <p1>City: {BillingAddress.City}, Country: {BillingAddress.country}</p1>
-                                                       </div>
-                                                         
-                                                   </SingleItemContainer>
-
-                                                  )
-                                                   
-                                                   
-                                                   
-                                                   
-                                                   
-                                                   
-                                                   
-                                                   
-                                                   
-                                                   
-                                                   
-                                                   
-                                                   
-                                                   }
-                                                   
-                                                 
-                                                  
-                                     
- </Billing_Item_Container>
- <FinalizeButtonWrapper>
- <ButtonTypes.Confirm onClick={handleToggle}/>
-</FinalizeButtonWrapper>                   
-                                      
-                        
-</Section_Payment_Billing_fetch_All>
 
 
 
    
 
-}
-
-</>
 )
 
 }
 
-
-const SingleItemContainer = styled.div`
-grid-column-start:1;
-grid-column-end:3;
-font-size:0.825rem;
-height:200px;
-position:relative;
-font-size:1rem;
-margin-top:0;
-
-p1{
-
-  padding: .5rem .5rem;
-  display:flex;
-}
-`
-
-
-const Section_Payment_Billing_fetch_All = styled.div`
-grid-row:5;
-margin-top:5%;
-height: auto;
-padding-top:20px;
-padding-bottom:20px;
-padding-left:5rem;
-grid-column-start:1;
-grid-column-end:3;
-background-color: ${Theme.colors.white};
-border-radius:20px;
-box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-font-family: 'Work Sans', sans-serif;
-position:relative;
-height: auto;
-
-
-
-p1{
-  top:0;
-  left:0;
-
-}
-
-h2{
-    position:absolute;
-    top:-20px;
-    left:3rem;
-    font-size:36px;
-    text-shadow: rgba(0, 0, 0, 0.24) 0px 3px 2px;
-}
-`
-
-
-const Selection_Wrapper = styled.div`
-display: grid;
-grid-template-columns: repeat(1,10rem);
-grid-template-rows: repeat(1,10rem);
-padding-bottom:2rem;
-padding-top:2rem;
-  
-  justify-items:center;
-  align-items:center;
-
-  label {
-  
-    align-items:center;
-    justify-items:center;
-    grid-column-start: 1;
-    grid-column-end: 1;
-  }
+const MidContainer = styled.div`
+display:flex;
+flex-direction:row;
+gap:1rem;
 
 `
 
-const FinalizeButtonWrapper = styled.div`
+
+const TopContainer = styled.div`
+
+display:flex;
+flex-direction:row;
+gap:1rem;
+align-content:center;
+
+`
+
+
+
+const BottomContainer = styled.div`
+
+display:flex;
+flex-direction:row;
+gap:1rem;
+align-content:center;
+`
+
+
+
+
+
+const SectionWrapper = styled.div`
 display:flex;
 justify-content:space-between;
-width:250px;
-margin-left:80%;
-
-
+align-items:center;
 `
 
-const ItemContainer = styled.div`
-grid-column-start:2;
-grid-column-end:2;
-font-size: 0.825rem;
 
-position: relative;
-font-size: 1rem;
-margin-top: 0;
+const SingleItemContainer = styled.div`
+display:flex;
+  flex-wrap:wrap;
+  flex-direction:column;
+  font-size: 0.825rem;
+  border:1px solid ${Theme.colors.ColumnBlack};
+  border-radius: 3px;
+  padding:0.5rem 0.5rem;
+  gap:.5rem;
+  font-size: 1rem;
+  width:100%;
+  margin-top: 0;
 
 
-p1 {
-  padding: 0.5rem 0.5rem;
-  display: flex;
-}
+  p1{
+    font-size:18px;
+    font-weight:bold;
+    opacity: 0.8;
+  }
+
+  p2{
+    font-size:18px;
+  }
+
+  p3,p4{
+    font-size:18px;
+     font-weight:bold;;
+  }
+
+  p5{
+    font-size:18px;
+    opacity:0.8;
+  }
+
+
+  p6{
+    font-size:18px;
+  }
+
+  ${(props)=>props.login && css`
+  display:flex;
+  flex-wrap:wrap;
+  border:none;
+  align-content:center;
+  justify-content:center;
+  align-self:center;
+  justify-self:center;
+  height:100%;
+  width:100%;
+  font-size:18px;
+  font-weight:bold;
+  `}
 `
+
+
 
 
 
 const Billing_Item_Container = styled.div`
-margin-top:1%;
-display:grid;
-grid-template-columns: repeat(1,1fr);
-grid-template-rows: repeat(1,1fr);
+display:flex;
+padding-bottom:2rem;
+padding-top:2rem;
+gap:2rem;
+margin-right:5rem;
+  
+  justify-content:left;
+  align-items:center;
+
+${(props) => props.login && css`
+height:200px;
+justify-content:center;
+align-content:center;
+justify-self:center;
 
 
 
+`}
 `
 
 const Section_Payment_Billing = styled.div`
@@ -321,13 +276,20 @@ margin-top:5%;
 height:20rem;
 padding-top:20px;
 padding-left:5rem;
+grid-row:4;
+margin-top:5%;
+height: auto;
+width:600px;
+padding-top:20px;
+padding-bottom:20px;
+padding-left:5rem;
 grid-column-start:1;
 grid-column-end:3;
 background-color: ${Theme.colors.white};
-border-radius:20px;
 box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 font-family: 'Work Sans', sans-serif;
 position:relative;
+
 
 
 
@@ -338,26 +300,33 @@ p1{
 }
 
 h2{
-    position:absolute;
-    top:-20px;
-    left:3rem;
+   
     font-size:36px;
     text-shadow: rgba(0, 0, 0, 0.24) 0px 3px 2px;
 }
+
+
+${(props) => props.login && css`
+height: 300px;
+
+
+
+
+`}
 `
 
 
 
 const EditButton = styled.p`
-margin-left:92%;
-margin-top:2%;
 color:${Theme.colors.Teal};
+display:flex;
+justify-content:right;
+padding-right:2rem;
 
 &:hover{
   cursor:pointer;
   text-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
-
 `
 
 

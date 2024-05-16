@@ -7,21 +7,24 @@ const router = express.Router();
 
 
 
-router.post("/", async (req,res)=>{
+router.post("/recordSummary", async (req,res)=>{
 
-    const { Order , Address ,  BillingAddress, CardCredentials } = req.body
+   
+    const userEmail = req.session.user.email;
+    const data = req.body
 
 
-    const new_data = new Object({
-        Order:Order,
-        Address:Address,
-        BillingAddress:BillingAddress,
-        CardCredentials:CardCredentials,
-        user_id: req.session.user.email,
-        timestampField: new Date()
-    })
+ 
 
-    try{
+        const new_data = {
+            data,
+            user_id: userEmail,
+            timestampField: new Date()
+        };
+        
+    
+
+    try{    
     const collection = await db.collection('Record_Summary')
     const result = await collection.insertOne(new_data)
 

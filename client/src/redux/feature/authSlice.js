@@ -4,8 +4,11 @@ import {createSlice} from '@reduxjs/toolkit';
 
 
 const initialState = {
-    isAuthenticated: false,
-    user:null,
+  Auth:{
+    
+    isFormOpen: false,
+    isSignUpFormOpen: false,
+  }
     
 }
 
@@ -14,23 +17,18 @@ const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers:{
-        loginSuccess: (state, action) => {
-            state.isAuthenticated = true;
-            state.user = action.payload;
-          },
-          loginFailure: (state) => {
-            state.isAuthenticated = false;
-            state.user = null;
-          },
-          logout: (state) => {
-            state.isAuthenticated = false;
-            state.user = null;
-          },
+       
+        openForm: (state,action)=>{
+          state.isFormOpen = action.payload
+        },
+        openSignupForm: (state,action)=>{
+          state.isSignUpFormOpen = action.payload
+        }
     
 }
 }
 );
 
 
-export const { loginSuccess, loginFailure, logout } = authSlice.actions;
+export const {openForm,openSignupForm } = authSlice.actions;
 export default authSlice.reducer

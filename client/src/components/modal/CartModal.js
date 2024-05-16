@@ -1,31 +1,50 @@
-//total revamp, make this not laggy
-//TRIM ANYTHING HERE. Although items should async render, Too much of this will make it laggy
-//Also make sure that the error checks are done properly. Dont let react return the error. instead, visualize it
-
-
-
-
-
 import React, {useState,useEffect, useRef} from 'react';
 import styled,{css} from 'styled-components';
 import Theme from '../../theme/theme';
 import ButtonTypes from '../../util/Button/ButtonObject';
 import {useDispatch, useSelector} from 'react-redux';
-import { removeItem, increase, decrease } from '../../redux/feature/cartSlice';
+import { removeItem, increase, decrease, setOpenCart } from '../../redux/feature/cartSlice';
 import { FaShoppingBag } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { setUserDetails } from '../../redux/feature/registrationSlice';
+import { openForm } from '../../redux/feature/authSlice';
+import { FaTimes } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+import OrderConfirmUI from '../../FetchAPI/orderConfirmAPI';
+
 
 const Cart = ({black}) =>{
-       const {cartItems,amount} = useSelector((store) => store.cart)
-       const name= localStorage.getItem('name')
-       const Username = name.replace(/^"(.*)"$/, '$1')
+       const {cartItems,amount,total,setCategory, isOpen} = useSelector((store) => store.cart)
+       const {Auth,RecordSumm,Address} = useSelector((store) => store.load)
+       const name= localStorage.getItem('Username')
+       let Username = ''
        
-       const [isOpen,setIsOpen] = useState(true)
-       const [isDropDown,setIsDropDown] = useState(true)
-       const [isHideNav,setisHideNav] = useState(false)
-       const prevScrollY = useRef(0)
+
+       name ? Username = name.replace(/^"(.*)"$/, '$1') : Username = '';
+         
+       
+       
+       //const [isOpen,setIsOpen] = useState(true);
+       const [isDropDown,setIsDropDown] = useState(true);
+       const [isHideNav,setisHideNav] = useState(false);
+       const [countTotal,setCountTotal] = useState(0);
+       const [isLoad,setIsLoad] = useState(false)
+       const [orderList, setOrderList] = useState({
+        Order:[],
+        Total: 0,
+        ItemsAmount: 0,
+        })
        const dispatch = useDispatch()
+       const navigate = useNavigate()
+       
+
+
+       const handleAuthForm = () =>{
+        dispatch(openForm(true))
+        
+       }
+
+      
        
 
        const handleIncreaseAmount = (itemId) => {
@@ -45,7 +64,15 @@ const Cart = ({black}) =>{
        }
 
        const handleOpenModal = () =>{
-        setIsOpen((prevIsOpen) => !prevIsOpen)
+        //setIsOpen((prevIsOpen) => !prevIsOpen)
+        dispatch(setOpenCart(true))
+        
+       }
+
+       const handleCloseModal = () =>{
+        //setIsOpen((prevIsOpen) => !prevIsOpen)
+        dispatch(setOpenCart(false))
+        
        }
 
        const handleOpenDropDown = () =>{
@@ -53,33 +80,35 @@ const Cart = ({black}) =>{
        }
 
 
-       const handleScroll = () =>{
-        const currentScrollY = window.scrollY;
-        if( currentScrollY > prevScrollY.current){
-          setisHideNav(true)
-          setIsOpen(true)
-          setIsDropDown(true)
-         
+      
 
-          
-        }else{
-          setisHideNav(false)
-          setIsDropDown(true)
-          setIsOpen(true)
-          
-        }
-        prevScrollY.current = currentScrollY;
+       
 
 
-       };
+      const handleRemoveUser = async () =>{
+        try{
+                 const response = await fetch('http://localhost:5000/logout',{
+                  method:'POST',
+                  headers:{
+                    "Content-Type": 'application/json',
+                },
+                credentials: 'include',
+               
+                 })
+        
+                 if(response.ok){
+                  localStorage.removeItem('Username');
+                 
+                  navigate('/Dashboard')
+        
+                 }
+                }catch(err){
+                  window.alert(err);
+                }
+              }
+        
 
-       useEffect(()=>{
-        window.addEventListener('scroll',handleScroll)
 
-        return () =>{
-          window.removeEventListener('scroll',handleScroll)
-        }
-       },[])
 
        useEffect(() =>{
         
@@ -87,7 +116,33 @@ const Cart = ({black}) =>{
             const username = localStorage.getItem('Username')
             dispatch(setUserDetails(username))
 
-       },[])
+       },[dispatch])
+
+       useEffect(() => {
+        let total = 0;
+        cartItems.forEach((item) => {
+          total += item.Price * item.Amount || 0 ; // Multiply price by quantity
+        });
+        setCountTotal(total);
+      }, [cartItems]);
+
+
+      useEffect(() => {
+
+        
+        
+        setOrderList({
+          Order: cartItems,
+          Total: total,
+          ItemsAmount: amount,
+        });
+
+       
+
+
+        
+      }, [orderList.Order, amount, total]);
+
 
 
 
@@ -97,16 +152,18 @@ const Cart = ({black}) =>{
         return(
         
         <>
+        
 
         
     <NavbarWrapper className={isHideNav ? 'hidden' : ''}>
         <StyledLink to="/Dashboard"><Navigation>Dashboard</Navigation></StyledLink>
         <StyledLink to="/Menu"><Navigation>Menu</Navigation></StyledLink>
         {name ? <Navigation dropDown  onClick={handleOpenDropDown}>{Username}
+        
         {!isDropDown ? (<DropDownWrapper>
         <DropDownContainer><StyledLink to="/Payment"><Navigation>Check Out</Navigation></StyledLink></DropDownContainer>
         
-        <DropDownContainer> <StyledLink to="/"><Navigation>Log out</Navigation></StyledLink></DropDownContainer>
+        <DropDownContainer> <StyledLink to="/Dashboard"><Navigation onClick={handleRemoveUser}>Log out</Navigation></StyledLink></DropDownContainer>
       </DropDownWrapper>) : null}
         
         
@@ -117,13 +174,10 @@ const Cart = ({black}) =>{
         
         
         : 
-        <Navigation dropDown onClick={handleOpenDropDown}> {isDropDown ? "Login" : <StyledLink to="/login">Login</StyledLink> }
-      {!isDropDown ? (<DropDownWrapper>
-        <DropDownContainer><StyledLink to="/Payment"><Navigation>Check Out</Navigation></StyledLink></DropDownContainer>
+        <StyledButton onClick={handleAuthForm}>Login</StyledButton>}
+ 
         
-      </DropDownWrapper>) : null}
         
-        </Navigation>}
         
       
  
@@ -133,12 +187,29 @@ const Cart = ({black}) =>{
         <Navigation onClick={handleOpenModal} > Cart{black ? <FaShoppingBag style={{color: "black"}}/> : <FaShoppingBag style={{color: "white"}}/> } {amount ? <AmountWrapper>{amount}</AmountWrapper> : null} </Navigation>
         
     </NavbarWrapper>
-    {!isOpen ? (
+    
 
 
 
-  
-  <ModalOverlay className={isOpen ? 'hidden' : ''}>
+  <ModalOverlay isHidden={isOpen}>
+    <CartModalTopWrapper>
+            <CloseButtonWrapper onClick={handleCloseModal}>
+
+            <FaTimes/>
+
+            </CloseButtonWrapper> 
+
+                        <ContentWrapper>
+                      
+                            <p1>Cart <FaShoppingBag/></p1>
+                            <p2>Your Area</p2>
+
+                        </ContentWrapper>
+    </CartModalTopWrapper>
+
+
+    <CartItemWindow>
+
         {cartItems.length === 0? (
           // Display "This cart is empty" message
           <EmptyItemContainer>
@@ -147,14 +218,15 @@ const Cart = ({black}) =>{
         ) : (
           // Display cart items
           cartItems.map((items,index) => {
+            
             return (
             
-              <ItemContainer key={items.id} className={index !== cartItems.length - 1? 'with-shadow' : ''}>
+              <ItemContainer key={items.id} className={index !== cartItems.length ? 'with-shadow' : ''}>
                 <img src={items.Image} />
 
                 <DescriptionWrapper>
                   <p1>{items.name}</p1>
-                  <p2>{items.Price}</p2>
+                  <p2>{items.Price || 0}</p2>
                   <p3>{items.Amount}</p3>
                 </DescriptionWrapper>
 
@@ -178,21 +250,32 @@ const Cart = ({black}) =>{
         )}
 
 
-                  {cartItems.length === 0 ? null :
-                    <ButtonContainer>
-                        <Link to="/Order_confirm"> <ButtonTypes.Head_to_Check_out/></Link>
+                  
+                    
+                  
+
+
+
+
+        </CartItemWindow>
+            
+                  <CheckoutWrapper>
+                    <PriceWrapper>
+                            <p1>Total:</p1>
+                            
+                            <p2>${countTotal.toFixed(2)}</p2>
+                    </PriceWrapper>
+                    
+                    
+                  <ButtonContainer>
+                  <Link to="/Order_confirm"> <ButtonTypes.Head_to_Check_out  onClick={handleCloseModal}> </ButtonTypes.Head_to_Check_out></Link>
                   </ButtonContainer>
-                  }
-
-
-
-
-
-
+                  <MessageTag>Note: *Prices are not included tax*</MessageTag>
+                  </CheckoutWrapper>
   </ModalOverlay>
 
 
-  ) : null}
+ 
         
             </>
        
@@ -204,6 +287,62 @@ const Cart = ({black}) =>{
     )
 
 }
+
+const MessageTag = styled.p`
+padding-left:3rem;
+font-size:16px;
+
+`
+
+
+const CartModalTopWrapper = styled.div`
+padding:2rem 2rem;
+top:0;
+left:0;
+display:flex;
+flex-direction:row;
+box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.2);
+`
+
+const CloseButtonWrapper = styled.div`
+&:hover{
+  cursor:pointer;
+}
+
+`
+
+const ContentWrapper = styled.div`
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction:column;
+  font-family: 'Work Sans', sans-serif;
+  font-size:16px;
+`
+
+
+
+
+
+const PriceWrapper = styled.div`
+display:flex;
+justify-content:space-between;
+padding-left:3rem;
+padding-right:3rem;
+`
+
+const CheckoutWrapper = styled.div`
+background-color: ${Theme.colors.white};
+z-index:1;
+display:flex;
+flex-direction: column;
+font-family: 'Work Sans', sans-serif;
+padding:  3rem;
+font-size:20px;
+box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.2);
+
+`
 
 const AmountWrapper = styled.p`
 
@@ -225,20 +364,28 @@ right:.5rem;
 const ButtonContainer = styled.div`
 padding-top:1rem;
 padding-bottom:1rem;
-margin-left:60%;
+display:flex;
 position:relative;
+justify-content:center;
+justify-self:center;
 `
 
 const ModalOverlay = styled.div`
 position:fixed;
-right:0;
+right: ${({ isHidden }) => (isHidden ? '0' :'-600px')}; /* Initially hidden */
+display:flex;
 top:0;
 background-color: ${Theme.colors.white};
 box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-padding-top:3.5rem;
-max-height: calc(5 * (2.5rem + 2.5rem) + 3rem);
+flex-direction:column;
+justify-content:space-evenly;
+height:100%;
+*/max-height: calc(5 * (2.5rem + 2.5rem) + 3rem);*/
 overflow-y:scroll;
-z-index:99;
+z-index:999;
+transform: ${({ isHidden }) => (isHidden ? '0' : 'translateX(200px)')};
+transition: ${({ isHidden }) => (isHidden ? 'transform 3s ease' : ' ')}; 
+
 
 
 
@@ -249,11 +396,21 @@ z-index:99;
 
 
 
-&.hidden{
-  transform: translateY(-100%);
-  transition:transform 0.3s ease-in-out;
-}
+
+
+
+
 `;
+
+const CartItemWindow = styled.form`
+
+height:600px;
+overflow-y:scroll;
+
+&::-webkit-scrollbar{
+  display:none;
+}
+`
 
 
 
@@ -261,14 +418,35 @@ z-index:99;
 const EmptyCartMessage = styled.h1`
 font-family: 'Work Sans', sans-serif;
 font-size: 1rem;
-grid-column: 1 / span 2; /* Center horizontally between columns 1 and 3 */
-grid-row: 2 / span 2;    /* Center vertically between rows 1 and 5 */
 display: flex;
   justify-content: center;
   align-items: center;
+  justify-self:center;
   text-align: center;
 
 `
+
+const EmptyItemContainer = styled.div`
+display:flex;
+
+position:relative;
+justify-content:center;
+justify-self:center;
+align-items:center;
+background-color: ${Theme.colors.white};
+box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+font-family: 'Work Sans', sans-serif;
+width:600px;
+height:600px;
+
+`
+
+
+
+
+
+
+
 
 const IncrementButtonWrapper = styled.div`
 border:1px solid black;
@@ -343,7 +521,7 @@ justify-items:center;
 background-color: ${Theme.colors.white};
 padding:2rem 1rem;
 font-family: 'Work Sans', sans-serif;
-width:500px;
+width:600px;
 
 
 &.with-shadow{
@@ -362,22 +540,6 @@ img{
 
 `
 
-
-const EmptyItemContainer = styled.div`
-display:grid;
-grid-template-rows: repeat( 4, 2.5rem);
-grid-template-columns: repeat( 2, 1fr);
-position:relative;
-justify-items:center;
-background-color: ${Theme.colors.white};
-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-font-family: 'Work Sans', sans-serif;
-width:500px;
-
-
-
-
-`
 
 
 
@@ -436,6 +598,32 @@ font-family: 'Work Sans', sans-serif;
 
 &:hover{
     color:${Theme.colors.Orange};
+}
+`
+
+const StyledButton = styled.button`
+padding:20px 20px;
+color:white;
+display:flex;
+font-size:16px;
+gap:0.5rem;
+align-items:center;
+font-family: 'Work Sans', sans-serif;
+overflow: hidden;
+text-decoration: none;
+justify-content:flex-start;
+z-index:-1;
+background-color: transparent;
+border:none;
+outline: none;
+font-family: 'Work Sans', sans-serif;
+
+
+&:hover{
+    
+    color:${Theme.colors.Orange};
+    cursor:pointer;
+    background-color: ${Theme.colors.ColumnBlack};
 }
 `
 

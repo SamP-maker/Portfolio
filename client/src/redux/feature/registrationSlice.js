@@ -1,6 +1,4 @@
 import {createSlice} from '@reduxjs/toolkit';
-import { saveNameToLocalStorage } from '../actions/actionCreator';
-
 
 const initialState = {
     isLoggedin: false,
@@ -30,18 +28,18 @@ export const fetchUserDetails =  (url) => async (dispatch) =>{
 
     const response = await fetch(url);
 try{
-    if(!response.ok){
-        throw new Error(`an error occured: ${response.statusText}`);
-    }else{
 
+
+
+    if(response.ok){
+    
         const result = await response.json();
         dispatch(setUserDetails({username: result.username}));
         console.log("Logged In")
-
-        
     }
+
 }catch(err){
-    console.log(err);
+    window.alert(err);
 }
 }
 

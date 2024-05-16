@@ -1,27 +1,16 @@
-/**
- *  1. Add in Sign up.
- *    - Currently only sign in, but then it does not redirect into the main menu as well
- *    - Need a sign up, then redirect to the main menu
- * 
- * 
- * 
- * 
- * 
- */
-
-
-
-
-
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import google_button from '../theme/Icons/google.png';
 import { useDispatch } from "react-redux";
-import { setUserDetails } from "../../src/redux/feature/registrationSlice";
+import { setUserDetails } from "../redux/feature/registrationSlice";
 import GoogleButton from 'react-google-button';
 
 
-const GoogleOauth = () => {
+
+
+
+
+const GoogleOauth = ({ButtonLabel}) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -44,7 +33,7 @@ const GoogleOauth = () => {
   window.addEventListener('message', event => {
 
     dispatch(setUserDetails(event.data.username))
-   // navigate('/Dashboard')
+    navigate('/Dashboard')
 });
 
 
@@ -54,7 +43,7 @@ const GoogleOauth = () => {
     
     <GoogleButton
     onClick={openPopup} // Provide your response handling function
-    label="Sign in with Google" // Button label
+    label={ButtonLabel} // Button label
    
   />
   );

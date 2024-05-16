@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 
 export const Theme={
@@ -33,6 +34,11 @@ export const Theme={
 
 export const Logo=()=>{
 
+
+const StyledLink = styled(Link)`
+text-decoration: none;
+
+`
     
 
 const ImageContainer = styled.div`
@@ -40,6 +46,12 @@ display:flex;
 justify-content:flex-start;
 padding-top:2rem;
 padding-bottom:2rem;
+
+
+
+&:hover{
+  cursor:pointer;
+}
 
 `
 
@@ -152,12 +164,13 @@ p1{
 
         <ImageContainer> 
        
-        
+       <StyledLink to='/Dashboard'>
         <TitleContainer>
      <p1>FUS</p1>
         <hr></hr>
         <p2>ONE</p2>
         </TitleContainer>
+        </StyledLink>
 </ImageContainer>
     
     )

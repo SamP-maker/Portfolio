@@ -35,7 +35,7 @@ const ButtonTypes = {
         )
         },
 
-    Head_to_Check_out:({type})=> (<Button checkout={true} type={type} padding=".8rem 1.625rem " text="Head to Check Out" fontSize="1rem" backgroundColor={"transparent"} />),
+    Head_to_Check_out:({type,onClick})=> (<Button checkout={true} type={type} onClick={onClick} padding=".8rem 9rem " text="Head to Check Out" fontSize="1rem" backgroundColor={"transparent"} />),
 
     Remove:({handleRemove})=> {
         return(
@@ -46,9 +46,9 @@ const ButtonTypes = {
         )},
     
 
-    Pay_Now:()=> (
+    Save:({onClick})=> (
     
-                    <Button type_normal={true} padding="1.5rem 5rem" text="Pay now" fontSize="1.5rem" backgroundColor={"transparent"}  type="submit"/>
+        <Button onClick={onClick} type_normal={true} padding=".6rem 1.5rem" text="Save" fontSize="1rem" backgroundColor={Theme.colors.BackgroundBlack} borderRadius=".8rem"/>
   
     ),
 
@@ -65,7 +65,7 @@ const ButtonTypes = {
         </>)},
 
 
-Billing_Address:()=> (  <Button checkout={true} type="submit" padding=".8rem 1.625rem " text="Head to Billing Address" fontSize="1rem" backgroundColor={"transparent"} />),
+Add_Card:({onClick})=> (  <Button checkout={true} type="submit" padding=".8rem 1.625rem " text="Add Card" fontSize="1rem" backgroundColor={"transparent"} />),
 
 
 Cancel:({onClick})=>  (<Button onClick={onClick} type_normal={true} padding=".6rem 1.5rem" text="Cancel" fontSize="1rem" backgroundColor={Theme.colors.BackgroundBlack} borderRadius=".8rem"/>),

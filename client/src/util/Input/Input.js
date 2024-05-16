@@ -108,14 +108,13 @@ const IconWrapper = styled.div`
 
 const CheckboxWrapper = styled.label`
 display:flex;
-position: relative;
 justify-content:start;
-gap: 1rem;
+justify-self:center;
 font-family: 'Work Sans', sans-serif;
 font-weight:bold;
     color: ${Theme.colors.ColumnBlack};
     
-    top: -0.0625rem;
+    
 
 
 
@@ -125,6 +124,7 @@ input{
     opacity: 1;
     cursor: pointer;
     height:0;
+    left:0;
     weight:0;
     position:relative;
 
@@ -133,12 +133,13 @@ input{
 
 span{
   top: -0.0225rem;
-  left: 0;
-  height: 0.625rem;
-  width: 0.625rem;
+  left: -.8rem;
+  height: 1rem;
+  width: 1rem;
   border:0.0625rem solid ${Theme.colors.greenColumn};
   align-self:center;
   position:relative;
+ 
 }
 
 
@@ -166,9 +167,9 @@ input:checked ~ span:After{
 }
 
 span:after{
-    width:0.125rem;
-    height:0.425rem;
-    left:0.225rem;
+    width:0.325rem;
+    height:0.725rem;
+    left:0.325rem;
     border: solid white;
     border-width:0px 2px 2px 0;
     transform:rotate(45deg);
@@ -187,11 +188,11 @@ span:after{
 
 
 const InputWrapper = styled.input`
-
-
+width:60%;
 
 
 ${(props)=>props.register && css`
+width:35%;
 padding-top:  1.6rem;
 padding-bottom: 1.6rem;
 padding-right: 15rem;
@@ -332,12 +333,11 @@ box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 
 const StyledPhoneInput = styled(PhoneInput)`
 
-
 ${(props) => props.styled && css`
 
 input[type="tel"]{
-padding-top:  1rem;
-padding-bottom: 1rem;
+    padding-top:  1rem;
+    padding-bottom: 1rem;
 font-size: 0.875rem;
 text-decoration:none;
 background-color:${Theme.colors.white};

@@ -1,28 +1,22 @@
-//total revamp, make this not laggy
-//TRIM ANYTHING HERE. Although items should async render, Too much of this will make it laggy
-
-
-
-
 
 import React, {useState} from "react";
-import { useNavigate } from "react-router-dom";
 import styled,{css} from "styled-components";
 import Input from "../../util/Input/Input";
 import Button from "../../util/Button/Button";
 import Label from "../../util/Label/Label";
 import Theme from "../../theme/theme";
 import {Link} from "react-router-dom";
-import GoogleButton from "../../auth/googleAuth";
-import FacebookButton from "../../auth/metaAuth";
-import { FaUserAlt } from "react-icons/fa";
+import GoogleButton from "../../Oauth/googleAuthSignIn";
+import FacebookButton from "../../Oauth/metaAuth";
+import { FaGlasses, FaUserAlt } from "react-icons/fa";
 import { FaLock } from "react-icons/fa";
 import {FaEnvelope} from "react-icons/fa"
-import Footer from "../../util/Footer/Footer";
-import {useDispatch, useSelector} from 'react-redux';
-import { fetchUserDetails, setUserDetails } from "../../redux/feature/registrationSlice";
-import { reduceBorderWidth,leftdividerAnimation,rightdividerAnimation,reduceBeforeAfterWidth,shake} from "../../theme/animations/animations";
+import {useDispatch} from 'react-redux';
+import { shake} from "../../theme/animations/animations";
 import bcrypt from 'bcryptjs';
+import { FaTimes } from "react-icons/fa";
+import SignUpUI from "../../FetchAPI/SignUpAPI.js";
+import { openForm, openSignupForm } from "../../redux/feature/authSlice";
 
 
 const Signup = () =>{
@@ -36,14 +30,21 @@ const Signup = () =>{
 
      const [isAgree,setIsAgree] = useState(false)
      const [errorMsg, setErrorMsg] = useState(false)
-     const navigate = useNavigate()
-     const dispatch = useDispatch()
+     const [isLoad,setIsLoad] = useState(false)
+     const [newPerson, setNewPerson] = useState(null);
+     const dispatch = useDispatch();
+     
 
      function handleAgreement()
      {
             setIsAgree((prev) => !prev)
             console.log(isAgree)
      }
+
+
+     const handleCloseForm = () =>{
+      dispatch(openSignupForm(false));
+    }
 
 
      const handleform = (field, value) => {
@@ -97,59 +98,20 @@ const Signup = () =>{
       
       
         const newPerson = {...form, password:hashedPassword};
-
-   
+        setNewPerson(newPerson)
+        
         if(isAgree){
-          const response =  await fetch('http://localhost:5000/signup',{
-            method:"POST",
-            headers:{
-                "Content-Type": "application/json",
-            },
-            credentials: 'include',
-            body: JSON.stringify(newPerson),
-        }).catch(error =>{
-            window.alert(error)
-            
-            return;
-        });
+          
+          setIsLoad(true);
 
-        setForm({ 
-            name:"",
-            email: "",
-            password: "",
-        });
-   
-        
-
-      
-
-        if(response.ok){
-  
-
-          try {
-            const result = await response.json();
-            
-            localStorage.setItem('Username', result.username)
-            const username = localStorage.getItem('Username')
-            dispatch(setUserDetails(username));
-            
-             
-             
-            navigate("/Dashboard")
-            // Handle the result here
-          } catch (error) {
-            // Handle the case where the response is not valid JSON
-            console.error('Invalid JSON response:', error);
-          }
+          
          
-        }else{
-          const err = await response.json()
-          window.alert(`An error has occured: ${err}`)
+          
+          
+
         }
-        
-       
-     }
-     else{
+     else
+     {
       handleError(); // Set the state variable to true
   setTimeout(() => {
     handleError(); // Reset the state variable after a delay
@@ -168,6 +130,7 @@ const Signup = () =>{
     }
   
     
+    
 
     
    
@@ -176,12 +139,14 @@ const Signup = () =>{
     return(
 
         
-<>
-      
-            <FormContainer >
-                <FormWrapper onSubmit={handleSubmit}>
+<FormContainer >
+<FormWrapper onSubmit={handleSubmit}>
+{isLoad ? <SignUpUI credentials={newPerson}/> : null}
+            
+              <CloseButtonWrapper onClick={handleCloseForm}><FaTimes/></CloseButtonWrapper>
+                
              
-                <Label fontSize="1.5rem" text="Sign Up"/>
+                <LabelWrapper><Label fontSize="1.5rem" text="Sign Up"/></LabelWrapper>
                 
                 <InputWrapper>
                 <IconWrapper>
@@ -267,148 +232,47 @@ const Signup = () =>{
                 </HyperLink>
 
 
+                <ImageWrapper>
+            <GoogleButton ButtonLabel={"Sign Up With Google"}/>
+            <FacebookButton label={"Sign Up With Facebook"}/>
+            </ImageWrapper>
+
+
                 </FormWrapper>
              </FormContainer>
           
-             <ContentWrapper>
-             <Divider left/>
-        <ContainerWrapper>
-        
-          <Container left/>
-          <p1>SIGN UP WITH</p1>
-          <Container right/>
-          </ContainerWrapper>
+            
+       
           
-             <Divider right/>
-           
-            </ContentWrapper>
-            <ImageWrapper>
-            <GoogleButton/>
-            <FacebookButton/>
-            </ImageWrapper>
-            <Footer/>
-          </>
         )
 }
 
-const ContainerWrapper = styled.div`
-position: relative; /* Add relative positioning to create a positioning context */
-padding-top:2rem;padding-bottom:2rem;
- z-index:;
-  width:10rem;
-  border:.15rem solid white;
-  padding-left:3rem;
-  display:flex;
-  align-items:center;
-  
 
 
-
-  p1{
-   
-    padding-left:-20px;
-    position:absolute;
-    font-family: 'Work Sans', sans-serif;
-  }
-`
-
-const Container = styled.div`
-
-
-
-
-  
-${(props)=> props.left && css`
-font-family: 'Work Sans', sans-serif;
-  color:${Theme.colors.Teal};
-  width:4rem;
-  padding-top:2rem;padding-bottom:2rem;
-  border-left:.5rem solid ${Theme.colors.DarkTeal};
-  border-bottom:.5rem solid ${Theme.colors.DarkTeal};
-  position: absolute; /* Add relative positioning to create a positioning context */
-  top:0rem;
-  left:-.1rem;
-  animation: ${reduceBorderWidth} 3s forwards;
-
-
-  
-
-  &::before{
-    content:'';
-    color:${Theme.colors.Teal};
-    width:7rem;
-    padding-top:2rem;padding-bottom:2rem;
-    border-top:.5rem solid ${Theme.colors.DarkTeal};
-    position: absolute; /* Add relative positioning to create a positioning context */
-    top:-0.1rem;
-    left:-.5rem;
-    animation:${reduceBeforeAfterWidth} 3s forwards;
-    
-
-    
-    
-  }
-
-  
-
-  
-  
-
-  
-
-
-
-`}
-
-
-
-
-${(props)=> props.right && css`
-font-family: 'Work Sans', sans-serif;
-  color:${Theme.colors.Teal};
-  width:4rem;
-  top:-.1rem;
-  right:-0.15rem;
-  padding-top:2rem;padding-bottom:2rem;
-  border-right:.5rem solid ${Theme.colors.ColumnBlack};
-  border-top:.5rem solid ${Theme.colors.ColumnBlack};
-  position: absolute; /* Add relative positioning to create a positioning context */
-  animation: ${reduceBorderWidth} 2s forwards;
- 
-
-  &::before{
-    content:'';
-    color:${Theme.colors.Teal};
-    width:7rem;
-    padding-top:2rem;padding-bottom:2rem;
-    border-bottom:.5rem solid ${Theme.colors.ColumnBlack};
-    position: absolute; /* Add relative positioning to create a positioning context */
-    bottom:-.1rem;
-    right:-.5rem;
-    animation: ${reduceBeforeAfterWidth} 2s forwards;
-    
-  }
-
-`}
-
-
-`
 
 const FormContainer = styled.div`
-display:flex;
-justify-content:center;
+position: fixed;
+margin-top:3rem;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  z-index:999;
+  align-items: center;
+  justify-content: center;
 
 `
 
 
 const FormWrapper = styled.form`
-margin-top:5rem;
+margin-bottom:5rem;
 display:grid;
 gap:0.6rem;
 gridTemplateRows: repeat(auto-fit,minmax(0,1fr));
 justify-content:center;
 padding:2rem 1.3rem;
-height:600px;
+height:800px;
 width:500px;
 box-shadow:rgba(0, 0, 0, 0.24) 0px 3px 8px;
 background-color:${Theme.colors.white};
@@ -465,6 +329,7 @@ props.errorMsg && css`
 const ButtonWrapper = styled.div`
 justify-self:center;
 grid-column: 1;
+margin-top:2rem;
 `
 
 
@@ -495,52 +360,6 @@ a{
 
 `
 
-const ContentWrapper = styled.div`
-margin-top:5rem;
-display:flex;
-gap:5rem;
-justify-content:space-evenly;
-
-align-items:center;
-
-
-
-`
-
-const Divider = styled.div`
-
-
-
-    
-
-
-${(props)=> props.left && css`
-border-radius:.1rem;
-width:40rem;
-background-color:${Theme.colors.ColumnBlack};
-height:.5rem;
-
-animation: ${leftdividerAnimation} 3s forwards;
-
-
-
-`}
-
-
-${(props)=> props.right && css`
-border-radius:.1rem;
-width:40rem;
-background-color:${Theme.colors.ColumnBlack};
-height:.5rem;
-
-animation: ${rightdividerAnimation} 3s forwards;
-
-
-`}
-
-`
-
-
 
 const ImageWrapper = styled.div`
 display:flex;
@@ -561,6 +380,34 @@ const IconWrapper = styled.div`
   position:absolute;
   
 `;
+
+
+const CloseButtonWrapper = styled.div`
+padding:2px 2px;
+height:10px;
+width:10px;
+display:flex;
+justify-content:center;
+justify-self:right;
+grid-row:1;
+grid-column:1;
+
+
+&:hover{
+cursor:pointer;
+}
+
+`
+const LabelWrapper = styled.div`
+margin-left:1rem;
+justify-self:left;
+grid-row:1;
+grid-column:1;
+`
+
+
+
+
 
 
 export default Signup

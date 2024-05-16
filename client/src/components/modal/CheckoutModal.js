@@ -1,74 +1,92 @@
-//total revamp, make this not laggy
-//TRIM ANYTHING HERE. Although items should async render, Too much of this will make it laggy
-//Also make sure that the error checks are done properly. Dont let react return the error. instead, visualize it
-
-
-
-
-
-
 import React, { useState, useEffect} from "react";
 import {styled,css} from 'styled-components';
 import Theme from "../../theme/theme";
 import { useSelector} from 'react-redux';
 import bcrypt from 'bcryptjs';
+import { useDispatch } from "react-redux";
+import { setRecordSummPostStatus } from "../../redux/feature/PostManagement";
+import { setReceipt } from "../../redux/feature/ReceiptSlice";
+const { v4: uuidv4 } = require('uuid');
 
-const CheckoutModal = () => {
+const CheckoutModal = ({isHidden}) => {
 
-  const [orderTotal,setOrderTotal] = useState({
-    Total: 0,
-    Tax: 0,
-    
-
-  })
-
-
-  const {cartItems, amount, total , Order_id} = useSelector((store)=> store.PaymentCart)
-  const address = JSON.parse(localStorage.getItem('address'))
-  const billing = JSON.parse(localStorage.getItem('billing'))
-  const credit = JSON.parse(localStorage.getItem('credit'))
+  const dispatch = useDispatch();
 
 
 
-
-  
-
-
+  const {cartItems, amount, total } = useSelector((store)=> store.cart)
+  const {Address,AllAddress} = useSelector((store) => store.address)
+  const { BillingAddress, AllBillingAddress} = useSelector((store) => store.billing)
+  const uuid = uuidv4();
+  const tax = Math.abs(total * 1.16 - total).toFixed(2)
+  const tempTotal= Math.abs(parseFloat(total))+parseFloat(tax)
+    const ActualTotal = tempTotal.toFixed(2)
+   
 
  
 
   const [userReceipt, setUserReceipt ] = useState({
     Order:{
       CartItems: [],
-      Amount: '',
-      Total: '',
+      Amount: 0,
+      Total:0,
+        Tax:0,
       Order_id: '',
     },
     Address:{
       FirstName:'',
-      LastName:'',
-      Address:'',
-      Postal:'',
-      District:'',
-      Phone:'',
+        LastName:'',
+        Postal:'',
+        Address:'',
+        District:'',
+        Phone:'',
+        _id:'',
+        Status:false,
     },
     BillingAddress:{
       FirstName:'',
-      LastName:'',
-      Address:'',
-      Postal:'',
-      Country:'',
-      City:'',
-      State:'',
+        LastName:'',
+        Address:'',
+        Postal:'',
+        Country:'',
+        City:'',
+        State: '',
+        _id:''
     },
-    CardCredentials:{
-      CardNumber:'',
-      FullName:'',
-      CCV:'',
-      Month:'',
-      Year:''
-    }
+   
   })
+
+  useEffect(()=>{
+
+    
+    
+
+
+     setUserReceipt({
+      Order:{
+        CartItems:cartItems,
+        Amount:amount,
+        Total: ActualTotal,
+        Tax:tax,
+        Order_id:uuid 
+      },
+      Address:{
+      ...Address
+      },
+      BillingAddress:{
+   ...BillingAddress
+      },
+      
+
+
+
+
+    })
+
+    
+    dispatch(setReceipt(userReceipt))
+   
+  },[cartItems, amount, total, , Address, BillingAddress])
 
 
 
@@ -78,148 +96,44 @@ const CheckoutModal = () => {
 
   async function handleSubmit(e){
     e.preventDefault();
-
-    
-
- 
-
-    setUserReceipt({
-      Order:{
-        CartItems:cartItems,
-        Amount:amount,
-        Total:total,
-        Order_id: Order_id
-      },
-      Address:{
-        FirstName:address.FirstName,
-        LastName:address.LastName,
-        Address:address.Address,
-        Postal:address.Postal,
-        District:address.District,
-        Phone:address.Phone,
-      },
-      BillingAddress:{
-        FirstName:billing.FirstName,
-        LastName:billing.LastName,
-        Address:billing.Address,
-        Postal:billing.Postal,
-        Country:billing.Country,
-        City:billing.City,
-        State:billing.State,
-      },
-      CardCredentials:{
-        CardNumber:credit.CardNumber,
-        FullName:credit.FullName,
-        CCV:credit.CCV,
-        Month:credit.Month,
-        Year:credit.Year,
-      }
-
-
-
-
-    })
-try{
-  const response = await fetch("http://localhost:5000/recordSummary",{
-    method:"POST",
-    headers:{
-      "Content-Type": "application/json",
-
-
-},
-    credentials:"include",
-    body: JSON.stringify(userReceipt)
-  })
-
-
-  if(response.ok){
-    const data = response.json()
-    console.log(`Receipt:`, data)
-    localStorage.removeItem('address')
-    localStorage.removeItem('credit')
-    localStorage.removeItem('billing')
-
-    
-  }
-}catch(err){
-  console.error(`an error has occured`, err)
-}
-
-}
-
-
-
-  useEffect(()=>{
-
-     
-
-
-      return async () =>{
-
-try{
-    let response = await fetch('http://localhost:5000/order',{
-      method:"GET",
-      headers:{
-        "Content-Type": "application/json",
-  
-  
-  },
-      credentials:"include",
-    });
-
-    if(response.ok){
-    
-      const result= await response.json()
    
-      
-      setOrderTotal({
-        Total: result[0].Total.toFixed(2),
-        Tax: Math.abs(result[0].Total * 1.16 - result[0].Total).toFixed(2),
-        
-      })
-      
-    }else{
-        window.alert('Cannot get item')
-    }
-
-  }catch(err){
-    console.error('An error has occured:', err)
-  }
+    
+    dispatch(setRecordSummPostStatus(true))
 
 
 
+    
+
+}
 
 
-
-
-  }
-},[])
 
 
   return (
 <form onSubmit={handleSubmit}>
-    <CheckoutWrapper>
+    <CheckoutWrapper isHidden={isHidden}>
 <Fees>
+
        <OrderTotalWrapper>
         <h3>Order Total: </h3>
-        <h3>${orderTotal.Total}</h3>
+        <h3>${total}</h3>
 
 
        </OrderTotalWrapper>
 
        <DeliveryFee>
        <h3>Delivery Fee: </h3>
-       <h3>${orderTotal.Tax}</h3>
+       <h3>${tax}</h3>
        </DeliveryFee>
 
 
        <TaxWrapper>
        <h3>Tax: </h3>
-       <h3>${orderTotal.Tax}</h3>
+       <h3>${tax}</h3>
        </TaxWrapper>
 </Fees>
      <ButtonContainer>
-        <ButtonWrapper>Checkout  <span></span>${(parseFloat(orderTotal.Tax) + parseFloat(orderTotal.Total)
+        <ButtonWrapper type="submit">Checkout  <span></span>${(parseFloat(tax) + parseFloat(total)
   ).toFixed(2)}</ButtonWrapper>
      </ButtonContainer>
      
@@ -317,10 +231,12 @@ flex-direction:column;
 const CheckoutWrapper = styled.div`
 background-color: ${Theme.colors.white};
 left: 0;
-bottom: 0;
+bottom: ${({ isHidden }) => (isHidden ? '-600px' :'0')}; /* Initially hidden */;
 height:200px;
+transform: ${({ isHidden }) => (isHidden ? 'translateY(600px)' : '0')};
+transition: ${({ isHidden }) => (isHidden ? 'transform 3s ease-in' : '0')}; 
 width:100%;
-z-index:1;
+z-index:100;
 display:flex;
 position:fixed;
 justify-content:space-evenly;

@@ -1,42 +1,61 @@
 import React, {useState,useEffect, useRef} from 'react';
 import styled,{css} from 'styled-components';
 import Theme from '../../theme/theme';
-import Footer from '../../util/Footer/Footer';
 import ButtonTypes from '../../util/Button/ButtonObject';
 import Input from '../../util/Input/Input';
 import Label from '../../util/Label/Label';
 import 'react-international-phone/style.css';
-import Cart from '../modal/CartModal';
 import { Link, useNavigate } from 'react-router-dom';
-import AddressEdit from '../modal/ModalEdit/AddressEdit';
 import { shake } from '../../theme/animations/animations';
+import { useDispatch, useSelector} from 'react-redux';
+import Error from '../../util/ErrorUI/errorUI';
+import { setAddressPostStatus } from '../../redux/feature/PostManagement';
+import { FaTimes } from 'react-icons/fa';
+import { setOpenForm } from '../../redux/feature/LoadManagement';
+import { setAddress } from '../../redux/feature/AddressSlice';
 
 
 
 
-const Address = ()=>{
+const AddAddress = ()=>{
+        const dispatch = useDispatch()
+       
         const navigate = useNavigate()
         const [form,setForm] = useState({
-          FirstName: '',
-          LastName: '',
-          Address: '',
+          FirstName:'',
+          LastName:'',
           Postal:'',
+          Address:'',
           District:'',
           Phone:'',
+          _id:'',
+          Status:false,
 
         })
 
-        const [emptyFormMessage, setEmptyFormMessage] = useState(false)
-        const [errorMsg, setErrorMsg] = useState(true)
         
+ 
+  const [errorMsg, setErrorMsg] = useState({
+    FirstName: true,
+    LastName: true,
+    Address: true,
+    Postal: true,
+    District: true,
+    Phone: true,
+    
+
+
+  })
+
+       
 
 
 
-        const [toggle, setToggle] = useState(false)
 
-        const handleToggle = () =>{
-          setToggle((prev) => !prev)
+        const handleCloseForm = () =>{
+          dispatch(setOpenForm(false))
         }
+
 
       
 
@@ -50,44 +69,41 @@ const Address = ()=>{
 
         async function handleSubmit(e){
           e.preventDefault();
-
-          const isFormEmpty = Object.values(form).some(value => value.trim() === '');
-          
-          if(emptyFormMessage){
-                try{
-                await fetch('http://localhost:5000/postAddress',{
-                  method:"POST",
-                  headers:{
-                    "Content-Type":"application/json",
-                  },
-                  credentials: 'include',
-                body: JSON.stringify(form)
-                })
-                
-                
-
-              
-                
-              }catch(err){
-                console.error("Error occured,", err);
-                window.alert("Error occured. Please try again later.")
-              }
-            }else{
+          e.preventDefault();
+          const formCheck = Object.values(form).every(item => item.trim() === '')
       
-              if(isFormEmpty){
-                setTimeout(()=>
-                  setErrorMsg(false)
-                ,100)
-                setTimeout(()=>
-                setErrorMsg(true)
-              ,1500)
-              }else{
-                setEmptyFormMessage(true)
-                
-
-              }
-
-            }
+          
+            
+      
+                for( const key in form){
+      
+                  if(form[key].trim() === ''){
+        
+                    setErrorMsg(prevErrorMsg => ({
+                      ...prevErrorMsg,
+                      [key]: false,
+                    }));
+        
+                    setTimeout(()=>
+                      setErrorMsg(prevErrorMsg => ({
+                        ...prevErrorMsg,
+                        [key]: true,
+                      }))
+                      
+                      
+                      
+                      ,1500)
+        
+        
+                    
+                    
+                  }
+                  }
+      
+                  if(!formCheck){
+                    dispatch(setAddress(form))
+                    dispatch(setAddressPostStatus(true))
+                  }
           }
         
 
@@ -110,34 +126,27 @@ const Address = ()=>{
 
     return(
        <PageWrapper>
-        <Cart/>
-
-
-
-
-
-    <HeaderWrapper>
-    
-        <StyledLink to="/Order_confirm"><RedirectWrapper><p>Back to Order Confirm</p> </RedirectWrapper></StyledLink>
         
-                 <RightWrapper>
-                 <ButtonTypes.AddAddress onClick={handleToggle} />
-  
-        </RightWrapper>
-    </HeaderWrapper>
-
-    <AddressEditWrapper>
-        <AddressEdit/>
-</AddressEditWrapper>
+        
+        
 
 
 
 
 
-{toggle ? 
+    
+
+
+
+
+
     <form onSubmit={handleSubmit}>
+<FormWrapper>
+
+
     <CheckOutWrapper>
-    {errorMsg ? <Label fontSize="1.5rem" text="First Name"/> : <ErrorMessage>**This field is required**</ErrorMessage> }
+    <CloseButtonWrapper onClick={handleCloseForm}><FaTimes/></CloseButtonWrapper>
+    {errorMsg.FirstName ? <Label fontSize="1.5rem" text="First Name"/> : <ErrorMessage>**This field is required**</ErrorMessage> }
                 
                
                         <Input
@@ -149,7 +158,7 @@ const Address = ()=>{
                             onChange={(e) => handleForm({FirstName: e.target.value})}
                             />
 
-{errorMsg ? <Label fontSize="1.5rem" text="Last Name"/> : <ErrorMessage>**This field is required**</ErrorMessage> }
+{errorMsg.LastName ? <Label fontSize="1.5rem" text="Last Name"/> : <ErrorMessage>**This field is required**</ErrorMessage> }
                 
                
                 <Input
@@ -161,7 +170,7 @@ const Address = ()=>{
                     onChange={(e) => handleForm({LastName: e.target.value})}
                     />
 
-{errorMsg ? <Label fontSize="1.5rem" text="Address"/> : <ErrorMessage>**This field is required**</ErrorMessage> }
+{errorMsg.Address ? <Label fontSize="1.5rem" text="Address"/> : <ErrorMessage>**This field is required**</ErrorMessage> }
                 
                
                 <Input
@@ -173,7 +182,7 @@ const Address = ()=>{
                     onChange={(e) => handleForm({Address: e.target.value})}
                     />
 
-{errorMsg ? <Label fontSize="1.5rem" text="Postal Code"/> : <ErrorMessage>**This field is required**</ErrorMessage> }
+{errorMsg.Postal ? <Label fontSize="1.5rem" text="Postal Code"/> : <ErrorMessage>**This field is required**</ErrorMessage> }
                 
                
                 <Input
@@ -185,7 +194,7 @@ const Address = ()=>{
                     onChange={(e) => handleForm({Postal: e.target.value})}
                     />
 
-{errorMsg ? <Label fontSize="1.5rem" text="District"/> : <ErrorMessage>**This field is required**</ErrorMessage> }
+{errorMsg.District ? <Label fontSize="1.5rem" text="District"/> : <ErrorMessage>**This field is required**</ErrorMessage> }
 <Input
                     white
                     type="text" 
@@ -198,7 +207,7 @@ const Address = ()=>{
                
                 
 
-{errorMsg ? <Label fontSize="1.5rem" text="Phone Number"/> : <ErrorMessage>**This field is required**</ErrorMessage> }
+{errorMsg.Phone ? <Label fontSize="1.5rem" text="Phone Number"/> : <ErrorMessage>**This field is required**</ErrorMessage> }
 <Input
                     white
                     type="Phone" 
@@ -210,28 +219,63 @@ const Address = ()=>{
                
 
 
-{errorMsg ? <Label fontSize="1rem" text="*Delivery is only available in the same state within 20km*"/> : <ErrorMessage>**This field is required**</ErrorMessage> }
+<Label fontSize="1rem" text="*Delivery is only available in the same state within 20km*"/> 
 
-            
+             
     <PaynowWrapper>
-        <ButtonTypes.Pay_Now type="submit"/>
+    <ButtonTypes.Cancel onClick={handleCloseForm}/>
+        <ButtonTypes.Save type="submit"/>
     </PaynowWrapper>                    
               
      </CheckOutWrapper>
+     </FormWrapper>
 </form>             
-:
-<>
 
-</>
-}
 
-        
-        <Footer/>
+
         </PageWrapper>
 
         
     )
 }
+
+
+
+const CloseButtonWrapper = styled.div`
+padding:2px 2px;
+height:10px;
+width:10px;
+display:flex;
+justify-content:center;
+justify-self:right;
+grid-row:1;
+grid-column:1;
+
+
+&:hover{
+cursor:pointer;
+}
+
+`
+
+
+
+
+
+
+const FormWrapper = styled.div`
+position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  z-index:999;
+  align-items: center;
+  justify-content: center;
+  pointer-events: ${(props) => props.toggle ?  'none' : 'auto'}
+
+`
 
 const ErrorMessage = styled.p`
 padding-left:2rem;
@@ -241,152 +285,139 @@ font-family: 'Hammersmith One', sans-serif;
 animation:${shake} .5s ease-in-out;
 `
 
-const AddressEditWrapper = styled.div`
-padding-left:20rem;
-padding-right:20rem;
-`
 
-const StyledLink = styled(Link)`
-text-decoration:none;
-color: ${Theme.colors.ColumnBlack};
-`
-
-const RedirectWrapper = styled.div`
-font-size:1rem;
-padding:1rem 1rem;
-box-shadow: 0 2px 4px ${Theme.colors.Greylite};
-border-radius: .5rem;
-
-&:hover{
-  cusor:pointer;
-}
-`
 
 
 const CheckOutWrapper = styled.div`
 padding-bottom:10rem;
 background-color: ${Theme.colors.white};
 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
-width:60vw;
-margin-left:auto;
-margin-right:auto;
+width:40vw;
 display:grid;
 grid-template-columns: repeat(2,1fr);
 grid-template-rows: repeat(auto,1fr);
-padding:5rem 5rem;
-
-Button:nth-child(14){
-  grid-column-start:2;
-  grid-column-end:2;
-  grid-row-start:14;
-  grid-row-end:14;
-}
-
-Label:nth-child(13){
-  grid-column-start:1;
-  grid-column-end:2;
-  grid-row-start:12;
-  grid-row-end:12;
-}
-
-Label:nth-child(n+1){
-    margin-left:2rem;
-}
+padding:2rem 2rem;
 
 
-Label:nth-child(1){
-  grid-column-start:1;
-  grid-column-end:1;
+
+
+Div:nth-child(1){
+  grid-column-start:3;
+  grid-column-end:3;
   grid-row-start:1;
   grid-row-end:1;
 }
 
 
-
-Input:nth-child(2){
+Label:nth-child(2){
   grid-column-start:1;
   grid-column-end:1;
   grid-row-start:2;
-  grid-row-end:2;
-}
-
-Label:nth-child(3){
- 
-  grid-column-start:2;
-  grid-column-end:2;
-  grid-row-start:1;
-  grid-row-end:1;
-}
-
-Input:nth-child(4){
-  grid-column-start:2;
-  grid-column-end:2;
-  grid-row-start:2;
-  grid-row-end:2;
-}
-
-Label:nth-child(5){
-  grid-column-start:1;
-  grid-column-end:1;
-  grid-row-start:3;
   grid-row-end:3;
 }
 
-Input:nth-child(6){
+
+
+Input:nth-child(3){
   grid-column-start:1;
-  grid-column-end:3;
-  grid-row-start:4;
+  grid-column-end:1;
+  grid-row-start:3;
   grid-row-end:4;
 }
 
-Label:nth-child(7){
+Label:nth-child(4){
+ 
+  grid-column-start:1;
+  grid-column-end:1;
+  grid-row-start:4;
+  grid-row-end:5;
+}
+
+Input:nth-child(5){
   grid-column-start:1;
   grid-column-end:1;
   grid-row-start:5;
+  grid-row-end:6;
+}
+
+Label:nth-child(6){
+  grid-column-start:2;
+  grid-column-end:2;
+  grid-row-start:2;
+  grid-row-end:3;
+}
+
+Input:nth-child(7){
+  grid-column-start:2;
+  grid-column-end:2;
+  grid-row-start:3;
+  grid-row-end:4;
+}
+
+Label:nth-child(8){
+  grid-column-start:2;
+  grid-column-end:2;
+  grid-row-start:4;
   grid-row-end:5;
 }
 
 
-Input:nth-child(8){
-  grid-column-start:1;
-  grid-column-end:1;
-  grid-row-start:6;
-  grid-row-end:6;
-}
-
-Label:nth-child(9){
+Input:nth-child(9){
   grid-column-start:2;
   grid-column-end:2;
   grid-row-start:5;
-  grid-row-end:5;
-}
-
-
-Input:nth-child(10){
-  grid-column-start:2;
-  grid-column-end:2;
-  grid-row-start:6;
   grid-row-end:6;
 }
 
-Label:nth-child(11){
-  grid-column-start:1;
-  grid-column-end:1;
-  grid-row-start:7;
+Label:nth-child(10){
+  grid-column-start:2;
+  grid-column-end:2;
+  grid-row-start:6;
   grid-row-end:7;
 }
 
 
-div:nth-child(12){
-  grid-column-start:1;
-  grid-column-end:1;
-  grid-row-start:8;
+Input:nth-child(11){
+  grid-column-start:2;
+  grid-column-end:2;
+  grid-row-start:7;
   grid-row-end:8;
+}
+
+Label:nth-child(12){
+  grid-column-start:2;
+  grid-column-end:2;
+  grid-row-start:8;
+  grid-row-end:9;
+}
+
+div:nth-child(13){
+  grid-column-start:2;
+  grid-column-end:2;
+  grid-row-start:10;
+  grid-row-end:10;
   margin-left:1rem;
   margin-top:1.2rem;
 }
 
 
+div:nth-child(15){
+  grid-column-start:2;
+  grid-column-end:2;
+  grid-row-start:12;
+  grid-row-end:13;
+  
+}
+
+Label:nth-child(14){
+  grid-column-start:1;
+  grid-column-end:1;
+  grid-row-start:10;
+  grid-row-end:11;
+  margin-left:1rem;
+  margin-top:1.2rem;
+}
+  
 
 `
 
@@ -396,34 +427,11 @@ div:nth-child(12){
 
 const PaynowWrapper = styled.div`
 display:flex;
-justify-content:right;
+justify-content:space-evenly;
 padding:1.3rem 1.3rem;
-grid-column-start:2;
-  grid-column-end:2;
-  grid-row-start:9;
-  grid-row-end:9;
 
 `
 
-
-const HeaderWrapper = styled.header`
-font-size:4rem;
-color: ${Theme.colors.ColumnBlack};
-font-family: 'Hammersmith One', sans-serif;
-display:flex;
-justify-content:space-between;
-align-items: center;
-width:60vw;
-margin-left:auto;
-margin-right:auto;
-
-`
-
-const RightWrapper = styled.div`
-display:flex;
-justify-item:flex-end;
-gap:1rem;
-`
 
 
 
@@ -444,7 +452,7 @@ background-color: ${Theme.colors.white};
 
 
 
-export default Address
+export default AddAddress
 
 
 

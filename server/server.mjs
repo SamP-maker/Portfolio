@@ -36,7 +36,7 @@ app.use(User_session);
 app.use(userAddress);
 app.use("/userRoute", route);
 app.use(googleAuthRoute);
-app.use("/recordSummary", recordSummary);
+app.use(recordSummary);
 app.use(userOrderList);
 app.use(userCreditCredentials);
 app.use(userBillingAddress);
