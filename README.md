@@ -20,39 +20,39 @@
 
 ## FRONT END
   <p>Authorization 🛡️<br>
-      <p2>rest API Login & SignUp</p2>
-      <p3>Google Sign In (Ceased)</p3>
-      <p4>Meta Sign In (Ceased)</p4>
+      <p2>rest API Login & SignUp<br>
+      <p3>Google Sign In (Ceased)<br>
+      <p4>Meta Sign In (Ceased)<br>
   <p>Menu (Home/Dashboard) 🏠<br>
-    <p2>Carousel Type View where users are able to see showcased items</p2>
-    <p3>Search bar where users are able to search for the specific item</p3>
-    <p4>Category navigation bar where users are able to click on the specific category</p4>
-    <p5>Cart with cart notification when items are added. But cleared when state is refreshed</p5>
+    <p2>Carousel Type View where users are able to see showcased items<br>
+    <p3>Search bar where users are able to search for the specific item<br>
+    <p4>Category navigation bar where users are able to click on the specific category<br>
+    <p5>Cart with cart notification when items are added. But cleared when state is refreshed<br>
 
     
   <p>Delivery 🚚<br>
-    <p2> None </p2>
+    <p2> None <br>
     
   <p>Payment 💳<br>
-    <p2> Card - Bank - TouchNGo - CAash On Delivery </p2>
+    <p2> Card - Bank - TouchNGo - CAash On Delivery <br>
     
   <p>Tools 🔧<br>
-  <p2> Modals Pop Up with background blur</p2>
-  <p3> Slider Pop Up with background Shading </p3>
-  <p4> Empty error message when users try to use the order confirm page without items or login</p4>
+  <p2> Modals Pop Up with background blur<br>
+  <p3> Slider Pop Up with background Shading <br>
+  <p4> Empty error message when users try to use the order confirm page without items or login<br>
 
 
 ## BACK END
   <p>Cookies 🍪<br>
-    <p1>Storing sessions, which utilizes emails</p1>
+    <p1>Storing sessions, which utilizes emails<br>
     
   <p>Session 🕒<br>
-    <p1>stores emails and username</p1>
+    <p1>stores emails and username<br>
     
   <p>Database Storage 💾<br>
-    <p1> Stores Address, Billing Address, Items (Does not store any payments)</p1>
+    <p1> Stores Address, Billing Address, Items (Does not store any payments)<br>
   <p>Google Oauth2 🔑<br>
-    <p1>Implemented but due to free trial reasons it is not valid for a long period</p1>
+    <p1>Implemented but due to free trial reasons it is not valid for a long period<br>
  
   <p>Facebook Oauth 📘<br>
-<p1>Implemented but due to free trial reasons it is not valid for a long period</p1>
+<p1>Implemented but due to free trial reasons it is not valid for a long period<br>
